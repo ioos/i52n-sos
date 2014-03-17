@@ -1,4 +1,4 @@
-# IOOS 52°North Sensor Observation System
+# IOOS 52°North SOS
 
 This repository holds the IOOS custom modules for the 
 [52°North Sensor Observation System](https://github.com/52North/SOS).
