@@ -1,0 +1,45 @@
+<!-- logback configuration for local debugging that prints to stdout -->
+<!-- not to be included in final war (never log to both stdout and the rolling file!) -->
+<!-- Use by passing -Dlogback.configurationFile=misc/logback-debug.xml when executing maven command -->
+<configuration>
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>${java.io.tmpdir}/sos.log</file>
+    <append>false</append>
+    <encoder>
+      <pattern>%date %level [%thread] [%file:%line] %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="QUERY_LOG" class="ch.qos.logback.core.FileAppender">
+    <file>${java.io.tmpdir}/sos_query.log</file>
+    <append>false</append>
+    <encoder>
+      <pattern>%date %level [%thread] [%file:%line] %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{0} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="org.n52" level="INFO" />
+  <logger name="org.springframework" level="WARN" />
+
+  <logger name="jdbc.sqlonly" level="OFF" />
+  <logger name="jdbc.sqltiming" level="DEBUG" additivity="false">
+    <appender-ref ref="QUERY_LOG" />
+  </logger>
+  <logger name="jdbc.audit" level="OFF" />
+  <logger name="jdbc.resultset" level="OFF" />
+  <logger name="jdbc.resultsettable" level="OFF" />
+  <logger name="jdbc.connection" level="DEBUG" additivity="false">
+    <appender-ref ref="QUERY_LOG" />
+  </logger>
+
+  <root level="INFO">
+    <appender-ref ref="STDOUT" />
+    <appender-ref ref="FILE" />
+  </root>
+</configuration>

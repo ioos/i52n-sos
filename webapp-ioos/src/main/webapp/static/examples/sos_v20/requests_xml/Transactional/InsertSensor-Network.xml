@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<swes:InsertSensor service="SOS" version="2.0.0"
+  xmlns:swes="http://www.opengis.net/swes/2.0" 
+  xmlns:sos="http://www.opengis.net/sos/2.0" 
+  xmlns:swe="http://www.opengis.net/swe/1.0.1"
+  xmlns:sml="http://www.opengis.net/sensorML/1.0.1" 
+  xmlns:gml="http://www.opengis.net/gml" 
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.opengis.net/sos/2.0 http://schemas.opengis.net/sos/2.0/sosInsertSensor.xsd 
+  http://www.opengis.net/swes/2.0 http://schemas.opengis.net/swes/2.0/swes.xsd">
+  <swes:procedureDescriptionFormat>text/xml; subtype="sensorML/1.0.1/profiles/ioos_sos/1.0"</swes:procedureDescriptionFormat>
+  <swes:procedureDescription>
+    <sml:SensorML version="1.0.1">
+
+      <sml:member>
+        <sml:System>
+          <gml:description>Example network</gml:description>
+          <gml:name>urn:ioos:network:test:example</gml:name>
+
+          <!-- Spatial bounds of the content described by this network -->
+          <gml:boundedBy>
+            <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+              <gml:lowerCorner>-90 180</gml:lowerCorner>
+              <gml:upperCorner>90 180</gml:upperCorner>
+            </gml:Envelope>
+          </gml:boundedBy> 
+
+          <!-- =============================================================== -->
+          <!-- IDENTIFIERS                                                     -->
+          <!-- The networkID, shortName and longName are manditory             -->
+          <!-- list all that are appropriate                                   -->
+          <!-- =============================================================== -->
+          <sml:identification>
+            <sml:IdentifierList>
+              <sml:identifier name="networkID">
+                <sml:Term definition="http://mmisw.org/ont/ioos/definition/networkID">
+                  <sml:value>urn:ioos:network:test:example</sml:value>
+                </sml:Term>
+              </sml:identifier>
+              <sml:identifier name="shortName">
+                <sml:Term definition="http://mmisw.org/ont/ioos/definition/shortName">
+                  <sml:value>Example network</sml:value>
+                </sml:Term>
+              </sml:identifier>
+              <sml:identifier name="longName">
+                <sml:Term definition="http://mmisw.org/ont/ioos/definition/longName">
+                  <sml:value>An example network to demonstrate network InsertSensor requests</sml:value>
+                </sml:Term>
+              </sml:identifier>
+              <sml:identifier name="offering">
+                <sml:Term definition="urn:ogc:def:identifier:OGC:offeringID">
+                  <sml:value>urn:ioos:network:test:example</sml:value>
+                </sml:Term>
+              </sml:identifier>          
+            </sml:IdentifierList>
+          </sml:identification>
+
+          <!-- =============================================================== -->
+          <!-- CLASSIFIERS                                                     -->
+          <!-- List any classifiers that apply to this network offering        -->
+          <!-- =============================================================== -->
+          <sml:classification>
+            <sml:ClassifierList>
+              <!-- List as many as needed to describe the content of the network offering -->   
+              <sml:classifier name="publisher">
+                <sml:Term definition="http://mmisw.org/ont/ioos/definition/publisher">
+                  <sml:codeSpace xlink:href="http://mmisw.org/ont/ioos/organization"/>
+                  <sml:value>IOOS</sml:value>
+                </sml:Term>
+              </sml:classifier>
+              <!-- At least one parent network must reference an IOOS codespace and list the RA Acronym -->
+              <sml:classifier name="parentNetwork">
+                <sml:Term definition="http://mmisw.org/ont/ioos/definition/parentNetwork">
+                  <sml:codeSpace xlink:href="http://mmisw.org/ont/ioos/organization"/>
+                  <sml:value>IOOS</sml:value>
+                </sml:Term>
+              </sml:classifier>
+            </sml:ClassifierList>
+          </sml:classification>
+
+          <!-- sml:validTime represents the date range of the validity of this document -->
+          <sml:validTime>
+            <gml:TimePeriod>
+              <gml:beginPosition>2008-04-28T08:00:00.000Z</gml:beginPosition>
+              <gml:endPosition indeterminatePosition="now" />
+            </gml:TimePeriod>
+          </sml:validTime>
+
+          <sml:capabilities name="offerings">
+            <swe:SimpleDataRecord>
+              <swe:field name="Example network offering">
+                <swe:Text>
+                  <swe:value>urn:ioos:network:test:example</swe:value>
+                </swe:Text>
+              </swe:field>
+            </swe:SimpleDataRecord>
+          </sml:capabilities>
+
+          <!-- =============================================================== -->
+          <!-- CONTACTS                                                        -->
+          <!-- List all publisher and operator contacts that apply to this     -->
+          <!-- network offering.                                               -->
+          <!-- Consider using xlink:href to external document for concision    -->
+          <!-- =============================================================== -->
+          <sml:contact>
+            <sml:ContactList>
+              <sml:member xlink:role="http://mmisw.org/ont/ioos/definition/operator">
+                <sml:ResponsibleParty>
+                  <sml:organizationName>An Operator</sml:organizationName>
+                  <sml:contactInfo>
+                    <sml:address>
+                      <sml:deliveryPoint>1234 Some Ave</sml:deliveryPoint>
+                      <!-- Optional: City; but strongly encouraged  -->
+                      <sml:city>Anytown</sml:city>
+                      <sml:administrativeArea>NY</sml:administrativeArea>
+                      <sml:postalCode>98195</sml:postalCode>
+                      <!-- Required: country [Values: USA|<COUNTRY NAME>|NON-USA] -->
+                      <sml:country>USA</sml:country>
+                      <!-- Required: electronicMailAddress -->
+                       <sml:electronicMailAddress>someone@anoperator.com</sml:electronicMailAddress>
+                      </sml:address>
+                      <!-- Optional: onlineResource; but strongly encouraged for operator --> 
+                      <sml:onlineResource xlink:href="http://anoperator.com"/>
+                    </sml:contactInfo>
+                  </sml:ResponsibleParty>
+                </sml:member>
+                <sml:member xlink:role="http://mmisw.org/ont/ioos/definition/publisher">
+                  <sml:ResponsibleParty>
+                    <sml:organizationName>IOOS</sml:organizationName>
+                    <sml:contactInfo>
+                      <sml:address>
+                        <sml:country>USA</sml:country>
+                        <sml:electronicMailAddress>sos@ioos.gov</sml:electronicMailAddress>
+                      </sml:address>
+                      <sml:onlineResource xlink:href="http://ioos.org"/>
+                    </sml:contactInfo>
+                  </sml:ResponsibleParty>
+                </sml:member>
+              </sml:ContactList>
+            </sml:contact>
+          </sml:System>
+        </sml:member>
+      </sml:SensorML>
+    </swes:procedureDescription>
+    <swes:observableProperty>NONE</swes:observableProperty>
+    <swes:metadata>
+      <sos:SosInsertionMetadata>
+        <sos:observationType>http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement</sos:observationType>
+        <sos:featureOfInterestType>http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingPoint</sos:featureOfInterestType>
+        <sos:featureOfInterestType>http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingCurve</sos:featureOfInterestType>
+      </sos:SosInsertionMetadata>
+    </swes:metadata>    
+  </swes:InsertSensor>

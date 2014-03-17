@@ -1,0 +1,119 @@
+IOOS 52 North SOS
+
+  This is the project page for the IOOS customized version of the
+   {{{http://52north.org/sos}52°North Sensor Observation Service (SOS)}}.
+
+  The IOOS 52°North SOS is a customized version of the most current version (currently 4.0.0-SNAPSHOT)
+  of the 52°North (52n) SOS. The IOOS custom modules provide custom encoding modules and an IOOS format test data generator.
+
+  The IOOS custom encoding formats are:
+
+   * GetCapabilitiesResponse (add metadata, customize offering format, etc)
+   
+   * SensorML (add metadata and generated fields like procedure hierarchies and time span)
+   
+   * O&M and SWE (add metadata, use IOOS SWE format)
+   
+   * netCDF (CF 1.6/ACDD 1.1/NODC 1.0/IOOS 1.0 conventions, one sensor per netCDF file, output as a zip file)   
+ 
+   []
+ 
+  The IOOS test data:
+
+   * Generates network, station, and sensor procedures
+   
+   * Uses IOOS SensorML formats and metadata
+   
+   * Uses CF standard names for observed properties
+   
+   * Uses udunits
+   
+   * Generates time series (air_temperature) and time series profile (sea_water_temperature) data
+   
+   * Randomly generates global station locations
+
+   * Includes test client example requests matching test data values
+
+   []
+   
+   The project currently aims to conform to the IOOS SOS Milestone 1 Standard.
+
+Download the WAR
+
+  Bleeding edge (current) build: {{{./download/52n-sos-ioos-${project.version}.war}52n-sos-ioos-${project.version}.war}} - built at ${timestamp}     
+  
+  Stable build: {{{./download/52n-sos-ioos-${n52IoosStableVersion}.war}52n-sos-ioos-${n52IoosStableVersion}.war}}
+
+Release Notes
+
+  See {{{./RELEASE-NOTES.txt}Release notes document}}
+
+Mailing List
+
+  See {{{./mail-lists.html}Mailing Lists document}}
+
+Installation
+
+  See {{{./install.html}installation instructions}}.
+
+Upgrading
+
+  See {{{./upgrade.html}upgrade instructions}}.
+
+Test Data
+
+  To experiment with test data in your SOS, see {{{./testdata.html}test data instructions}}.
+
+Populating
+
+  For tools to populate your SOS, see {{{./populating.html}populating instructions}}.
+
+Concepts
+
+  For an overview of SOS concepts, see {{{./concepts.html}concepts}}.
+
+Test instance
+
+  A test instance of the stable and bleeding edge versions of the IOOS 52n SOS are available:
+   
+  * Bleeding edge: {{http://ioossos.axiomalaska.com/52n-sos-ioos-dev}}
+  
+  * Stable: {{http://ioossos.axiomalaska.com/52n-sos-ioos-stable}}
+
+  []
+
+Issue Tracker
+
+  Report issues on the {{{https://code.google.com/p/52n-sos-ioos-issues/issues}Google Code issue tracker}}. 
+
+Known Issues
+
+  * Performance degrades when several million observations are stored
+  
+  * Quality flags not yet supported
+  
+  * Profile orientation/pitch/roll static data block not supported in GetObservation output
+
+  * Station and sensor location in GetObservation are determined from observation locations
+  
+  * ResultTemplate operations are not supported
+
+  []
+   
+Other resources
+
+  52North resources:
+  
+  * {{{http://52north.org/sos}52n SOS Home}}
+  
+  * {{{https://wiki.52north.org/bin/view/SensorWeb/SensorObservationServiceIVDocumentation}52n SOS 4.0 Doc Wiki}}
+  
+  * {{{https://wiki.52north.org/bin/view/SensorWeb/SensorObservationServiceIV}52n SOS 4.0 Dev Wiki}}        
+
+  []
+  
+  
+  Information on IOOS SOS efforts can be found at the {{{http://code.google.com/p/ioostech/}ioostech Google Code page}}
+  and {{{https://groups.google.com/forum/?#!forum/ioostech_dev}ioostech_dev Google Group}}.
+  
+  Information on OGC SOS standards can be found {{{http://www.opengeospatial.org/standards/sos}here}}. 

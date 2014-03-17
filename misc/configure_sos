@@ -1,0 +1,132 @@
+#!/bin/bash
+#configure a 52n-sos-ioos war with a datasource and set configuration settings
+#if [ "$#" -lt 5 ]; then
+#  echo "Usage: configure_sos DATASOURCE_FILE TARGET_FILENAME SOS_URL ADMIN_PASSWORD LOG_NAME [SOURCE_WAR]"
+#  exit 1
+#fi
+
+#DATASOURCE_FILE=$1
+#TARGET=$2
+#SOS_URL=$3
+#PASSWORD=$4
+#LOG_NAME=$5
+#SOURCE_WAR=$6
+
+usage()
+{
+cat << EOF
+usage: $0 options
+
+Configure an IOOS 52n SOS war with various options.
+
+OPTIONS:
+  -h   Show this message
+
+Required:
+  -d   Datasource file
+  -t   Target filename (relative or absolute)
+  -u   SOS url
+  -p   Admin password
+  -l   Log name (relative to container log dir)
+
+Optional:
+  -s   Source war (defaults to war in Maven target dir)
+  -o   Active response format (disable all other output formats)
+EOF
+}
+
+DATASOURCE_FILE=
+TARGET=
+SOS_URL=
+PASSWORD=
+LOG_NAME=
+SOURCE_WAR=
+ACTIVE_RESPONSE_FORMAT=
+while getopts "d:t:u:p:l:s:o:" OPTION
+do
+  case $OPTION in
+    h)
+      usage
+      exit 1
+      ;;
+    d)
+      DATASOURCE_FILE="$OPTARG"
+      ;;
+    t)
+      TARGET="$OPTARG"
+      ;;
+    u)
+      SOS_URL="$OPTARG"
+      ;;
+    p)
+      PASSWORD="$OPTARG"
+      ;;
+    l)
+      LOG_NAME="$OPTARG"
+      ;;
+    s)
+      SOURCE_WAR="$OPTARG"
+      ;;
+    o)
+      ACTIVE_RESPONSE_FORMAT="$OPTARG"
+      ;;
+  esac
+done
+
+# check for missing required opts
+if [[ -z "$DATASOURCE_FILE" ]] || [[ -z "$TARGET" ]] || [[ -z "$SOS_URL" ]] \
+	|| [[ -z "$PASSWORD" ]] || [[ -z "$LOG_NAME" ]]; then
+  usage
+  exit 1
+fi
+
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+CWD=`pwd`
+HASHED_PASSWORD=`java -jar $SCRIPT_DIR/../password-hasher/target/password-hasher-*.jar $PASSWORD`
+
+TMP_DIR=/tmp/52n-sos-ioos-config
+
+if [[ "$DATASOURCE_FILE" != /* ]]; then
+  #relative output, make absolute in the cwd
+  DATASOURCE_FILE=$CWD/$DATASOURCE_FILE
+fi
+
+if [ ! -f "$DATASOURCE_FILE" ]; then
+  echo Datasource file "$DATASOURCE_FILE" doesn\'t exist.
+  exit 1
+fi
+
+if [[ "$TARGET" != /* ]]; then
+  #relative output, make absolute in the cwd
+  TARGET=$CWD/$TARGET
+fi
+
+if [ -z "$SOURCE_WAR" ]; then 
+  #SOURCE_WAR is unset, default to target war in project tree
+  SOURCE_WAR="$SCRIPT_DIR"/../webapp-ioos/target/52n-sos-ioos*.war
+fi
+
+if [[ "$SOURCE_WAR" != /* ]]; then
+  #relative output, make absolute in the cwd
+  SOURCE_WAR=$CWD/$SOURCE_WAR
+fi
+
+ls -U $SOURCE_WAR &> /dev/null
+if [ $? -gt 0 ]; then
+  echo Source WAR "$SOURCE_WAR" doesn\'t exist.
+  exit 1
+fi
+
+rm -Rf $TMP_DIR
+unzip -q "$SOURCE_WAR" -d $TMP_DIR
+cd $TMP_DIR
+cp "$DATASOURCE_FILE" ./WEB-INF/datasource.properties
+sqlite3 ./configuration.db "update administrator_user set password = '$HASHED_PASSWORD' where username = 'admin';"
+sqlite3 ./configuration.db "update uri_settings set value = '$SOS_URL' where identifier = 'service.sosUrl';"
+if [[ ! -z "$ACTIVE_RESPONSE_FORMAT" ]]; then
+  sqlite3 ./configuration.db "update observation_encodings set active=0 where responseFormat != '$ACTIVE_RESPONSE_FORMAT';"
+fi
+sed -i "s/52n-sos-ioos-webapp/$LOG_NAME/g" ./WEB-INF/classes/logback.xml
+rm -f $TARGET
+zip -q -r $TARGET .

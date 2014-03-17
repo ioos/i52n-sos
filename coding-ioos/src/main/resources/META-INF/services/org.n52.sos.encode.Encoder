@@ -1,0 +1,4 @@
+org.n52.sos.encode.IoosOmEncoderv100
+org.n52.sos.encode.IoosOwsEncoderv110
+org.n52.sos.encode.IoosSensorMLEncoderv101
+org.n52.sos.encode.IoosGetCapabilitiesResponseEncoder

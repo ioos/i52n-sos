@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<swes:InsertSensor service="SOS" version="2.0.0"
+  xmlns:swes="http://www.opengis.net/swes/2.0" 
+  xmlns:sos="http://www.opengis.net/sos/2.0" 
+  xmlns:swe="http://www.opengis.net/swe/1.0.1"
+  xmlns:sml="http://www.opengis.net/sensorML/1.0.1" 
+  xmlns:gml="http://www.opengis.net/gml" 
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.opengis.net/sos/2.0 http://schemas.opengis.net/sos/2.0/sosInsertSensor.xsd 
+  http://www.opengis.net/swes/2.0 http://schemas.opengis.net/swes/2.0/swes.xsd">
+  <swes:procedureDescriptionFormat>text/xml; subtype="sensorML/1.0.1/profiles/ioos_sos/1.0"</swes:procedureDescriptionFormat>
+  <swes:procedureDescription> 
+    <sml:SensorML version="1.0.1">
+      <sml:member>
+        <sml:System>
+          <gml:description>Surface water temperature sensor on WMO platform 41001</gml:description>
+          <gml:name>urn:ioos:sensor:test:wmo41001:watertemp1</gml:name>
+
+          <!-- ==================================================================== -->
+          <!-- SENSOR IDENTIFIERS                                                   -->
+          <!-- ==================================================================== -->
+          <sml:identification>
+            <sml:IdentifierList>
+              <!-- The 3 identifiers listed below are MANDATORY -->
+              <sml:identifier name="sensorID">
+                <sml:Term definition="http://mmisw.org/ont/ioos/definition/sensorID">
+                  <sml:value>urn:ioos:sensor:test:wmo41001:watertemp1</sml:value>
+                </sml:Term>
+              </sml:identifier>
+              <sml:identifier name="shortName">
+                <sml:Term definition="http://mmisw.org/ont/ioos/definition/shortName">
+                  <sml:value>WMO 41001 Water Temperature Sensor</sml:value>
+                </sml:Term>
+              </sml:identifier>
+              <sml:identifier name="longName">
+                <sml:Term definition="http://mmisw.org/ont/ioos/definition/longName">
+                  <sml:value>Surface water temperature sensor on WMO platform 41001</sml:value>
+                </sml:Term>
+              </sml:identifier>
+            </sml:IdentifierList>
+          </sml:identification>
+
+          <!-- sml:validTime represents the date range of the validity of this document -->
+          <sml:validTime>
+            <gml:TimePeriod>
+              <gml:beginPosition>2010-07-14T10:00:00.000Z</gml:beginPosition>
+              <gml:endPosition>2012-12-27T19:00:00.000Z</gml:endPosition>
+            </gml:TimePeriod>
+          </sml:validTime>
+
+          <sml:capabilities name="offerings">
+            <swe:SimpleDataRecord>
+              <swe:field name="Offering for WMO 41001 sea water temperature sensor">
+                <swe:Text>
+                  <swe:value>urn:ioos:sensor:test:wmo41001:watertemp1</swe:value>
+                </swe:Text>
+              </swe:field>              
+            </swe:SimpleDataRecord>
+          </sml:capabilities>
+          <sml:capabilities name="parentProcedures">
+            <swe:SimpleDataRecord>
+              <swe:field name="station">
+                <swe:Text>
+                  <swe:value>urn:ioos:station:test:wmo41001</swe:value>
+                </swe:Text>
+              </swe:field>
+            </swe:SimpleDataRecord>
+          </sml:capabilities>
+          <sml:capabilities name="featuresOfInterest">
+            <swe:SimpleDataRecord>
+              <swe:field name="featureOfInterestID">
+                <swe:Text>
+                  <swe:value>urn:ioos:sensor:test:wmo41001:watertemp1</swe:value>
+                </swe:Text>
+              </swe:field>
+            </swe:SimpleDataRecord>
+          </sml:capabilities>
+        </sml:System>
+      </sml:member>   
+    </sml:SensorML>     
+  </swes:procedureDescription>
+  <swes:observableProperty>http://mmisw.org/ont/cf/parameter/sea_water_temperature</swes:observableProperty>
+  <swes:metadata>
+    <sos:SosInsertionMetadata>
+      <sos:observationType>http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement</sos:observationType>
+      <sos:featureOfInterestType>http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingPoint</sos:featureOfInterestType>
+    </sos:SosInsertionMetadata>
+  </swes:metadata>
+</swes:InsertSensor>

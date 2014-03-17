@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GetObservation service="SOS" version="1.0.0"
+    xmlns="http://www.opengis.net/sos/1.0"
+    xmlns:gml="http://www.opengis.net/gml"
+    xmlns:ogc="http://www.opengis.net/ogc"    
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.opengis.net/sos/1.0
+    http://schemas.opengis.net/sos/1.0.0/sosGetObservation.xsd">
+    <offering>urn:ioos:network:test:all</offering>
+    <eventTime>
+        <ogc:TM_During>
+            <ogc:PropertyName>om:samplingTime</ogc:PropertyName>
+            <gml:TimePeriod>
+                <gml:beginPosition>2013-09-01T00:00:00.000Z</gml:beginPosition>
+                <gml:endPosition>2016-01-01T00:00:00.000Z</gml:endPosition>
+            </gml:TimePeriod>
+        </ogc:TM_During>
+    </eventTime>      
+    <procedure>urn:ioos:network:test:all</procedure>
+    <observedProperty>http://mmisw.org/ont/cf/parameter/air_temperature</observedProperty>
+    <observedProperty>http://mmisw.org/ont/cf/parameter/sea_water_temperature</observedProperty>
+    <responseFormat>text/xml; subtype=&quot;om/1.0.0/profiles/ioos_sos/1.0&quot;</responseFormat>
+</GetObservation>

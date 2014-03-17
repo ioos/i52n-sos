@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sos:InsertObservation service="SOS" version="2.0.0" 
+	xmlns:sos="http://www.opengis.net/sos/2.0"
+	xmlns:swes="http://www.opengis.net/swes/2.0" 
+	xmlns:swe="http://www.opengis.net/swe/2.0"
+	xmlns:sml="http://www.opengis.net/sensorML/1.0.1" 
+	xmlns:gml="http://www.opengis.net/gml/3.2"
+	xmlns:xlink="http://www.w3.org/1999/xlink" 
+	xmlns:om="http://www.opengis.net/om/2.0"
+	xmlns:sams="http://www.opengis.net/samplingSpatial/2.0" 
+	xmlns:sf="http://www.opengis.net/sampling/2.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.opengis.net/sos/2.0 http://schemas.opengis.net/sos/2.0/sos.xsd">
+	<sos:offering>urn:ioos:station:test:1</sos:offering>
+	<sos:observation>
+		<om:OM_Observation gml:id="o1">
+			<om:type xlink:href="http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"/>
+			<om:phenomenonTime>
+				<gml:TimeInstant gml:id="phenomenonTime">
+					<gml:timePosition>2012-07-31T17:45:15.000+00:00</gml:timePosition>
+				</gml:TimeInstant>
+			</om:phenomenonTime>
+			<om:resultTime xlink:href="#phenomenonTime"/>
+			<om:procedure xlink:href="urn:ioos:sensor:test:1:air_temperature"/>
+			<om:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/air_temperature"/>
+			<om:featureOfInterest>
+				<sams:SF_SpatialSamplingFeature gml:id="ssf_foi"> 
+					<gml:identifier codeSpace="">urn:ioos:test:some:point</gml:identifier> 
+					<gml:name>urn:ioos:test:some:point</gml:name>
+					<sf:type xlink:href="http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingPoint"/> 
+					<sf:sampledFeature xlink:href="urn:ioos:test:some:point"/> 
+					<sams:shape> 
+						<gml:Point gml:id="foi"> 
+							<gml:pos srsName="http://www.opengis.net/def/crs/EPSG/0/4326">34.7 -72.73</gml:pos> 
+						</gml:Point> 
+					</sams:shape> 
+				</sams:SF_SpatialSamplingFeature>
+			</om:featureOfInterest>
+			<om:result xsi:type="gml:MeasureType" uom="urn:ogc:def:uom:udunits:2:Cel">22.1</om:result>
+		</om:OM_Observation>
+	</sos:observation>
+</sos:InsertObservation>

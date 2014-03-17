@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GetObservation service="SOS" version="1.0.0"
+    xmlns="http://www.opengis.net/sos/1.0"
+    xmlns:gml="http://www.opengis.net/gml"
+    xmlns:ogc="http://www.opengis.net/ogc"    
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.opengis.net/sos/1.0
+	http://schemas.opengis.net/sos/1.0.0/sosGetObservation.xsd">
+	<offering>urn:ioos:network:test:all</offering>
+	<procedure>urn:ioos:network:test:all</procedure>
+	<observedProperty>http://mmisw.org/ont/cf/parameter/air_temperature</observedProperty>
+	<observedProperty>http://mmisw.org/ont/cf/parameter/sea_water_temperature</observedProperty>
+    <featureOfInterest>
+        <ogc:BBOX>
+            <ogc:PropertyName>urn:ogc:data:location</ogc:PropertyName>
+            <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                <gml:lowerCorner>-180 0</gml:lowerCorner>
+                <gml:upperCorner>0 90</gml:upperCorner>
+            </gml:Envelope>
+        </ogc:BBOX>
+    </featureOfInterest>	
+	<responseFormat>text/xml; subtype=&quot;om/1.0.0/profiles/ioos_sos/1.0&quot;</responseFormat>
+</GetObservation>

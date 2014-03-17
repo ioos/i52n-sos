@@ -1,0 +1,377 @@
+{
+    "examples": [
+        {
+            "param": {
+                "service": "SOS",
+                "request": "GetCapabilities",
+                "AcceptVersions": "1.0.0"
+            },
+            "service": "SOS",
+            "version": "1.0.0",
+            "binding": "/kvp",
+            "operation": "GetCapabilities",
+            "method": "GET"
+        },
+        {
+            "param": {
+                "service": "SOS",
+                "version": "1.0.0",
+                "request": "DescribeSensor",
+                "procedure": "urn:ioos:network:test:all",
+                "outputFormat": "text/xml; subtype=\"sensorML/1.0.1/profiles/ioos_sos/1.0\""
+            },
+            "service": "SOS",
+            "version": "1.0.0",
+            "binding": "/kvp",
+            "operation": "DescribeSensor",
+            "title": "Network",
+            "method": "GET"
+        },
+        {
+            "param": {
+                "service": "SOS",
+                "version": "1.0.0",
+                "request": "DescribeSensor",
+                "procedure": "urn:ioos:station:test:2",
+                "outputFormat": "text/xml; subtype=\"sensorML/1.0.1/profiles/ioos_sos/1.0\""
+            },
+            "service": "SOS",
+            "version": "1.0.0",
+            "binding": "/kvp",
+            "operation": "DescribeSensor",
+            "title": "Station",
+            "method": "GET"
+        },
+        {
+            "param": {
+                "service": "SOS",
+                "version": "1.0.0",
+                "request": "DescribeSensor",
+                "procedure": "urn:ioos:sensor:test:2:sea_water_temperature",
+                "outputFormat": "text/xml; subtype=\"sensorML/1.0.1/profiles/ioos_sos/1.0\""
+            },
+            "service": "SOS",
+            "version": "1.0.0",
+            "binding": "/kvp",
+            "operation": "DescribeSensor",
+            "title": "Sensor",
+            "method": "GET"
+        },
+        {
+            "param": {
+                "service": "SOS",
+                "version": "1.0.0",
+                "request": "GetObservation",
+                "offering": "urn:ioos:network:test:all",
+                "observedProperty": "http://mmisw.org/ont/cf/parameter/air_temperature",
+                "procedure": "urn:ioos:station:test:1",
+                "responseFormat": "text/xml; subtype=\"om/1.0.0/profiles/ioos_sos/1.0\""
+            },
+            "service": "SOS",
+            "version": "1.0.0",
+            "binding": "/kvp",
+            "operation": "GetObservation",
+            "title": "TimeSeries",            
+            "method": "GET"
+        },
+        {
+            "param": {
+                "service": "SOS",
+                "version": "1.0.0",
+                "request": "GetObservation",
+                "offering": "urn:ioos:network:test:all",
+                "observedProperty": "http://mmisw.org/ont/cf/parameter/air_temperature",
+                "procedure": "urn:ioos:station:test:1",
+                "responseFormat": "application/zip;subtype=x-netcdf"
+            },
+            "service": "SOS",
+            "version": "1.0.0",
+            "binding": "/kvp",
+            "operation": "GetObservation",
+            "title": "TimeSeries - Netcdf",            
+            "method": "GET"
+        },
+        {
+          "param": {
+            "service": "SOS",
+            "version": "2.0.0",
+            "request": "GetObservation",
+            "procedure": "urn:ioos:station:test:1",
+            "observedProperty": "http://mmisw.org/ont/cf/parameter/air_temperature",
+            "responseFormat": "application/json"
+          },
+          "service": "SOS",
+          "version": "2.0.0",
+          "binding": "/kvp",
+          "operation": "GetObservation",
+          "title": "TimeSeries - Json",
+          "headers":{
+            "Accept":"application/json"
+          },          
+          "method": "GET"
+        },        
+        {
+            "request": "static/examples/sos_v100/m1.0/requests_xml/GetCapabilities/GetCapabilities.xml",
+            "service": "SOS",
+            "version": "1.0.0",
+            "binding": "/pox",
+            "operation": "GetCapabilities",
+            "title": "All Sections",
+            "headers": {
+                "Content-Type": "text/xml"
+            },
+            "method": "POST"
+        },
+        {
+            "request": "static/examples/sos_v100/m1.0/requests_xml/DescribeSensor/DescribeSensor-Network.xml",
+            "service": "SOS",
+            "version": "1.0.0",
+            "binding": "/pox",
+            "operation": "DescribeSensor",
+            "title": "Network",
+            "headers": {
+                "Content-Type": "text/xml"
+            },
+            "method": "POST"
+        },
+        {
+            "request": "static/examples/sos_v100/m1.0/requests_xml/DescribeSensor/DescribeSensor-Station.xml",
+            "service": "SOS",
+            "version": "1.0.0",
+            "binding": "/pox",
+            "operation": "DescribeSensor",
+            "title": "Station",
+            "headers": {
+                "Content-Type": "text/xml"
+            },
+            "method": "POST"
+        },
+        {
+            "request": "static/examples/sos_v100/m1.0/requests_xml/DescribeSensor/DescribeSensor-Sensor.xml",
+            "service": "SOS",
+            "version": "1.0.0",
+            "binding": "/pox",
+            "operation": "DescribeSensor",
+            "title": "Sensor",
+            "headers": {
+                "Content-Type": "text/xml"
+            },
+            "method": "POST"
+        },
+        {
+            "request": "static/examples/sos_v100/m1.0/requests_xml/GetObservation/GetObservation-Network.xml",
+            "service": "SOS",
+            "version": "1.0.0",
+            "binding": "/pox",
+            "operation": "GetObservation",
+            "title": "Network",
+            "headers": {
+                "Content-Type": "text/xml"
+            },
+            "method": "POST"
+        },
+        {
+            "request": "static/examples/sos_v100/m1.0/requests_xml/GetObservation/GetObservation-Network-SpatialFilter.xml",
+            "service": "SOS",
+            "version": "1.0.0",
+            "binding": "/pox",
+            "operation": "GetObservation",
+            "title": "Network - Spatial Filter",
+            "headers": {
+                "Content-Type": "text/xml"
+            },
+            "method": "POST"
+        },
+        {
+            "request": "static/examples/sos_v100/m1.0/requests_xml/GetObservation/GetObservation-Network-TemporalFilter.xml",
+            "service": "SOS",
+            "version": "1.0.0",
+            "binding": "/pox",
+            "operation": "GetObservation",
+            "title": "Network - Temporal Filter",
+            "headers": {
+                "Content-Type": "text/xml"
+            },
+            "method": "POST"
+        },
+        {
+            "request": "static/examples/sos_v100/m1.0/requests_xml/GetObservation/GetObservation-Network-TemporalFilter-Latest.xml",
+            "service": "SOS",
+            "version": "1.0.0",
+            "binding": "/pox",
+            "operation": "GetObservation",
+            "title": "Network - Temporal Filter - Latest",
+            "headers": {
+                "Content-Type": "text/xml"
+            },
+            "method": "POST"
+        },        
+        {
+            "request": "static/examples/sos_v100/m1.0/requests_xml/GetObservation/GetObservation-SingleStation-TimeSeries.xml",
+            "service": "SOS",
+            "version": "1.0.0",
+            "binding": "/pox",
+            "operation": "GetObservation",
+            "title": "Single Station - TimeSeries",
+            "headers": {
+                "Content-Type": "text/xml"
+            },
+            "method": "POST"
+        },
+        {
+            "request": "static/examples/sos_v100/m1.0/requests_xml/GetObservation/GetObservation-SingleStation-TimeSeries-Netcdf.xml",
+            "service": "SOS",
+            "version": "1.0.0",
+            "binding": "/pox",
+            "operation": "GetObservation",
+            "title": "Single Station - TimeSeries - Netcdf",
+            "headers": {
+                "Content-Type": "text/xml"
+            },
+            "method": "POST"
+        },
+        {
+            "request": "static/examples/sos_v100/m1.0/requests_xml/GetObservation/GetObservation-SingleStation-TimeSeriesProfile-Netcdf.xml",
+            "service": "SOS",
+            "version": "1.0.0",
+            "binding": "/pox",
+            "operation": "GetObservation",
+            "title": "Single Station - TimeSeriesProfile - Netcdf",
+            "headers": {
+                "Content-Type": "text/xml"
+            },
+            "method": "POST"
+        },                
+        {
+            "request": "static/examples/sos_v100/m1.0/requests_xml/GetObservation/GetObservation-MultiStation-TimeSeries.xml",
+            "service": "SOS",
+            "version": "1.0.0",
+            "binding": "/pox",
+            "operation": "GetObservation",
+            "title": "Multi Station - TimeSeries",
+            "headers": {
+                "Content-Type": "text/xml"
+            },
+            "method": "POST"
+        },
+        {
+            "request": "static/examples/sos_v100/m1.0/requests_xml/GetObservation/GetObservation-SingleSensor-TimeSeries.xml",
+            "service": "SOS",
+            "version": "1.0.0",
+            "binding": "/pox",
+            "operation": "GetObservation",
+            "title": "Single Sensor - TimeSeries",
+            "headers": {
+                "Content-Type": "text/xml"
+            },
+            "method": "POST"
+        },
+        {
+            "request": "static/examples/sos_v100/m1.0/requests_xml/GetObservation/GetObservation-OtherOffering-TimeSeries.xml",
+            "service": "SOS",
+            "version": "1.0.0",
+            "binding": "/pox",
+            "operation": "GetObservation",
+            "title": "Other Offering - TimeSeries",
+            "headers": {
+                "Content-Type": "text/xml"
+            },
+            "method": "POST"
+        },
+        {
+            "request": "static/examples/sos_v100/m1.0/requests_xml/GetObservation/GetObservation-MultiStation-TimeSeriesProfile.xml",
+            "service": "SOS",
+            "version": "1.0.0",
+            "binding": "/pox",
+            "operation": "GetObservation",
+            "title": "Multi Station - TimeSeriesProfile",
+            "headers": {
+                "Content-Type": "text/xml"
+            },
+            "method": "POST"
+        },
+        {
+            "request": "static/examples/sos_v20/requests_xml/GetObservation/GetObservation-SingleStation-TimeSeries-Json.xml",
+            "service": "SOS",
+            "version": "2.0.0",
+            "binding": "/pox",
+            "operation": "GetObservation",
+            "title": "Single Station - TimeSeries - Json",
+            "headers": {
+                "Content-Type": "text/xml"
+            },
+            "method": "POST"
+        },
+        {
+            "request": "static/examples/sos_v20/requests_xml/Transactional/InsertSensor-Network.xml",
+            "service": "SOS",
+            "version": "2.0.0",
+            "binding": "/pox",
+            "operation": "InsertSensor",
+            "title": "Network",
+            "headers": {
+                "Content-Type": "text/xml"
+            },
+            "method": "POST"
+        },
+        {
+            "request": "static/examples/sos_v20/requests_xml/Transactional/InsertSensor-Station.xml",
+            "service": "SOS",
+            "version": "2.0.0",
+            "binding": "/pox",
+            "operation": "InsertSensor",
+            "title": "Station",
+            "headers": {
+                "Content-Type": "text/xml"
+            },
+            "method": "POST"
+        },
+        {
+            "request": "static/examples/sos_v20/requests_xml/Transactional/InsertSensor-Sensor.xml",
+            "service": "SOS",
+            "version": "2.0.0",
+            "binding": "/pox",
+            "operation": "InsertSensor",
+            "title": "Sensor",
+            "headers": {
+                "Content-Type": "text/xml"
+            },
+            "method": "POST"
+        },
+        {
+            "request": "static/examples/sos_v20/requests_xml/Transactional/UpdateSensorDescription.xml",
+            "service": "SOS",
+            "version": "2.0.0",
+            "binding": "/pox",
+            "operation": "UpdateSensorDescription",
+            "headers": {
+                "Content-Type": "text/xml"
+            },
+            "method": "POST"
+        },
+        {
+            "request": "static/examples/sos_v20/requests_xml/Transactional/InsertObservation_Measurement.xml",
+            "service": "SOS",
+            "version": "2.0.0",
+            "binding": "/pox",
+            "operation": "InsertObservation",
+            "title": "Measurement",
+            "headers": {
+                "Content-Type": "text/xml"
+            },
+            "method": "POST"
+        },
+        {
+            "request": "static/examples/sos_v20/requests_xml/Transactional/InsertObservation_SplitMeasurement.xml",
+            "service": "SOS",
+            "version": "2.0.0",
+            "binding": "/pox",
+            "operation": "InsertObservation",
+            "title": "Split Measurements",
+            "headers": {
+                "Content-Type": "text/xml"
+            },
+            "method": "POST"
+        }
+    ]
+}

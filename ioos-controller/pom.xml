@@ -1,0 +1,41 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.n52.sensorweb.sos</groupId>
+    <artifactId>52n-sos-ioos</artifactId>
+    <version>0.8.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>ioos-controller</artifactId>
+  <name>52North SOS IOOS Controller</name>
+	<dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>admin-controller</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>test-data-ioos</artifactId>
+        </dependency>                
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+        </dependency>        
+
+        <!-- remove these once upstream upgrades to spring-security 3.2.0.RELEASE -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>3.2.0.RELEASE</version>
+        </dependency>         
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>3.2.0.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-expression</artifactId>
+            <version>3.2.0.RELEASE</version>
+        </dependency>      
+	</dependencies>
+</project>

@@ -1,0 +1,77 @@
+RELEASE NOTES
+
+Changes since last stable release
+==================================
+ 
+ --- New features ---
+ 
+ --- Changes ---
+      
+ --- Fixed bugs --- 
+
+Release 0.7.6
+==================================
+ 
+ --- Changes ---
+
+    * Optimized cache loading (now 25x faster)
+    * Hibernate mappings in datasource.properties can now be classpath relative
+
+Release 0.7.5
+==================================
+ 
+ --- Changes ---
+ 
+    * Changed data model to use new series concept
+    * Added spatial filtering profile mapping for later use
+
+ --- Fixed bugs ---
+
+    * Added application/json Accept header to json KVP example request 
+
+Release 0.7.4
+==================================
+ 
+ --- Changes ---
+ 
+    * Implemented netCDF encoder (CF/ACDD/NODC/IOOS conventions)
+    * Enabled JSON observation encoder
+
+Release 0.7.3
+==================================
+ 
+ --- Changes ---
+ 
+    * Enabled Oracle datastore
+    * Sort GetCap OperationsMetadata by URL for consistent order
+    * Disabled 'text/xml; subtype="sensorML/1.0.1"' outputFormat by default
+     
+ --- Fixed bugs --- 
+
+    * [Bug 964] KVP requests should require the service parameter
+        https://bugzilla.52north.org/show_bug.cgi?id=964
+        https://code.google.com/p/52n-sos-ioos-issues/issues/detail?id=1
+ 
+Release 0.7.2
+==================================
+     
+ --- Fixed bugs --- 
+
+    * Fixed duplicate sml namespace on abstract process during SensorML member decoding
+
+Release 0.7.1
+==================================
+ 
+ --- New features ---
+ 
+    * Sanity check request parameter in KVP requests
+    * Preserve z coordinate (enable timeSeriesProfile) in H2 in-memory powered demo instances
+
+ --- Changes ---   
+     
+    * Reduce logging noise
+     
+ --- Fixed bugs ---
+ 
+    * Fixed duplicate namespace encoding in DescribeSensor's swe:envelope (more to come)
+    * [Bug 943] Race condition between offering cache update task and GeometryHandler settings on startup

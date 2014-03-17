@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sos:GetResultTemplate service="SOS" version="2.0.0"
+    xmlns:sos="http://www.opengis.net/sos/2.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.opengis.net/sos/2.0 http://schemas.opengis.net/sos/2.0/sos.xsd">
+    <sos:offering>urn:ioos:sensor:test:wmo41001:watertemp1</sos:offering>
+    <sos:observedProperty>http://mmisw.org/ont/cf/parameter/sea_water_temperature</sos:observedProperty>
+</sos:GetResultTemplate>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <groupId>org.n52.sensorweb.sos</groupId>
+    <artifactId>52n-sos</artifactId>
+    <version>4.0.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>52n-sos-ioos</artifactId>
+  <version>0.8.1-SNAPSHOT</version>
+  <name>52North Sensor Observation Service for IOOS</name>
+  <description>52North Sensor Observation Service for IOOS</description>
+  <packaging>pom</packaging>
+  <modules>  
+    <module>coding-ioos</module>
+    <module>coding-ioos-netcdf</module>
+    <module>test-data-ioos</module>    
+    <module>ioos-controller</module>    
+    <module>webapp-ioos</module>
+    <module>password-hasher</module>    
+    <module>site-ioos</module>    
+  </modules>
+  
+  <properties>
+    <config.logger.fileappender.filename>52n-sos-ioos-webapp</config.logger.fileappender.filename>
+    <n52.sos.version>${project.parent.version}</n52.sos.version>
+    <maven.build.timestamp.format>yyyy-MM-dd HH:mm z</maven.build.timestamp.format>
+  </properties>
+  
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>coding-ioos</artifactId>
+        <version>${project.version}</version>    
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>coding-ioos-netcdf</artifactId>
+        <version>${project.version}</version>
+      </dependency>      
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>test-data-ioos</artifactId>
+        <version>${project.version}</version>    
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>ioos-controller</artifactId>
+        <version>${project.version}</version>    
+      </dependency>      
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>webapp</artifactId>
+        <version>${project.parent.version}</version>
+      </dependency>      
+      <dependency>
+        <groupId>com.axiomalaska</groupId>
+        <artifactId>ioos-sos-common</artifactId>
+        <version>0.1-SNAPSHOT</version>    
+      </dependency>    
+      <dependency>
+        <groupId>com.axiomalaska</groupId>
+        <artifactId>phenomena</artifactId>
+        <version>0.2-SNAPSHOT</version>      
+      </dependency>
+      <dependency>
+        <groupId>com.axiomalaska</groupId>
+        <artifactId>ioos-sos-validator</artifactId>
+        <version>1.0-SNAPSHOT</version>      
+      </dependency>         
+    </dependencies>
+  </dependencyManagement>
+  
+  <repositories>
+    <repository>
+      <id>n52-releases</id>
+      <name>52n Releases</name>
+      <url>http://52north.org/maven/repo/releases</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>n52-snapshots</id>
+      <name>52n Snapshots</name>
+      <url>http://52north.org/maven/repo/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>axiom_public_releases</id>
+      <name>Axiom Releases</name>
+      <url>http://nexus.axiomalaska.com/nexus/content/repositories/public-releases</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>      
+    </repository>
+    <repository>
+      <id>axiom_public_snapshots</id>
+      <name>Axiom Snapshots</name>
+      <url>http://nexus.axiomalaska.com/nexus/content/repositories/public-snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>      
+    </repository>    
+  </repositories>
+  
+  <build>
+    <plugins>
+      <!-- disable maven-notice-plugin execution for now -->
+      <plugin>
+        <groupId>org.jasig.maven</groupId>
+        <artifactId>maven-notice-plugin</artifactId>
+        <version>1.0.6.1</version>
+        <executions>
+          <execution>
+            <id>check-license</id>
+            <phase />
+          </execution>
+        </executions>
+      </plugin>  
+    </plugins>
+  </build>
+</project>

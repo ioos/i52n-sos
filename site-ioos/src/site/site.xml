@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="IOOS 52 North SOS">
+  
+  <skin>
+    <groupId>org.apache.maven.skins</groupId>
+    <artifactId>maven-default-skin</artifactId>
+    <version>1.1</version>
+  </skin>
+
+  <bannerLeft>
+      <name>52North</name>
+      <src>images/logos/52n_logo.gif</src>
+      <href>http://www.52north.org</href>
+  </bannerLeft>
+
+  <bannerRight>
+      <name>IOOS</name>
+      <src>images/logos/ioos_logo.jpg</src>
+      <href>http://www.ioos.gov</href>
+  </bannerRight>
+
+  <body>
+    <menu ref="reports" />
+    
+    <links>
+        <item name="IOOS" href="http://www.ioos.gov" />    
+    </links>
+    
+    <menu name="Resources">
+      <item name="Home" href="index.html" />
+      <item name="Install" href="install.html" />
+      <item name="Upgrade" href="upgrade.html" />
+      <item name="Test Data" href="testdata.html" />      
+      <item name="Populating" href="populating.html" />
+      <item name="Concepts" href="concepts.html" />
+	  <item name="Bleeding Edge Demo" href="http://ioossos.axiomalaska.com/52n-sos-ioos-dev" target="_blank" />      
+	  <item name="Stable Demo" href="http://ioossos.axiomalaska.com/52n-sos-ioos-stable" target="_blank" />
+      <item name="Download Bleeding Edge WAR" href="download/52n-sos-ioos-${project.version}.war" />
+      <item name="Download Stable WAR" href="download/52n-sos-ioos-${n52IoosStableVersion}.war" />
+      <item name="Release Notes" href="RELEASE-NOTES.txt" />
+    </menu>
+    
+    <menu name="52North Links">
+      <item name="52n SOS Home" href="http://52north.org/sos" />      
+      <item name="52n SOS 4.0 Doc Wiki" href="https://wiki.52north.org/bin/view/SensorWeb/SensorObservationServiceIVDocumentation" />
+      <item name="52n SOS 4.0 Dev Wiki" href="https://wiki.52north.org/bin/view/SensorWeb/SensorObservationServiceIV" />      
+    </menu>
+    
+  </body>
+</project>

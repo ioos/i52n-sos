@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sos:GetResult service="SOS" version="2.0.0"
+    xmlns:sos="http://www.opengis.net/sos/2.0"
+    xmlns:fes="http://www.opengis.net/fes/2.0"
+    xmlns:gml="http://www.opengis.net/gml/3.2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.opengis.net/sos/2.0 http://schemas.opengis.net/sos/2.0/sos.xsd">
+    <sos:offering>urn:ioos:sensor:test:wmo41001:watertemp1</sos:offering>
+    <sos:observedProperty>http://mmisw.org/ont/cf/parameter/sea_water_temperature</sos:observedProperty>
+    <sos:temporalFilter>
+        <fes:During>
+            <fes:ValueReference>phenomenonTime</fes:ValueReference>
+            <gml:TimePeriod gml:id="tp">
+                <gml:beginPosition>2012-11-19T13:32:00Z</gml:beginPosition>
+                <gml:endPosition>2012-11-19T13:40:00Z</gml:endPosition>            
+            </gml:TimePeriod>
+        </fes:During>
+    </sos:temporalFilter>      
+</sos:GetResult>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GetObservation service="SOS" version="1.0.0" 
+    xmlns="http://www.opengis.net/sos/1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.opengis.net/sos/1.0
+    http://schemas.opengis.net/sos/1.0.0/sosGetObservation.xsd">    
+    <offering>urn:ioos:network:test:all</offering>
+    <procedure>urn:ioos:station:test:1</procedure>
+    <procedure>urn:ioos:station:test:2</procedure>
+    <observedProperty>http://mmisw.org/ont/cf/parameter/sea_water_temperature</observedProperty>  
+    <responseFormat>text/xml; subtype=&quot;om/1.0.0/profiles/ioos_sos/1.0&quot;</responseFormat>
+</GetObservation>
