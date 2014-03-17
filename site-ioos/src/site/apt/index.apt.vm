@@ -3,8 +3,8 @@ IOOS 52 North SOS
   This is the project page for the IOOS customized version of the
    {{{http://52north.org/sos}52°North Sensor Observation Service (SOS)}}.
 
-  The IOOS 52°North SOS is a customized version of the most current version (currently 4.0.0-SNAPSHOT)
-  of the 52°North (52n) SOS. The IOOS custom modules provide custom encoding modules and an IOOS format test data generator.
+  The IOOS 52°North SOS is a customized version of the {{{https://github.com/52North/SOS}52°North (52n) SOS}}.
+  The IOOS custom modules provide custom encoding modules and an IOOS format test data generator.
 
   The IOOS custom encoding formats are:
 
@@ -103,6 +103,8 @@ Known Issues
 Other resources
 
   52North resources:
+  
+  * {{{https://github.com/52North/SOS/tree/develop}52n SOS GitHub repository}}
   
   * {{{http://52north.org/sos}52n SOS Home}}
   

@@ -120,9 +120,9 @@
           </reportSet>
         </reportSets>        
         <configuration>
-          <webAccessUrl>https://svn.52north.org/svn/swe/main/SOS/Services/52n-sos-ioos/trunk/</webAccessUrl>
-          <anonymousConnection>scm:svn:https://svn.52north.org/svn/swe/main/SOS/Services/52n-sos-ioos/trunk/</anonymousConnection>
-          <developerConnection>scm:svn:https://svn.52north.org/svn/swe/main/SOS/Services/52n-sos-ioos/trunk/</developerConnection>
+          <webAccessUrl>https://github.com/ioos/i52n-sos</webAccessUrl>
+          <anonymousConnection>scm:git@github.com:ioos/i52n-sos.git</anonymousConnection>
+          <developerConnection>scm:git@github.com:ioos/i52n-sos.git</developerConnection>
         </configuration>
       </plugin>
       <plugin>
