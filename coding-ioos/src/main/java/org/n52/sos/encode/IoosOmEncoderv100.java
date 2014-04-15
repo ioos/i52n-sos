@@ -192,11 +192,11 @@ public class IoosOmEncoderv100 implements ObservationEncoder<XmlObject, Object>{
         XmlHelper.append( xb_disclaimerMetadataProperty, xb_disclaimerMetadataDoc );        
 
         //ioos template version        
-        MetaDataPropertyType xb_templateVersionMetadataProperty = xb_obsCol.addNewMetaDataProperty();;
+        MetaDataPropertyType xb_templateVersionMetadataProperty = xb_obsCol.addNewMetaDataProperty();
         xb_templateVersionMetadataProperty.set( IoosEncoderUtil.getIoosVersionMetaData() );
 
         //software version        
-        MetaDataPropertyType xb_softwareVersionMetadataProperty = xb_obsCol.addNewMetaDataProperty();;
+        MetaDataPropertyType xb_softwareVersionMetadataProperty = xb_obsCol.addNewMetaDataProperty();
         xb_softwareVersionMetadataProperty.set( IoosEncoderUtil.getSoftwareVersionMetaData() );
         
         if (sosObservationCollection != null) {
