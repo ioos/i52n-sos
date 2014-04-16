@@ -34,8 +34,6 @@
               <artifactId>webapp</artifactId>
               <excludes>
                 <exclude>configuration.db</exclude>
-                <exclude>WEB-INF/views/common/logotitle.jsp</exclude>
-                <exclude>WEB-INF/views/common/header.jsp</exclude>
                 <exclude>WEB-INF/views/admin/index.jsp</exclude>
                 <exclude>static/conf/client-config.json</exclude>
                 <exclude>static/examples/**</exclude>
