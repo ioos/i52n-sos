@@ -193,7 +193,7 @@
   </mailingLists>
   
   <issueManagement>
-    <system>Google Code</system>
-    <url>https://code.google.com/p/52n-sos-ioos-issues/issues</url>
+    <system>GitHub Issues</system>
+    <url>https://github.com/ioos/i52n-sos/issues</url>
   </issueManagement>
 </project>
