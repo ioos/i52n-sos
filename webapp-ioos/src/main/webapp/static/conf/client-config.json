@@ -109,6 +109,22 @@
             "Accept":"application/json"
           },          
           "method": "GET"
+        },
+        {
+            "param":{
+                "service":"SOS",
+                "version":"2.0.0",
+                "request":"DeleteSensor",
+                "procedure":"urn:ioos:station:test:9"
+            },
+            "service":"SOS",
+            "version":"2.0.0",
+            "binding": "application/x-kvp",
+            "operation":"DeleteSensor",
+            "headers":{
+                "Accept":"application/xml"
+            },
+            "method":"GET"
         },        
         {
             "request": "static/examples/sos_v100/m1.0/requests_xml/GetCapabilities/GetCapabilities.xml",
@@ -372,6 +388,17 @@
                 "Content-Type": "text/xml"
             },
             "method": "POST"
-        }
+        },
+        {
+            "request": "static/examples/sos_v20/requests_xml/Transactional/DeleteSensor.xml",
+            "service": "SOS",
+            "version": "2.0.0",
+            "binding": "/pox",
+            "operation": "DeleteSensor",
+            "headers": {
+                "Content-Type": "text/xml"
+            },
+            "method": "POST"
+        }        
     ]
 }
