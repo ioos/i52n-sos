@@ -273,7 +273,7 @@ public class IoosSensorMLEncoderv101 extends SensorMLEncoderv101 {
             System system = new System();
             component.setProcess(system);
             
-            if (asset instanceof StationAsset){    
+            if (asset instanceof StationAsset){
                 //stationID
                 system.addIdentifier(new SmlIdentifier(IoosDefConstants.STATION_ID,
                         IoosDefConstants.STATION_ID_DEF, asset.getAssetId()));
@@ -315,6 +315,9 @@ public class IoosSensorMLEncoderv101 extends SensorMLEncoderv101 {
                         aggregateProcedureIos(childSystem))));
                 
             } else if (asset instanceof SensorAsset) {
+                //TODO enable this once pull request is accepted
+                //system.setGmlId(asset.getAssetShortId());
+
                 //sensorID, use fake definition to signal custom encoder method that it should be an href
                 system.addIdentifier(new SmlIdentifier(IoosDefConstants.SENSOR_ID,
                         HREF_FLAG, asset.getAssetId()));
