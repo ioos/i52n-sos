@@ -94,7 +94,7 @@ public class IoosSensorMLEncoderv101 extends SensorMLEncoderv101 {
             IOOS_SENSORML_CONTENT_TYPE_M10.toString(), SosProcedureDescription.class, AbstractSensorML.class);
 
     private static final Map<String, Map<String, Set<String>>> SUPPORTED_PROCEDURE_DESCRIPTION_FORMATS = getFormats();
-    
+
     @Override
     public Set<EncoderKey> getEncoderKeyType() {
         return Collections.unmodifiableSet(ENCODER_KEYS);
@@ -159,10 +159,13 @@ public class IoosSensorMLEncoderv101 extends SensorMLEncoderv101 {
     }
 
     private void addServiceMetadata(SensorMLDocument xbSmlDoc) {
-        Capabilities xbCapabilities = xbSmlDoc.getSensorML().addNewCapabilities();
-        xbCapabilities.setName(IoosSosConstants.IOOS_SERVICE_METADATA);
+        removeExistingCapabilities(xbSmlDoc.getSensorML(), IoosSosConstants.IOOS_SERVICE_METADATA);
 
-        SimpleDataRecordType xbSimpleDataRecord = (SimpleDataRecordType) xbCapabilities.addNewAbstractDataRecord()
+        //add new service metadata capabilities if needed
+        Capabilities xbServiceMetadataCapabilities = xbSmlDoc.getSensorML().addNewCapabilities();
+        xbServiceMetadataCapabilities.setName(IoosSosConstants.IOOS_SERVICE_METADATA);            
+
+        SimpleDataRecordType xbSimpleDataRecord = (SimpleDataRecordType) xbServiceMetadataCapabilities.addNewAbstractDataRecord()
                 .substitute(SweConstants.QN_SIMPLEDATARECORD_SWE_101, SimpleDataRecordType.type);
         
         //template version
@@ -191,6 +194,8 @@ public class IoosSensorMLEncoderv101 extends SensorMLEncoderv101 {
     }
 
     private void addObservationTimeRange(String procedure, AbstractProcessType xbAbstractProcess) {
+        removeExistingCapabilities(xbAbstractProcess, IoosSweConstants.OBSERVATION_TIME_RANGE);
+
         Capabilities xbObsTimeRangeCap = xbAbstractProcess.addNewCapabilities();
         xbObsTimeRangeCap.setName(IoosSweConstants.OBSERVATION_TIME_RANGE);
 
@@ -211,11 +216,17 @@ public class IoosSensorMLEncoderv101 extends SensorMLEncoderv101 {
     }
 
     private void addSpatialBounds(String procedure, AbstractProcessType xbAbstractProcess) throws OwsExceptionReport {
+        //remove existing bounded by
+        while (xbAbstractProcess.isSetBoundedBy()) {
+            xbAbstractProcess.unsetBoundedBy();
+        }
+
         Configurator configurator = Configurator.getInstance();
         if (configurator == null || configurator.getCache() == null) {
             //if configurator is null this might be a test, just return
             return;
         }
+
         ContentCache cache = configurator.getCache();
         //assume that the procedure has an equivalent offering (sensors won't have this)
         if (cache.hasEnvelopeForOffering(procedure)) {
@@ -477,5 +488,43 @@ public class IoosSensorMLEncoderv101 extends SensorMLEncoderv101 {
             return new Documentation[] { xbDocumentation };
         }
         return super.createDocumentationArray(sosDocumentation);
-    }    
+    }
+
+    /**
+     * Remove an sml:capabilities from a SensorMLDocument if it exists
+     * @param xbSmlDoc The SensorMLDocument to operate on
+     * @param capabilitiesName Name of the capabilities to remove
+     */
+    private void removeExistingCapabilities(XmlObject xbXmlObject, String capabilitiesName) {
+        Capabilities[] capabilitiesArray = null;
+        if (xbXmlObject instanceof SensorMLDocument.SensorML) {
+            capabilitiesArray = ((SensorMLDocument.SensorML) xbXmlObject).getCapabilitiesArray();
+        } else if (xbXmlObject instanceof AbstractProcessType) {
+            capabilitiesArray = ((AbstractProcessType) xbXmlObject).getCapabilitiesArray();
+        } else {
+            throw new IllegalArgumentException(String.format("Encountered unsupported XmlObject type '%s'",
+                    xbXmlObject.getClass().getSimpleName()));
+        }
+        
+        //remove existing service metadata if found
+        if (capabilitiesArray != null) {
+            boolean fullIteration = false;
+            while (!fullIteration) {
+                for (int i = 0; i < capabilitiesArray.length; i++) {
+                    Capabilities xbCapabilities = capabilitiesArray[i];
+                    if (xbCapabilities.isSetName() && xbCapabilities.getName().equals(capabilitiesName)) {
+                        //remove this capabilities and start the loop over, since there may be others
+                        //and the array index will have shifted after the delete
+                        if (xbXmlObject instanceof SensorMLDocument.SensorML) {
+                            ((SensorMLDocument.SensorML) xbXmlObject).removeCapabilities(i);
+                        } else if (xbXmlObject instanceof AbstractProcessType) {
+                            ((AbstractProcessType) xbXmlObject).removeCapabilities(i);
+                        }
+                        //don't need to check for other types since we already did above
+                    }
+                }
+                fullIteration = true;
+            }
+        }        
+    }
 }
