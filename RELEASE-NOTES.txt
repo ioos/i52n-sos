@@ -5,13 +5,28 @@ Changes since last stable release
  
  --- New features ---
  
- --- Changes ---
- 
-    * Added publisher to test data network SensorML
+ --- Changes ---    
     
  --- Fixed bugs --- 
 
-    * Fixed IOOS SensorML gml:boundedBy (https://code.google.com/p/52n-sos-ioos-issues/issues/detail?id=19) 
+Release 0.8.1
+==================================
+ 
+ --- New features ---
+
+    * Enabled SensorML editing and observable property rename pages in admin menu
+    * Added example DeleteSensor requests
+
+ --- Changes ---
+
+    * Issues now on GitHub (https://github.com/ioos/i52n-sos/issues)
+    * Added publisher to test data network SensorML
+
+ --- Fixed bugs --- 
+
+    * Fixed upstream bug where parent offerings were being reset in the cache during DeleteSensor (https://github.com/52North/SOS/pull/40)
+    * Fixed IOOS SensorML gml:boundedBy (https://code.google.com/p/52n-sos-ioos-issues/issues/detail?id=19)
+    * Component sensor sml:System gml:id is missing in DescribeSensor response (https://github.com/ioos/i52n-sos/issues/7)
 
 Release 0.8.0
 ==================================
