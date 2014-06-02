@@ -896,4 +896,10 @@ public class IoosNetcdfEncoder implements ObservationEncoder<ServiceResponse, Ob
     private static String makeDateSafe(DateTime dt) {
         return dt.toString().replace(":", "");
     }
+
+    @Override
+    public boolean supportsResultStreamingForMergedValues() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 }

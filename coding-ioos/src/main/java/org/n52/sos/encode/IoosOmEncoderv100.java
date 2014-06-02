@@ -320,4 +320,10 @@ public class IoosOmEncoderv100 implements ObservationEncoder<XmlObject, Object>{
         xb_result.set( xb_sweResult );
         return xb_obsDoc;
     }
+
+    @Override
+    public boolean supportsResultStreamingForMergedValues() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 }
