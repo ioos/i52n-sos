@@ -228,6 +228,11 @@
           <artifactId>jetty-util</artifactId>
           <version>${jetty.version}</version>
         </dependency>
+        <dependency>
+          <groupId>org.hamcrest</groupId>
+          <artifactId>hamcrest-all</artifactId>
+          <scope>test</scope>
+        </dependency>        
       </dependencies>
 
       <build>
@@ -256,7 +261,7 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-simple</artifactId>
                 <version>1.7.5</version>
-              </dependency>            
+              </dependency>
             </dependencies>                        
           </plugin>
           <plugin>
