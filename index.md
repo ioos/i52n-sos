@@ -1,7 +1,7 @@
 ---
 ---
 
-This is the project page for the IOOS customized build of the
+This is the project page for the [IOOS](http://www.ioos.noaa.gov/) customized build of the
 [52°North Sensor Observation Service (SOS)](http://52north.org/sos).
 
 i52n-SOS extends the stock upstream [52°North (52n) SOS](https://github.com/52North/SOS) with
