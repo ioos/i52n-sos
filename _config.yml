@@ -1,0 +1,8 @@
+exclude: [Gemfile, Gemfile.lock, params.json]
+defaults:
+  -
+    scope:
+      path: "" # all paths
+    values:
+      layout: default
+name: i52n-SOS
