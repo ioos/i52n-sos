@@ -11,14 +11,13 @@
   <name>52North Sensor Observation Service for IOOS</name>
   <description>52North Sensor Observation Service for IOOS</description>
   <packaging>pom</packaging>
-  <modules>  
+  <modules>
     <module>coding-ioos</module>
     <module>coding-ioos-netcdf</module>
-    <module>test-data-ioos</module>    
-    <module>ioos-controller</module>    
+    <module>test-data-ioos</module>
+    <module>ioos-controller</module>
     <module>webapp-ioos</module>
-    <module>password-hasher</module>    
-    <module>site-ioos</module>    
+    <module>password-hasher</module>
   </modules>
   
   <properties>
