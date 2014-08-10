@@ -134,4 +134,26 @@
       </plugin>  
     </plugins>
   </build>
+
+  <scm>
+    <connection>scm:git:https://github.com/ioos/i52n-sos.git</connection>
+    <url>scm:git:https://github.com/ioos/i52n-sos.git</url>
+    <developerConnection>scm:git:https://github.com/ioos/i52n-sos.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
+  <distributionManagement>
+    <repository>
+      <id>axiom_public_releases</id>
+      <name>Axiom Releases</name>
+      <uniqueVersion>false</uniqueVersion>
+      <url>http://nexus.axiomalaska.com/nexus/content/repositories/public-releases</url>
+    </repository>
+    <snapshotRepository>
+      <id>axiom_public_snapshots</id>
+      <name>Axiom Snapshots</name>
+      <uniqueVersion>false</uniqueVersion>
+      <url>http://nexus.axiomalaska.com/nexus/content/repositories/public-snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
 </project>
