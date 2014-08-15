@@ -33,8 +33,8 @@ import org.n52.sos.ogc.ows.OwsExceptionReport;
 import org.n52.sos.ogc.sos.Sos1Constants;
 import org.n52.sos.ogc.sos.SosConstants;
 import org.n52.sos.request.GetObservationRequest;
+import org.n52.sos.response.BinaryAttachmentResponse;
 import org.n52.sos.response.GetObservationResponse;
-import org.n52.sos.response.ServiceResponse;
 import org.n52.sos.service.Configurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -139,8 +139,8 @@ public class IoosNetcdfEncoderTest extends HibernateTestCase {
         }
         req.setResponseFormat(IoosNetcdfEncoder.CONTENT_TYPE_NETCDF_ZIP.toString());
         GetObservationResponse resp = new GetObservationDAO().getObservation(req);
-        ServiceResponse serviceResponse = new IoosNetcdfEncoder().encode(resp);
-        byte[] zipBytes = serviceResponse.getByteArray();
+        BinaryAttachmentResponse response = new IoosNetcdfEncoder().encode(resp);
+        byte[] zipBytes = response.getBytes();
         List<File> unzippedNetcdfs = Lists.newArrayList();        
         ZipInputStream zipStream = new ZipInputStream(new ByteArrayInputStream(zipBytes));        
         ZipEntry zipEntry;

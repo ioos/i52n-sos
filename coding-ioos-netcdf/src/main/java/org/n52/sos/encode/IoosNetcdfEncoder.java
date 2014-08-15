@@ -54,10 +54,10 @@ import org.n52.sos.ogc.sos.SosConstants;
 import org.n52.sos.ogc.sos.SosConstants.HelperValues;
 import org.n52.sos.ogc.sos.SosProcedureDescription;
 import org.n52.sos.request.DescribeSensorRequest;
+import org.n52.sos.response.BinaryAttachmentResponse;
 import org.n52.sos.response.DescribeSensorResponse;
 import org.n52.sos.response.GetObservationByIdResponse;
 import org.n52.sos.response.GetObservationResponse;
-import org.n52.sos.response.ServiceResponse;
 import org.n52.sos.service.ServiceConstants.SupportedTypeKey;
 import org.n52.sos.util.CollectionHelper;
 import org.n52.sos.util.http.MediaType;
@@ -99,7 +99,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 
-public class IoosNetcdfEncoder implements ObservationEncoder<ServiceResponse, Object>{
+public class IoosNetcdfEncoder implements ObservationEncoder<BinaryAttachmentResponse, Object>{
     private static final Logger LOGGER = LoggerFactory.getLogger(IoosNetcdfEncoder.class);
     private static final String DEFINITION = "definition";
     private static final double DOUBLE_FILL_VALUE = -9999.9;
@@ -186,12 +186,12 @@ public class IoosNetcdfEncoder implements ObservationEncoder<ServiceResponse, Ob
     }
 
     @Override
-    public ServiceResponse encode(Object element) throws OwsExceptionReport {
+    public BinaryAttachmentResponse encode(Object element) throws OwsExceptionReport {
         return encode(element, new EnumMap<HelperValues, String>(HelperValues.class));
     }
 
     @Override
-    public ServiceResponse encode(Object objectToEncode, Map<HelperValues, String> additionalValues)
+    public BinaryAttachmentResponse encode(Object objectToEncode, Map<HelperValues, String> additionalValues)
             throws OwsExceptionReport {
         if (objectToEncode instanceof GetObservationResponse) {
             GetObservationResponse response = (GetObservationResponse) objectToEncode;
@@ -203,7 +203,7 @@ public class IoosNetcdfEncoder implements ObservationEncoder<ServiceResponse, Ob
         throw new UnsupportedEncoderInputException(this, objectToEncode);        
     }
 
-    private ServiceResponse encodeGetObsResponse(List<OmObservation> sosObservationCollection)
+    private BinaryAttachmentResponse encodeGetObsResponse(List<OmObservation> sosObservationCollection)
             throws OwsExceptionReport{
         List<IoosSosObservation> ioosSosObsList = IoosEncoderUtil.createIoosSosObservations( this,
                 sosObservationCollection );
@@ -215,7 +215,7 @@ public class IoosNetcdfEncoder implements ObservationEncoder<ServiceResponse, Ob
         return encodeIoosObsToNetcdfZip(ioosSosObsList);
     }
 
-    private ServiceResponse encodeIoosObsToNetcdfZip(List<IoosSosObservation> ioosSosObsList) throws OwsExceptionReport {
+    private BinaryAttachmentResponse encodeIoosObsToNetcdfZip(List<IoosSosObservation> ioosSosObsList) throws OwsExceptionReport {
         File tempDir = Files.createTempDir();
         
         for (IoosSosObservation ioosSosObs : ioosSosObsList) {
@@ -224,21 +224,27 @@ public class IoosNetcdfEncoder implements ObservationEncoder<ServiceResponse, Ob
             }
         }
         
-        ByteArrayOutputStream zipBoas;
+        BinaryAttachmentResponse response = null;
+        ByteArrayOutputStream zipBoas = null;
         try {
             zipBoas = createZip(tempDir);
+            response = new BinaryAttachmentResponse(zipBoas.toByteArray(), CONTENT_TYPE_NETCDF_ZIP,
+                    String.format(DOWNLOAD_FILENAME_FORMAT, makeDateSafe(new DateTime(DateTimeZone.UTC))));
         } catch (IOException e) {
             throw new NoApplicableCodeException().causedBy(e)
                 .withMessage("Couldn't create netCDF zip file");
+        } finally {
+            if (zipBoas != null) {
+                try {
+                    zipBoas.close();
+                } catch (IOException e) {
+                    //NOOP closing BAOS has no effect anyway
+                }
+            }
+            tempDir.delete();            
         }
-        tempDir.delete();
-        ServiceResponse serviceResponse = new ServiceResponse(zipBoas, CONTENT_TYPE_NETCDF_ZIP);
-        serviceResponse.setSupportsGZip(false);
-        serviceResponse.setHeader(ServiceResponse.HeaderCode.CONTENT_TRANSFER_ENCODING, 
-                ServiceResponse.HeaderCode.CONTENT_TRANSFER_ENCODING_BINARY);
-        serviceResponse.setAttachmentFilename(String.format(DOWNLOAD_FILENAME_FORMAT,
-                makeDateSafe(new DateTime(DateTimeZone.UTC))));
-        return serviceResponse;
+
+        return response;
     }
     
     private void encodeSensorDataToNetcdf(File tempDir, AbstractSensorDataset sensorDataset)
