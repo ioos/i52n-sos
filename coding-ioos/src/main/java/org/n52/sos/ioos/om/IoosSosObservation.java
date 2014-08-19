@@ -1,7 +1,6 @@
 package org.n52.sos.ioos.om;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -16,6 +15,7 @@ import org.n52.sos.ogc.om.OmObservableProperty;
 
 import com.axiomalaska.cf4j.CFFeatureType;
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.SetMultimap;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Point;
@@ -104,8 +104,8 @@ public class IoosSosObservation {
 		return stationPoints.get( station ).iterator().next();
 	}
     
-    public Collection<? extends AbstractSensorDataset> getSensorDatasets(){
-        return sensorDatasetMap.values();
+    public List<? extends AbstractSensorDataset> getSensorDatasets(){
+        return Collections.unmodifiableList(Lists.newArrayList(sensorDatasetMap.values()));
     }
     
     public <T extends AbstractSensorDataset> AbstractSensorDataset getSensorDataset( SensorAsset sensor ){
