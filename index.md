@@ -12,7 +12,9 @@ The IOOS custom encoding formats include:
 * Enhanced GetCapabilitiesResponse (extra metadata)
 * Enhanced SensorML (extra metadata and network/station/sensor hierarchies)
 * O&M and SWE (IOOS m1.0 SOS format)
-* netCDF (CF 1.6/ACDD 1.1/NODC 1.0/IOOS 1.0 conventions, one sensor per netCDF file, output as a zip file)   
+* netCDF (CF 1.6/ACDD 1.1/NODC 1.0/IOOS 1.0 conventions)
+    * application/x-netcdf - single sensor/observed property
+    * application/zip; subtype=x-netcdf - zipped, supports multiple sensors
 
 The IOOS test data:
 
