@@ -117,23 +117,6 @@
       </snapshots>      
     </repository>    
   </repositories>
-  
-  <build>
-    <plugins>
-      <!-- disable maven-notice-plugin execution for now -->
-      <plugin>
-        <groupId>org.jasig.maven</groupId>
-        <artifactId>maven-notice-plugin</artifactId>
-        <version>1.0.6.1</version>
-        <executions>
-          <execution>
-            <id>check-license</id>
-            <phase />
-          </execution>
-        </executions>
-      </plugin>  
-    </plugins>
-  </build>
 
   <scm>
     <connection>scm:git:https://github.com/ioos/i52n-sos.git</connection>
