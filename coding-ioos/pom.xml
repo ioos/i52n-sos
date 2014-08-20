@@ -74,13 +74,13 @@
     </dependency>    
   </dependencies>
 
-  <!--
+  <!-- TODO implement document providers? See IoosCodingSosDocumentProvider -->
+  <!--  
   <build>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.15</version>
         <configuration> 
           <dependenciesToScan>
             <dependency>com.axiomalaska:ioos-sos-validator</dependency>
