@@ -15,17 +15,10 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>test-data-ioos</artifactId>
-        </dependency>                
+        </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
-        </dependency>        
-
-        <!-- remove these once upstream upgrades to spring-security 3.2.0.RELEASE -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aop</artifactId>
-            <version>3.2.0.RELEASE</version>
-        </dependency>   
+        </dependency>
 	</dependencies>
 </project>
