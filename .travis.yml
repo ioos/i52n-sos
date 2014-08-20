@@ -6,5 +6,6 @@ jdk:
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -y libnetcdf-dev
+install: mvn clean verify -Dioos-validate
 notifications:
   flowdock: 7a05b97b59127301baa1b87fe93b3c41
