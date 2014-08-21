@@ -6,6 +6,8 @@
 	http://schemas.opengis.net/sos/1.0.0/sosGetObservation.xsd">
 	<offering>urn:ioos:network:test:all</offering>
 	<procedure>urn:ioos:station:test:1</procedure>
-	<observedProperty>http://mmisw.org/ont/cf/parameter/air_temperature</observedProperty>	
-	<responseFormat>application/x-netcdf</responseFormat>
+	<procedure>urn:ioos:station:test:2</procedure>	
+	<observedProperty>http://mmisw.org/ont/cf/parameter/air_temperature</observedProperty>
+	<observedProperty>http://mmisw.org/ont/cf/parameter/sea_water_temperature</observedProperty>	
+	<responseFormat>application/zip; subtype=x-netcdf</responseFormat>
 </GetObservation>

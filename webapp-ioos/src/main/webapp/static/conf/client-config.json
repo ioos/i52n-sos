@@ -82,13 +82,36 @@
                 "offering": "urn:ioos:network:test:all",
                 "observedProperty": "http://mmisw.org/ont/cf/parameter/air_temperature",
                 "procedure": "urn:ioos:station:test:1",
-                "responseFormat": "application/zip;subtype=x-netcdf"
+                "responseFormat": "application/x-netcdf"
             },
             "service": "SOS",
             "version": "1.0.0",
             "binding": "/kvp",
             "operation": "GetObservation",
             "title": "TimeSeries - Netcdf",            
+            "method": "GET"
+        },        
+        {
+            "param": {
+                "service": "SOS",
+                "version": "1.0.0",
+                "request": "GetObservation",
+                "offering": "urn:ioos:network:test:all",
+                "observedProperty": [
+                    "http://mmisw.org/ont/cf/parameter/air_temperature",
+                    "http://mmisw.org/ont/cf/parameter/sea_water_temperature"
+                ],
+                "procedure": [
+                    "urn:ioos:station:test:1",
+                    "urn:ioos:station:test:2"
+                ],
+                "responseFormat": "application/zip; subtype=x-netcdf"
+            },
+            "service": "SOS",
+            "version": "1.0.0",
+            "binding": "/kvp",
+            "operation": "GetObservation",
+            "title": "TimeSeries - Zipped Netcdf",            
             "method": "GET"
         },
         {
@@ -240,7 +263,7 @@
             "version": "1.0.0",
             "binding": "/pox",
             "operation": "GetObservation",
-            "title": "Single Station - TimeSeries - Netcdf",
+            "title": "Single Station - TimeSeries - netCDF",
             "headers": {
                 "Content-Type": "text/xml"
             },
@@ -252,7 +275,7 @@
             "version": "1.0.0",
             "binding": "/pox",
             "operation": "GetObservation",
-            "title": "Single Station - TimeSeriesProfile - Netcdf",
+            "title": "Single Station - TimeSeriesProfile - netCDF",
             "headers": {
                 "Content-Type": "text/xml"
             },
@@ -312,12 +335,24 @@
             "version": "2.0.0",
             "binding": "/pox",
             "operation": "GetObservation",
-            "title": "Single Station - TimeSeries - Json",
+            "title": "Single Station - TimeSeries - JSON",
             "headers": {
                 "Content-Type": "text/xml"
             },
             "method": "POST"
         },
+        {
+            "request": "static/examples/sos_v100/m1.0/requests_xml/GetObservation/GetObservation-MultiStation-ZippedNetcdf.xml",
+            "service": "SOS",
+            "version": "1.0.0",
+            "binding": "/pox",
+            "operation": "GetObservation",
+            "title": "Multi Station - Zipped netCDF",
+            "headers": {
+                "Content-Type": "text/xml"
+            },
+            "method": "POST"
+        },        
         {
             "request": "static/examples/sos_v20/requests_xml/Transactional/InsertSensor-Network.xml",
             "service": "SOS",

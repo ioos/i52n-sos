@@ -7,5 +7,5 @@
 	<offering>urn:ioos:network:test:all</offering>
 	<procedure>urn:ioos:station:test:1</procedure>
 	<observedProperty>http://mmisw.org/ont/cf/parameter/sea_water_temperature</observedProperty>	
-	<responseFormat>application/zip;subtype=x-netcdf</responseFormat>
+	<responseFormat>application/x-netcdf</responseFormat>
 </GetObservation>
