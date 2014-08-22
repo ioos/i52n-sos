@@ -371,11 +371,13 @@ public class IoosSwe2ResultEncoder {
             xbSubSensorField.setName(IoosSweConstants.PROFILE_HEIGHTS);
             xbDataArray.setDefinition(IoosSweConstants.PROFILE_HEIGHTS_DEF);
             xbElementType.setName(IoosSweConstants.PROFILE_DEFINITION);
+            xbProfileDataRecord.setDefinition(IoosSweConstants.PROFILE_HEIGHT_DEF);
             xbHeightField.setName(IoosCfConstants.HEIGHT);                        
         } else if (firstSubSensor instanceof BinProfileSubSensor) {
             xbSubSensorField.setName(IoosSweConstants.PROFILE_BINS);
             xbDataArray.setDefinition(IoosSweConstants.PROFILE_BINS_DEF);
             xbElementType.setName(IoosSweConstants.PROFILE_BIN_DESCRIPTION);
+            xbProfileDataRecord.setDefinition(IoosSweConstants.PROFILE_BIN_DEF);
             xbHeightField.setName(IoosSweConstants.BIN_CENTER);
             
             Field xbBinEdgesField = xbProfileDataRecord.addNewField();
