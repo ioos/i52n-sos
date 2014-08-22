@@ -38,6 +38,7 @@ import org.apache.xmlbeans.XmlOptions;
 import org.n52.sos.exception.ows.InvalidParameterValueException;
 import org.n52.sos.exception.ows.concrete.UnsupportedEncoderInputException;
 import org.n52.sos.ioos.Ioos52nConstants;
+import org.n52.sos.ioos.IoosUtil;
 import org.n52.sos.ioos.IoosXmlOptionCharEscapeMap;
 import org.n52.sos.ioos.asset.AbstractAsset;
 import org.n52.sos.ioos.asset.FakeStationAsset;
@@ -149,7 +150,7 @@ public class IoosSwe2ResultEncoder {
             Point stationPoint = ioosSosObs.getSingularStationPoint( station );
             
             if( stationPoint != null ){	
-        		IoosEncoderUtil.checkSrid( stationPoint.getSRID(), LOGGER );        
+        		IoosUtil.checkSrid( stationPoint.getSRID(), LOGGER );        
             }
             
             createLocationVector(xb_staticStationDataRecord, station, stationPoint);

@@ -28,6 +28,7 @@ import org.n52.sos.binding.BindingRepository;
 import org.n52.sos.cache.ContentCache;
 import org.n52.sos.exception.CodedException;
 import org.n52.sos.exception.ows.NoApplicableCodeException;
+import org.n52.sos.ioos.Ioos52nSosVersionHandler;
 import org.n52.sos.ioos.asset.AbstractAsset;
 import org.n52.sos.ioos.asset.AssetResolver;
 import org.n52.sos.ioos.asset.NetworkAsset;

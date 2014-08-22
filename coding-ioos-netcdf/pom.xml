@@ -10,12 +10,7 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>coding-ioos</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>edu.ucar</groupId>
-      <artifactId>netcdf</artifactId>
-      <version>4.3.20</version>
+      <artifactId>api-ioos</artifactId>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -64,11 +59,4 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  
-  <repositories>
-    <repository>
-      <id>unidata-releases</id>
-      <url>https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/</url>
-    </repository>
-  </repositories>
 </project>

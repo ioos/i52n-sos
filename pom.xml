@@ -12,6 +12,7 @@
   <description>52North Sensor Observation Service for IOOS</description>
   <packaging>pom</packaging>
   <modules>
+    <module>api-ioos</module>  
     <module>coding-ioos</module>
     <module>coding-ioos-netcdf</module>
     <module>test-data-ioos</module>
@@ -28,6 +29,11 @@
   
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>api-ioos</artifactId>
+        <version>${project.version}</version>    
+      </dependency>    
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>coding-ioos</artifactId>
@@ -67,7 +73,17 @@
         <groupId>com.axiomalaska</groupId>
         <artifactId>ioos-sos-validator</artifactId>
         <version>1.0.0</version>      
-      </dependency>         
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>3.1</version>
+      </dependency>
+      <dependency>
+        <groupId>edu.ucar</groupId>
+        <artifactId>netcdf</artifactId>
+        <version>4.3.22</version>
+      </dependency>      
     </dependencies>
   </dependencyManagement>
   
@@ -93,6 +109,10 @@
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
+    </repository>
+    <repository>
+      <id>unidata-releases</id>
+      <url>https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/</url>
     </repository>
     <repository>
       <id>axiom_public_releases</id>

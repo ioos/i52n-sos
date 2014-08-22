@@ -1,4 +1,4 @@
-package org.n52.sos.encode;
+package org.n52.sos.ioos;
 
 import java.io.IOException;
 import java.io.InputStream;

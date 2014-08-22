@@ -20,6 +20,7 @@ import org.n52.sos.ds.OperationDAORepository;
 import org.n52.sos.exception.CodedException;
 import org.n52.sos.exception.ows.NoApplicableCodeException;
 import org.n52.sos.exception.ows.concrete.UnsupportedEncoderInputException;
+import org.n52.sos.ioos.IoosUtil;
 import org.n52.sos.ioos.asset.SensorAsset;
 import org.n52.sos.ioos.asset.StationAsset;
 import org.n52.sos.ioos.data.dataset.AbstractSensorDataset;
@@ -191,8 +192,7 @@ public abstract class AbstractIoosNetcdfEncoder implements ObservationEncoder<Bi
 
     private BinaryAttachmentResponse encodeGetObsResponse(List<OmObservation> sosObservationCollection)
             throws OwsExceptionReport{
-        List<IoosSosObservation> ioosSosObsList = IoosEncoderUtil.createIoosSosObservations( this,
-                sosObservationCollection );
+        List<IoosSosObservation> ioosSosObsList = IoosUtil.createIoosSosObservations(sosObservationCollection);
 
         if (ioosSosObsList.isEmpty()) {
             throw new NoApplicableCodeException().withMessage("No feature types to encode.");

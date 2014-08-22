@@ -37,6 +37,7 @@ import org.apache.xmlbeans.XmlObject;
 import org.joda.time.DateTime;
 import org.n52.sos.exception.ows.concrete.UnsupportedEncoderInputException;
 import org.n52.sos.ioos.Ioos52nConstants;
+import org.n52.sos.ioos.IoosUtil;
 import org.n52.sos.ioos.asset.StationAsset;
 import org.n52.sos.ioos.om.IoosSosObservation;
 import org.n52.sos.ogc.gml.GmlConstants;
@@ -202,12 +203,11 @@ public class IoosOmEncoderv100 implements ObservationEncoder<XmlObject, Object>{
         if (sosObservationCollection != null) {
         	if ( sosObservationCollection.size() > 0) {
         		xb_obsCol.addNewBoundedBy();
-                xb_obsCol.setBoundedBy( IoosEncoderUtil.createBoundedBy(IoosEncoderUtil.swapEnvelopeAxisOrder(
-                        IoosEncoderUtil.createEnvelope(sosObservationCollection))));
+                xb_obsCol.setBoundedBy( IoosEncoderUtil.createBoundedBy(IoosUtil.swapEnvelopeAxisOrder(
+                        IoosUtil.createEnvelope(sosObservationCollection))));
                 
                 //add the observation members (one per feature type)
-                List<IoosSosObservation> ioosSosObsList = IoosEncoderUtil.createIoosSosObservations( this,
-                		sosObservationCollection );
+                List<IoosSosObservation> ioosSosObsList = IoosUtil.createIoosSosObservations(sosObservationCollection);
 
 				for( IoosSosObservation ioosSosObs : ioosSosObsList ){
 		        	xb_obsCol.addNewMember().set(encodeIoosObservation(ioosSosObs));
