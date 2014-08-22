@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.n52.sensorweb.sos</groupId>
     <artifactId>52n-sos-ioos</artifactId>
-    <version>0.8.2-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
   </parent>
   <artifactId>coding-ioos-netcdf</artifactId>
   <name>IOOS Netcdf Coding Module for 52North SOS</name>

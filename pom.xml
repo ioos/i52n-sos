@@ -3,11 +3,11 @@
   <parent>
     <groupId>org.n52.sensorweb.sos</groupId>
     <artifactId>52n-sos</artifactId>
-    <version>4.1.0-SNAPSHOT</version>
+    <version>4.1.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>52n-sos-ioos</artifactId>
-  <version>0.8.2-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
   <name>52North Sensor Observation Service for IOOS</name>
   <description>52North Sensor Observation Service for IOOS</description>
   <packaging>pom</packaging>
