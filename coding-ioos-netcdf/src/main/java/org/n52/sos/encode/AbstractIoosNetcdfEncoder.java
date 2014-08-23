@@ -75,9 +75,8 @@ import ucar.nc2.NetcdfFileWriter;
 import ucar.nc2.NetcdfFileWriter.Version;
 import ucar.nc2.Variable;
 import ucar.nc2.constants.CDM;
+import ucar.nc2.constants.CF;
 
-import com.axiomalaska.cf4j.CFFeatureType;
-import com.axiomalaska.cf4j.CFFeatureTypes;
 import com.axiomalaska.cf4j.CFStandardNames;
 import com.axiomalaska.cf4j.constants.ACDDConstants;
 import com.axiomalaska.cf4j.constants.CFConstants;
@@ -228,7 +227,7 @@ public abstract class AbstractIoosNetcdfEncoder implements ObservationEncoder<Bi
         //set fill on, doesn't seem to have any effect though
         writer.setFill(true);
         
-        String featureTypeName = sensorDataset.getFeatureType().getName();
+        String featureTypeName = sensorDataset.getFeatureType().name();
 
         int numTimes = sensorDataset.getTimes().size();        
         //FIXME shouldn't assume that all subsensors are heights (or rename subsensors if they are)
@@ -240,7 +239,7 @@ public abstract class AbstractIoosNetcdfEncoder implements ObservationEncoder<Bi
                 ACDDConstants.UNIDATA_DATASET_DISCOVERY_1_0));
         writer.addGroupAttribute(null, new Attribute(CFConstants.FEATURE_TYPE, featureTypeName));
         writer.addGroupAttribute(null, new Attribute(ACDDConstants.CDM_DATA_TYPE,
-                getCdmDataType(sensorDataset.getFeatureType())));
+                CF.FeatureType.convert(sensorDataset.getFeatureType()).name()));
         writer.addGroupAttribute(null, new Attribute(NODCConstants.NODC_TEMPLATE_VERSION,
                 getNodcTemplateVersion(sensorDataset.getFeatureType())));
         writer.addGroupAttribute(null, new Attribute(ACDDConstants.STANDARD_NAME_VOCABULARY,
@@ -251,7 +250,7 @@ public abstract class AbstractIoosNetcdfEncoder implements ObservationEncoder<Bi
                 sensor.getAssetId()));
         writer.addGroupAttribute(null, new Attribute(ACDDConstants.SUMMARY,
                 "Sensor observations for " + sensor.getAssetId()
-                + ", feature type " + sensorDataset.getFeatureType().getName()));
+                + ", feature type " + sensorDataset.getFeatureType().name()));
         //TODO adjust processing_level?
         writer.addGroupAttribute(null, new Attribute(ACDDConstants.PROCESSING_LEVEL,
                 ACDDConstants.NONE));
@@ -657,48 +656,25 @@ public abstract class AbstractIoosNetcdfEncoder implements ObservationEncoder<Bi
         }
     }
 
-    private String getNodcTemplateVersion(CFFeatureType featureType) throws CodedException{
-        if (featureType.equals(CFFeatureTypes.POINT)) {
-            return NODCConstants.NODC_POINT_TEMPLATE_1_0;
-        } else if (featureType.equals(CFFeatureTypes.PROFILE)) {
-            return NODCConstants.NODC_PROFILE_ORTHOGONAL_TEMPLATE_1_0;
-        } else if (featureType.equals(CFFeatureTypes.TIME_SERIES)) {
+    private String getNodcTemplateVersion(CF.FeatureType featureType) throws CodedException{
+        if (featureType.equals(CF.FeatureType.timeSeries)) {
             return NODCConstants.NODC_TIMESERIES_ORTHOGONAL_TEMPLATE_1_0;
-        } else if (featureType.equals(CFFeatureTypes.TIME_SERIES_PROFILE)) {
+        } else if (featureType.equals(CF.FeatureType.timeSeriesProfile)) {
             return NODCConstants.NODC_TIMESERIESPROFILE_ORTHOGONAL_TEMPLATE_1_0;
         }
-        throw new NoApplicableCodeException().withMessage("Feature type " + featureType.getName()
+        throw new NoApplicableCodeException().withMessage("Feature type " + featureType.name()
                 + " is not supported for netCDF output");
     }
 
-    private String getCdmDataType(CFFeatureType featureType) throws CodedException{
-        if (featureType.equals(CFFeatureTypes.POINT)) {
-            return ACDDConstants.CDM_DATA_TYPE_POINT;
-        } else if (featureType.equals(CFFeatureTypes.PROFILE)) {
-            return ACDDConstants.CDM_DATA_TYPE_PROFILE;
-        } else if (featureType.equals(CFFeatureTypes.TIME_SERIES)) {
-            return ACDDConstants.CDM_DATA_TYPE_STATION;
-        } else if (featureType.equals(CFFeatureTypes.TIME_SERIES_PROFILE)) {
-            return ACDDConstants.CDM_DATA_TYPE_PROFILE;
-        }
-        throw new NoApplicableCodeException().withMessage("Feature type " + featureType.getName()
-                + " is not supported for netCDF output");
-    }
-
-    private String getCfRole(CFFeatureType featureType) throws CodedException {
-        if (featureType.equals(CFFeatureTypes.POINT)) {
-            //point doesn't have a cf_role
-            return null;
-        } else if (featureType.equals(CFFeatureTypes.PROFILE)) {
-            return CFConstants.CF_ROLE_PROFILE_ID;            
-        } else if (featureType.equals(CFFeatureTypes.TIME_SERIES)) {
-            return CFConstants.CF_ROLE_TIMESERIES_ID;
-        } else if (featureType.equals(CFFeatureTypes.TIME_SERIES_PROFILE)) {
-            return CFConstants.CF_ROLE_TIMESERIES_ID;
-        } else if (featureType.equals(CFFeatureTypes.TRAJECTORY) || featureType.equals(CFFeatureTypes.TRAJECTORY_PROFILE)) {
-            return CFConstants.CF_ROLE_TRAJECTORY_ID;
+    private String getCfRole(CF.FeatureType featureType) throws CodedException {
+        if (featureType.equals(CF.FeatureType.timeSeries)) {
+            return CF.TIMESERIES_ID;
+        } else if (featureType.equals(CF.FeatureType.timeSeriesProfile)) {
+            return CF.TIMESERIES_ID;
+        } else if (featureType.equals(CF.FeatureType.trajectory) || featureType.equals(CF.FeatureType.trajectoryProfile)) {
+            return CF.TRAJECTORY_ID;
         } else {
-            throw new NoApplicableCodeException().withMessage("Feature type " + featureType.getName()
+            throw new NoApplicableCodeException().withMessage("Feature type " + featureType.name()
                     + " is not supported for netCDF output");
         }
     }
@@ -853,7 +829,7 @@ public abstract class AbstractIoosNetcdfEncoder implements ObservationEncoder<Bi
         DateTime lastTime = getDateTime(times.get(times.size() - 1));
 
         StringBuffer pathBuffer = new StringBuffer(sensorDataset.getSensor().getAssetShortId());
-        pathBuffer.append("_" + sensorDataset.getFeatureType().getName().toString().toLowerCase());
+        pathBuffer.append("_" + sensorDataset.getFeatureType().name().toLowerCase());
         pathBuffer.append("_" + makeDateSafe(firstTime));
 //        if (!(sensorDataset instanceof IStaticTimeDataset)) {
             pathBuffer.append("_" + makeDateSafe(lastTime));

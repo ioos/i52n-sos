@@ -13,12 +13,13 @@ import org.n52.sos.ogc.gml.time.Time;
 import org.n52.sos.ogc.om.OmObservableProperty;
 import org.n52.sos.ogc.om.values.Value;
 
-import com.axiomalaska.cf4j.CFFeatureType;
+import ucar.nc2.constants.CF;
+
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 public abstract class AbstractSensorDataset implements Comparable<AbstractSensorDataset>{
-    private CFFeatureType featureType;    
+    private CF.FeatureType featureType;    
     private SensorAsset sensor;
 
     private List<OmObservableProperty> obsProps;
@@ -27,7 +28,7 @@ public abstract class AbstractSensorDataset implements Comparable<AbstractSensor
     
     private Map<Time,Map<OmObservableProperty,Map<SubSensor,Value<?>>>> dataValues;
 
-    public AbstractSensorDataset( CFFeatureType featureType, SensorAsset sensor,
+    public AbstractSensorDataset( CF.FeatureType featureType, SensorAsset sensor,
             Map<Time,Map<OmObservableProperty,Map<SubSensor,Value<?>>>> dataValues){
         this.featureType = featureType;
         this.sensor = sensor;
@@ -71,7 +72,7 @@ public abstract class AbstractSensorDataset implements Comparable<AbstractSensor
         return sensor;
     }
 
-    public CFFeatureType getFeatureType() {
+    public CF.FeatureType getFeatureType() {
         return featureType;
     }
 

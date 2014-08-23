@@ -43,7 +43,8 @@ import org.n52.sos.ogc.ows.OwsExceptionReport;
 import org.n52.sos.util.GeometryHandler;
 import org.slf4j.Logger;
 
-import com.axiomalaska.cf4j.CFFeatureTypes;
+import ucar.nc2.constants.CF;
+
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import com.vividsolutions.jts.geom.Envelope;
@@ -394,45 +395,28 @@ public class IoosUtil {
         //build IoosSosObservations        
         List<IoosSosObservation> iSosObsList = new ArrayList<IoosSosObservation>();
 
-        //point
-//        if( pointSensorDatasets.size() > 0 ){
-//            iSosObsList.add( new IoosSosObservation( CFFeatureTypes.POINT, CFFeatureTypes.POINT.getName(),
-//                    pointSamplingTimePeriod, pointSensorDatasets, pointPhenomena, pointEnvelope, pointStationPoints ) );
-//        }
-        
         //timeSeries
         if( timeSeriesSensorDatasets.size() > 0 ){
-            iSosObsList.add( new IoosSosObservation( CFFeatureTypes.TIME_SERIES, CFFeatureTypes.TIME_SERIES.getName(),
-                    timeSeriesSamplingTimePeriod, timeSeriesSensorDatasets, timeSeriesPhenomena, timeSeriesEnvelope,
-                    timeSeriesStationPoints ) );
+            iSosObsList.add( new IoosSosObservation( CF.FeatureType.timeSeries, timeSeriesSamplingTimePeriod,
+                    timeSeriesSensorDatasets, timeSeriesPhenomena, timeSeriesEnvelope, timeSeriesStationPoints ) );
         }
-        
-        //profile
-//        if( profileSensorDatasets.size() > 0 ){
-//            iSosObsList.add( new IoosSosObservation( CFFeatureTypes.PROFILE, CFFeatureTypes.PROFILE.getName(),
-//                    profileSamplingTimePeriod, profileSensorDatasets, profilePhenomena, profileEnvelope,
-//                    profileStationPoints ) );
-//        }
 
         //time series profile
         if( timeSeriesProfileSensorDatasets.size() > 0 ){
-            iSosObsList.add( new IoosSosObservation( CFFeatureTypes.TIME_SERIES_PROFILE, CFFeatureTypes.TIME_SERIES_PROFILE.getName(),
-                    timeSeriesProfileSamplingTimePeriod, timeSeriesProfileSensorDatasets, timeSeriesProfilePhenomena,                    
-                    timeSeriesProfileEnvelope, timeSeriesProfileStationPoints ) );
+            iSosObsList.add( new IoosSosObservation( CF.FeatureType.timeSeriesProfile, timeSeriesProfileSamplingTimePeriod,
+                    timeSeriesProfileSensorDatasets, timeSeriesProfilePhenomena, timeSeriesProfileEnvelope, timeSeriesProfileStationPoints ) );
         }
 
         //trajectory
         if( trajectorySensorDatasets.size() > 0 ){
-            iSosObsList.add( new IoosSosObservation( CFFeatureTypes.TRAJECTORY, CFFeatureTypes.TRAJECTORY.getName(),
-                    trajectorySamplingTimePeriod, trajectorySensorDatasets, trajectoryPhenomena, trajectoryEnvelope,
-                    trajectoryStationPoints ) );
+            iSosObsList.add( new IoosSosObservation( CF.FeatureType.trajectory, trajectorySamplingTimePeriod,
+                    trajectorySensorDatasets, trajectoryPhenomena, trajectoryEnvelope, trajectoryStationPoints ) );
         }
 
         //trajectoryProfile
         if( trajectoryProfileSensorDatasets.size() > 0 ){
-            iSosObsList.add( new IoosSosObservation( CFFeatureTypes.TRAJECTORY_PROFILE, CFFeatureTypes.TRAJECTORY_PROFILE.getName(),
-                    trajectoryProfileSamplingTimePeriod, trajectoryProfileSensorDatasets, trajectoryProfilePhenomena,
-                    trajectoryProfileEnvelope, trajectoryProfileStationPoints ) );
+            iSosObsList.add( new IoosSosObservation( CF.FeatureType.trajectoryProfile, trajectoryProfileSamplingTimePeriod,
+                    trajectoryProfileSensorDatasets, trajectoryProfilePhenomena, trajectoryProfileEnvelope, trajectoryProfileStationPoints ) );
         }        
         return iSosObsList;
     }
@@ -508,5 +492,5 @@ public class IoosUtil {
             }
         }                
         return subSensor;
-    }    
+    }
 }

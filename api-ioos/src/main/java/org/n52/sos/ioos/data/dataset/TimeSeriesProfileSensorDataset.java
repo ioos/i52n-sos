@@ -8,7 +8,7 @@ import org.n52.sos.ogc.gml.time.Time;
 import org.n52.sos.ogc.om.OmObservableProperty;
 import org.n52.sos.ogc.om.values.Value;
 
-import com.axiomalaska.cf4j.CFFeatureTypes;
+import ucar.nc2.constants.CF;
 
 public class TimeSeriesProfileSensorDataset extends AbstractSensorDataset implements IStaticLocationDataset {
     private Double lng;
@@ -16,7 +16,7 @@ public class TimeSeriesProfileSensorDataset extends AbstractSensorDataset implem
     
     public TimeSeriesProfileSensorDataset( SensorAsset sensor, Double lng, Double lat, 
             Map<Time, Map<OmObservableProperty, Map<SubSensor, Value<?>>>> dataValues) {        
-        super( CFFeatureTypes.TIME_SERIES_PROFILE, sensor, dataValues);
+        super( CF.FeatureType.timeSeriesProfile, sensor, dataValues);
         this.lng = lng;
         this.lat = lat;
     }
