@@ -65,7 +65,6 @@ import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
 import ucar.ma2.ArrayDouble;
-import ucar.ma2.ArrayFloat;
 import ucar.ma2.DataType;
 import ucar.ma2.Index;
 import ucar.ma2.IndexIterator;
@@ -98,7 +97,6 @@ public abstract class AbstractIoosNetcdfEncoder implements ObservationEncoder<Bi
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractIoosNetcdfEncoder.class);
     private static final String DEFINITION = "definition";
     private static final double DOUBLE_FILL_VALUE = -9999.9;
-    private static final float FLOAT_FILL_VALUE = -9999.9f;
     private static final int CHUNK_SIZE_TIME = 1000;
 
     private static final Map<SupportedTypeKey, Set<String>> SUPPORTED_TYPES = Collections.singletonMap(
@@ -416,36 +414,36 @@ public abstract class AbstractIoosNetcdfEncoder implements ObservationEncoder<Bi
             vTime.addAttribute(new Attribute(CDM.CHUNK_SIZE, CHUNK_SIZE_TIME));            
         }
         ArrayDouble timeArray = new ArrayDouble(getDimShapes(timeDims));
-        initArrayWithFillValue(timeArray, FLOAT_FILL_VALUE);
+        initArrayWithFillValue(timeArray, DOUBLE_FILL_VALUE);
 
         //lat var
-        Variable vLat = writer.addVariable(null, CFStandardNames.LATITUDE.getName(), DataType.FLOAT, latLngDims);
+        Variable vLat = writer.addVariable(null, CFStandardNames.LATITUDE.getName(), DataType.DOUBLE, latLngDims);
         vLat.addAttribute(new Attribute(CFConstants.STANDARD_NAME, CFStandardNames.LATITUDE.getName()));
         vLat.addAttribute(new Attribute(CFConstants.LONG_NAME, IoosCfConstants.LATITUDE_DEF));
         vLat.addAttribute(new Attribute(CFConstants.UNITS, CFConstants.UNITS_DEGREES_NORTH));
         vLat.addAttribute(new Attribute(CFConstants.AXIS, CFConstants.AXIS_Y));
-        vLat.addAttribute(new Attribute(CFConstants.FILL_VALUE, FLOAT_FILL_VALUE));
+        vLat.addAttribute(new Attribute(CFConstants.FILL_VALUE, DOUBLE_FILL_VALUE));
 
         //lon var
-        Variable vLon = writer.addVariable(null, CFStandardNames.LONGITUDE.getName(), DataType.FLOAT, latLngDims);
+        Variable vLon = writer.addVariable(null, CFStandardNames.LONGITUDE.getName(), DataType.DOUBLE, latLngDims);
         vLon.addAttribute(new Attribute(CFConstants.STANDARD_NAME, CFStandardNames.LONGITUDE.getName()));
         vLon.addAttribute(new Attribute(CFConstants.LONG_NAME, IoosCfConstants.LONGITUDE_DEF));
         vLon.addAttribute(new Attribute(CFConstants.UNITS, CFConstants.UNITS_DEGREES_EAST));
         vLon.addAttribute(new Attribute(CFConstants.AXIS, CFConstants.AXIS_X));
-        vLon.addAttribute(new Attribute(CFConstants.FILL_VALUE, FLOAT_FILL_VALUE));
-        ArrayFloat latArray = null;
-        ArrayFloat lonArray = null;
+        vLon.addAttribute(new Attribute(CFConstants.FILL_VALUE, DOUBLE_FILL_VALUE));
+        ArrayDouble latArray = null;
+        ArrayDouble lonArray = null;
         if (sensorDataset instanceof IStaticLocationDataset) {
             IStaticLocationDataset staticLocationDataset = (IStaticLocationDataset) sensorDataset;
             if (staticLocationDataset.getLat() != null && staticLocationDataset.getLng() != null) {
-                latArray = new ArrayFloat.D1(1);
-                lonArray = new ArrayFloat.D1(1);
+                latArray = new ArrayDouble.D1(1);
+                lonArray = new ArrayDouble.D1(1);
                 Index latIndex = latArray.getIndex();
                 Index lonIndex = lonArray.getIndex();
                 latIndex.set(0);            
                 lonIndex.set(0);
-                latArray.set(latIndex, staticLocationDataset.getLat().floatValue());
-                lonArray.set(lonIndex, staticLocationDataset.getLng().floatValue());
+                latArray.set(latIndex, staticLocationDataset.getLat());
+                lonArray.set(lonIndex, staticLocationDataset.getLng());
             }
         } else {
             //TODO support varying lat/lons
@@ -453,23 +451,23 @@ public abstract class AbstractIoosNetcdfEncoder implements ObservationEncoder<Bi
         }        
         
         //height var
-        Variable vHeight = writer.addVariable(null, CFStandardNames.HEIGHT.getName(), DataType.FLOAT, zDims);
+        Variable vHeight = writer.addVariable(null, CFStandardNames.HEIGHT.getName(), DataType.DOUBLE, zDims);
         vHeight.addAttribute(new Attribute(CFConstants.STANDARD_NAME, CFStandardNames.HEIGHT.getName()));
         vHeight.addAttribute(new Attribute(CFConstants.LONG_NAME, IoosCfConstants.HEIGHT_DEF));
         vHeight.addAttribute(new Attribute(CFConstants.UNITS, CFConstants.UNITS_METERS));
         vHeight.addAttribute(new Attribute(CFConstants.AXIS, CFConstants.AXIS_Z));
         vHeight.addAttribute(new Attribute(CFConstants.POSITIVE, CFConstants.POSITIVE_UP));
-        vHeight.addAttribute(new Attribute(CFConstants.FILL_VALUE, FLOAT_FILL_VALUE));
-        ArrayFloat heightArray = new ArrayFloat(getDimShapes(zDims));
-        initArrayWithFillValue(heightArray, FLOAT_FILL_VALUE);
+        vHeight.addAttribute(new Attribute(CFConstants.FILL_VALUE, DOUBLE_FILL_VALUE));
+        ArrayDouble heightArray = new ArrayDouble(getDimShapes(zDims));
+        initArrayWithFillValue(heightArray, DOUBLE_FILL_VALUE);
         if (sensorDataset instanceof IStaticAltitudeDataset) {
             IStaticAltitudeDataset staticAltitudeDataset = (IStaticAltitudeDataset) sensorDataset;
             Index heightIndex = heightArray.getIndex();
 //            heightIndex.set(0);            
             if (staticAltitudeDataset.getAlt() != null) {                
-                heightArray.set(heightIndex, staticAltitudeDataset.getAlt().floatValue());
+                heightArray.set(heightIndex, staticAltitudeDataset.getAlt());
             } else {
-                heightArray.set(heightIndex, FLOAT_FILL_VALUE);
+                heightArray.set(heightIndex, DOUBLE_FILL_VALUE);
             }
         }
 
@@ -501,22 +499,22 @@ public abstract class AbstractIoosNetcdfEncoder implements ObservationEncoder<Bi
                 vTime.getFullName(), vLat.getFullName(), vLon.getFullName(), vHeight.getFullName()));
         
         Map<OmObservableProperty,Variable> obsPropVarMap = Maps.newHashMap();
-        Map<Variable,ArrayFloat> varDataArrayMap = Maps.newHashMap();
+        Map<Variable,ArrayDouble> varDataArrayMap = Maps.newHashMap();
         for (OmObservableProperty obsProp : sensorDataset.getPhenomena()) {
             //obs prop var
             String standardName = IoosSosUtil.getNameFromUri(obsProp.getIdentifier());
-            Variable vObsProp = writer.addVariable(null, standardName, DataType.FLOAT, obsPropDims);
+            Variable vObsProp = writer.addVariable(null, standardName, DataType.DOUBLE, obsPropDims);
             vObsProp.addAttribute(new Attribute(CFConstants.STANDARD_NAME, standardName));
             vObsProp.addAttribute(new Attribute(CFConstants.LONG_NAME, obsProp.getIdentifier()));
             vObsProp.addAttribute(new Attribute(CFConstants.COORDINATES, coordinateString));
-            vObsProp.addAttribute(new Attribute(CFConstants.FILL_VALUE, FLOAT_FILL_VALUE));
+            vObsProp.addAttribute(new Attribute(CFConstants.FILL_VALUE, DOUBLE_FILL_VALUE));
             vObsProp.addAttribute(new Attribute(CFConstants.UNITS,
                     IoosSosUtil.getNameFromUri(obsProp.getUnit())));
             obsPropVarMap.put(obsProp, vObsProp);
 
             //init obs prop data array
-            ArrayFloat obsPropArray = new ArrayFloat(getDimShapes(obsPropDims));
-            initArrayWithFillValue(obsPropArray, FLOAT_FILL_VALUE);
+            ArrayDouble obsPropArray = new ArrayDouble(getDimShapes(obsPropDims));
+            initArrayWithFillValue(obsPropArray, DOUBLE_FILL_VALUE);
             varDataArrayMap.put(vObsProp, obsPropArray);
         }
 
@@ -525,20 +523,20 @@ public abstract class AbstractIoosNetcdfEncoder implements ObservationEncoder<Bi
             Index heightIndex = heightArray.getIndex();
             int heightIndexCounter = 0;
             List<SubSensor> subSensors = sensorDataset.getSubSensors();
-            Float consistentBinHeight = null; 
+            Double consistentBinHeight = null; 
             for (SubSensor subSensor : sensorDataset.getSubSensors()) {
                 if (subSensor instanceof ProfileSubSensor) {
                     heightIndex.setDim(0, heightIndexCounter++);
-                    heightArray.set(heightIndex, Double.valueOf(((ProfileSubSensor) subSensor).getHeight()).floatValue());
+                    heightArray.set(heightIndex, ((ProfileSubSensor) subSensor).getHeight());
 
                     //check for consistent bin size
                     if (subSensor instanceof BinProfileSubSensor) {
-                        float binHeight = Double.valueOf((((BinProfileSubSensor) subSensor).getBinHeight())).floatValue();
+                        double binHeight = ((BinProfileSubSensor) subSensor).getBinHeight();
                         if (consistentBinHeight == null) {
                             consistentBinHeight = binHeight;
-                        } else if (consistentBinHeight > FLOAT_FILL_VALUE && consistentBinHeight != binHeight) {
+                        } else if (consistentBinHeight != DOUBLE_FILL_VALUE && consistentBinHeight != binHeight) {
                             //mark bin height as inconsistent
-                            consistentBinHeight = FLOAT_FILL_VALUE;
+                            consistentBinHeight = DOUBLE_FILL_VALUE;
                         }
                     }
                 } else {
@@ -566,7 +564,7 @@ public abstract class AbstractIoosNetcdfEncoder implements ObservationEncoder<Bi
             String verticalResolution = null;
             if (consistentBinHeight == null) {
                 verticalResolution = ACDDConstants.POINT;
-            } else if (consistentBinHeight != FLOAT_FILL_VALUE){
+            } else if (consistentBinHeight != DOUBLE_FILL_VALUE){
                 verticalResolution = consistentBinHeight + " " + CFConstants.UNITS_METERS + " "
                         + ACDDConstants.BINNED;
             }
@@ -595,7 +593,7 @@ public abstract class AbstractIoosNetcdfEncoder implements ObservationEncoder<Bi
             Map<OmObservableProperty, Map<SubSensor, Value<?>>> obsPropMap = sensorDataset.getDataValues().get(time);
             for (OmObservableProperty obsProp : obsPropMap.keySet()) {
                 Variable variable = obsPropVarMap.get(obsProp);
-                ArrayFloat array = varDataArrayMap.get(variable);
+                ArrayDouble array = varDataArrayMap.get(variable);
                 for (Entry<SubSensor, Value<?>> subSensorEntry : obsPropMap.get(obsProp).entrySet()) {
                     SubSensor subSensor = subSensorEntry.getKey();
                     Value<?> value = subSensorEntry.getValue();
@@ -620,7 +618,7 @@ public abstract class AbstractIoosNetcdfEncoder implements ObservationEncoder<Bi
                             index.setDim(obsPropDimCounter++, sensorDataset.getSubSensors().indexOf(subSensor));                            
                         }
                     }
-                    array.set(index, ((BigDecimal) valObj).floatValue());                    
+                    array.set(index, ((BigDecimal) valObj).doubleValue());                    
                 }
             }
         }
@@ -639,9 +637,9 @@ public abstract class AbstractIoosNetcdfEncoder implements ObservationEncoder<Bi
             writer.write(vLat, latArray);
             writer.write(vLon, lonArray);
             writer.write(vHeight, heightArray);
-            for (Entry<Variable,ArrayFloat> varEntry : varDataArrayMap.entrySet()) {
+            for (Entry<Variable,ArrayDouble> varEntry : varDataArrayMap.entrySet()) {
                 Variable vObsProp = varEntry.getKey();
-                ArrayFloat varData = varEntry.getValue();
+                ArrayDouble varData = varEntry.getValue();
                 writer.write(vObsProp, varData);
             }            
         } catch (Exception e) {
