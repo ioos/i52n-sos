@@ -67,8 +67,8 @@ import org.n52.sos.util.XmlOptionsHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.axiomalaska.cf4j.CFFeatureType;
-import com.axiomalaska.cf4j.CFFeatureTypes;
+import ucar.nc2.constants.CF;
+
 import com.axiomalaska.ioos.sos.IoosCfConstants;
 import com.axiomalaska.ioos.sos.IoosDefConstants;
 import com.axiomalaska.ioos.sos.IoosSosConstants;
@@ -91,7 +91,7 @@ public class IoosSwe2ResultEncoder {
     
     public static XmlObject encodeResult(Encoder<?,?> encoder, IoosSosObservation ioosSosObs )
             throws InvalidParameterValueException, UnsupportedEncoderInputException{       
-        CFFeatureType featureType = ioosSosObs.getFeatureType();
+        CF.FeatureType featureType = ioosSosObs.getFeatureType();
         
         //TODO move to OM encoder constructor? might just need to be done once
 
@@ -129,7 +129,7 @@ public class IoosSwe2ResultEncoder {
             
             DataRecordType xb_staticStationDataRecord = (DataRecordType) xb_stationField.addNewAbstractDataComponent()
                     .substitute( Ioos52nConstants.QN_DATA_RECORD_SWE_200, DataRecordType.type );
-            xb_staticStationDataRecord.setId( station.getAssetShortId() + "_" + featureType.getName().toLowerCase() );
+            xb_staticStationDataRecord.setId( station.getAssetShortId() + "_" + featureType.name().toLowerCase() );
             xb_staticStationDataRecord.setDefinition(IoosSweConstants.STATION_DEF);
             
             //station id
@@ -189,8 +189,7 @@ public class IoosSwe2ResultEncoder {
                 
                 //sensorLocation (lat/lng/z)                
                 //TODO use sensor point instead of station point
-                if (featureType.equals(CFFeatureTypes.TIME_SERIES_PROFILE) 
-                        || featureType.equals(CFFeatureTypes.PROFILE)) {
+                if (featureType.equals(CF.FeatureType.timeSeriesProfile) || featureType.equals(CF.FeatureType.profile)) {
                     //create full sensor location for profiles
                     createLocationVector(xb_sensorDataRecord, sensor, stationPoint);
                 } else {
@@ -294,8 +293,7 @@ public class IoosSwe2ResultEncoder {
 
                 DataRecordType xbDataRecordForObsProps = xb_sensorDataRecord;
                 
-                if (featureType.equals(CFFeatureTypes.TIME_SERIES_PROFILE) 
-                        || featureType.equals(CFFeatureTypes.PROFILE)) {
+                if (featureType.equals(CF.FeatureType.timeSeriesProfile) || featureType.equals(CF.FeatureType.profile)) {
                     Field xbProfileField = xb_sensorDataRecord.addNewField();
                     xbProfileField.setName(IoosSweConstants.PROFILE);
                     
@@ -537,7 +535,7 @@ public class IoosSwe2ResultEncoder {
     }    
     
     private static EncodedValuesResult createResultString( IoosSosObservation ioosSosObs ){
-        CFFeatureType featureType = ioosSosObs.getFeatureType();
+        CF.FeatureType featureType = ioosSosObs.getFeatureType();
         
         // value matrix which should be built
         StringBuffer valueMatrix = new StringBuffer();
@@ -633,8 +631,7 @@ public class IoosSwe2ResultEncoder {
                     valueMatrix.append( Ioos52nConstants.TOKEN_SEPARATOR );
 
                     //subsensor dataarray element count
-                    if (featureType.equals(CFFeatureTypes.TIME_SERIES_PROFILE) 
-                            || featureType.equals(CFFeatureTypes.PROFILE)) {
+                    if (featureType.equals(CF.FeatureType.timeSeriesProfile) || featureType.equals(CF.FeatureType.profile)) {
                         valueMatrix.append( subSensorMap.size() );
                         valueMatrix.append( Ioos52nConstants.TOKEN_SEPARATOR );
                     }
@@ -642,7 +639,7 @@ public class IoosSwe2ResultEncoder {
                     //subsensor (profile height, profile bin, etc)
                     for( SubSensor subSensor : subSensorMap.keySet() ){
                         //encode index for profiles                        
-                        if (featureType.equals(CFFeatureTypes.TIME_SERIES_PROFILE) || featureType.equals(CFFeatureTypes.PROFILE)) {                        
+                        if (featureType.equals(CF.FeatureType.timeSeriesProfile) || featureType.equals(CF.FeatureType.profile)) {                        
                             if (subSensor != null && subSensor instanceof IndexedSubSensor){
                                 //output subsensor index
                                 valueMatrix.append( sensorSubSensors.get(sensor).indexOf(subSensor) );                                

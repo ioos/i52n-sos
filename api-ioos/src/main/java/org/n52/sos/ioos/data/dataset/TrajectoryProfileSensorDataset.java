@@ -8,11 +8,11 @@ import org.n52.sos.ogc.gml.time.Time;
 import org.n52.sos.ogc.om.OmObservableProperty;
 import org.n52.sos.ogc.om.values.Value;
 
-import com.axiomalaska.cf4j.CFFeatureTypes;
+import ucar.nc2.constants.CF;
 
 public class TrajectoryProfileSensorDataset extends AbstractSensorDataset {
     public TrajectoryProfileSensorDataset( SensorAsset sensor,  
             Map<Time, Map<OmObservableProperty, Map<SubSensor, Value<?>>>> dataValues) {        
-        super( CFFeatureTypes.TRAJECTORY_PROFILE, sensor, dataValues);
+        super( CF.FeatureType.trajectoryProfile, sensor, dataValues);
     }
 }

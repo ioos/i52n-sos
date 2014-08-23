@@ -233,7 +233,7 @@ public class IoosOmEncoderv100 implements ObservationEncoder<XmlObject, Object>{
         //== metadata block ==
 
         //description
-        xb_obsType.addNewDescription().setStringValue( ioosSosObs.getDescription() );
+        xb_obsType.addNewDescription().setStringValue( ioosSosObs.getFeatureType().name() );
 
         //sampling time
         TimeObjectPropertyType xb_samplingTime = xb_obsType.addNewSamplingTime();
@@ -288,7 +288,7 @@ public class IoosOmEncoderv100 implements ObservationEncoder<XmlObject, Object>{
         GenericMetaDataType xb_featureTypeMetadata = xb_featureTypeMetadataDoc.addNewGenericMetaData();         
         NameDocument xb_featureTypeNameDoc = NameDocument.Factory.newInstance();
         CodeType xb_featureTypeName = xb_featureTypeNameDoc.addNewName();
-        xb_featureTypeName.setStringValue( ioosSosObs.getFeatureType().getName() );
+        xb_featureTypeName.setStringValue( ioosSosObs.getFeatureType().name() );
         xb_featureTypeName.setCodeSpace( IoosSosConstants.CF_FEATURE_TYPES_CODESPACE );
         XmlHelper.append( xb_featureTypeMetadata, xb_featureTypeNameDoc );
         XmlHelper.append( xb_featureTypeMetaDataProp, xb_featureTypeMetadataDoc );        
