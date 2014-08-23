@@ -15,6 +15,8 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 import org.junit.AfterClass;
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.n52.sos.ds.hibernate.GetObservationDAO;
@@ -48,6 +50,7 @@ import ucar.nc2.dataset.NetcdfDataset.Enhance;
 import ucar.nc2.ft.FeatureDataset;
 import ucar.nc2.ft.FeatureDatasetFactoryManager;
 import ucar.nc2.ft.FeatureDatasetPoint;
+import ucar.nc2.jni.netcdf.Nc4Iosp;
 
 import com.axiomalaska.ioos.sos.IoosSosUtil;
 import com.axiomalaska.phenomena.Phenomena;
@@ -75,6 +78,11 @@ public abstract class AbstractIoosNetcdfEncoderTest extends HibernateTestCase {
     public static void tearDownTestData() throws OwsExceptionReport {
         IoosHibernateTestDataManager.removeTestData();
         H2Configuration.recreate();
+    }
+
+    @Before
+    public void checkDependency() {
+        Assume.assumeTrue(Nc4Iosp.isClibraryPresent());        
     }
 
     @Test

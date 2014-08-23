@@ -75,6 +75,7 @@ import ucar.nc2.NetcdfFileWriter.Version;
 import ucar.nc2.Variable;
 import ucar.nc2.constants.CDM;
 import ucar.nc2.constants.CF;
+import ucar.nc2.jni.netcdf.Nc4Iosp;
 
 import com.axiomalaska.cf4j.CFStandardNames;
 import com.axiomalaska.cf4j.constants.ACDDConstants;
@@ -195,6 +196,10 @@ public abstract class AbstractIoosNetcdfEncoder implements ObservationEncoder<Bi
             throw new NoApplicableCodeException().withMessage("No feature types to encode.");
         }
 
+        if (!Nc4Iosp.isClibraryPresent()) {
+            throw new NoApplicableCodeException().withMessage("Can't encode to netCDF because the native netCDF4 C library isn't installed");
+        }
+        
         return encodeIoosObsToNetcdf(ioosSosObsList);
     }
 
