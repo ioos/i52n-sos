@@ -78,25 +78,6 @@ public abstract class AbstractIoosNetcdfEncoderTest extends HibernateTestCase {
     }
 
     @Test
-    public void testPoint() throws OwsExceptionReport, UnitCreationException, IOException{
-        for (File netcdf : makeNetcdfRequest(Phenomena.instance().AIR_TEMPERATURE, true)) {
-            FeatureDataset featureDataset = verifyNetcdfFile(netcdf, FeatureType.STATION);
-            NetcdfFile netcdfFile = featureDataset.getNetcdfFile();
-            assertEquals(2, netcdfFile.getDimensions().size());
-        }
-    }    
-
-    @Test
-    public void testProfile() throws OwsExceptionReport, UnitCreationException, IOException{
-        for (File netcdf : makeNetcdfRequest(Phenomena.instance().SEA_WATER_TEMPERATURE, true)) {
-            FeatureDataset featureDataset = verifyNetcdfFile(netcdf, FeatureType.STATION_PROFILE);
-            NetcdfFile netcdfFile = featureDataset.getNetcdfFile();
-            assertEquals(3, netcdfFile.getDimensions().size());
-            verifyHeightAxis(netcdfFile, 20, -95.0, 0.0);
-        }
-    }
-
-    @Test
     public void testTimeSeries() throws OwsExceptionReport, UnitCreationException, IOException{
         for (File netcdf : makeNetcdfRequest(Phenomena.instance().AIR_TEMPERATURE)) {
             FeatureDataset featureDataset = verifyNetcdfFile(netcdf, FeatureType.STATION);
@@ -177,7 +158,7 @@ public abstract class AbstractIoosNetcdfEncoderTest extends HibernateTestCase {
         FeatureDataset featureDataset = null;
         Formatter errlog = new Formatter();
         try {
-            featureDataset = FeatureDatasetFactoryManager.open(FeatureType.ANY_POINT, netcdfFile.getAbsolutePath(), null, errlog);
+            featureDataset = FeatureDatasetFactoryManager.open(featureType, netcdfFile.getAbsolutePath(), null, errlog);
         } catch (IOException e) {
             LOGGER.error(errlog.toString());
             throw e;
@@ -187,9 +168,13 @@ public abstract class AbstractIoosNetcdfEncoderTest extends HibernateTestCase {
         }
         assertTrue(featureDataset.getFeatureType().equals(featureType));
         assertThat(featureDataset, instanceOf(FeatureDatasetPoint.class));
+
+        NetcdfDataset netcdfDataset = NetcdfDataset.wrap(featureDataset.getNetcdfFile(), Sets.newHashSet(Enhance.CoordSystems));
+
+        //make sure that the feature type found by FDFM (via cdm_feature_type) is the same as the expected feature type
+        assertEquals(featureType, FeatureDatasetFactoryManager.findFeatureType(netcdfDataset));
         
         //verify that axes is increasing
-        NetcdfDataset netcdfDataset = NetcdfDataset.wrap(featureDataset.getNetcdfFile(), Sets.newHashSet(Enhance.CoordSystems));
         List<CoordinateSystem> coordinateSystems = netcdfDataset.getCoordinateSystems();
 //        assertEquals(1, coordinateSystems.size());
         for (CoordinateSystem coordinateSystem : coordinateSystems) {
