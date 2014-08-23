@@ -16,6 +16,9 @@ The IOOS custom encoding formats include:
     * application/x-netcdf - single sensor/observed property
     * application/zip; subtype=x-netcdf - zipped, supports multiple sensors
 
+__NOTE__: netCDF encoding formats require the installation of the netCDF4 C library on the server.
+For Debian/Ubuntu systems, this is the `libnetcdf-dev` package.
+
 The IOOS test data:
 
 * Generates network, station, and sensor procedures

@@ -13,6 +13,8 @@ title: Installation Instructions
 * Supported database (see above)
 * [Java JRE or JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 6+
 * Java Application Server (e.g. [Tomcat](http://tomcat.apache.org) 6.0+)
+* netCDF4 C library (for netCDF encoding formats)
+    * on Debian/Ubuntu systems, `sudo aptitude install libnetcdf-dev`
 
 # PostgreSQL Recommendations
 
