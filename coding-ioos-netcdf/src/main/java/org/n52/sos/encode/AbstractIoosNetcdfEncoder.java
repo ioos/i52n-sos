@@ -20,6 +20,7 @@ import org.n52.sos.ds.OperationDAORepository;
 import org.n52.sos.exception.CodedException;
 import org.n52.sos.exception.ows.NoApplicableCodeException;
 import org.n52.sos.exception.ows.concrete.UnsupportedEncoderInputException;
+import org.n52.sos.ioos.Ioos52nSosVersionHandler;
 import org.n52.sos.ioos.IoosUtil;
 import org.n52.sos.ioos.asset.SensorAsset;
 import org.n52.sos.ioos.asset.StationAsset;
@@ -267,7 +268,11 @@ public abstract class AbstractIoosNetcdfEncoder implements ObservationEncoder<Bi
                 sensor.getAssetId()));
         writer.addGroupAttribute(null, new Attribute(ACDDConstants.NAMING_AUTHORITY,
                 sensor.getAuthority()));
+        writer.addGroupAttribute(null, new Attribute(ACDDConstants.HISTORY,
+                "Created by i52n-sos v" + Ioos52nSosVersionHandler.getIoosVersion() + " at "
+                + new DateTime(DateTimeZone.UTC)));
 
+        
         //keywords
         LinkedHashSet<String> keywords = Sets.newLinkedHashSet();
         keywords.add(sensor.getAuthority());
