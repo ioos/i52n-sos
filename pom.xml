@@ -72,7 +72,7 @@
       <dependency>
         <groupId>com.axiomalaska</groupId>
         <artifactId>ioos-sos-validator</artifactId>
-        <version>1.0.0</version>      
+        <version>1.0.2</version>      
       </dependency>
       <dependency>
         <groupId>org.apache.commons</groupId>
