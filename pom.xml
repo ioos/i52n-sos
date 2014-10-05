@@ -62,12 +62,12 @@
       <dependency>
         <groupId>com.axiomalaska</groupId>
         <artifactId>ioos-sos-common</artifactId>
-        <version>1.0.2</version>    
+        <version>1.0.3</version>    
       </dependency>    
       <dependency>
         <groupId>com.axiomalaska</groupId>
         <artifactId>phenomena</artifactId>
-        <version>1.0.0</version>      
+        <version>1.0.2</version>      
       </dependency>
       <dependency>
         <groupId>com.axiomalaska</groupId>
