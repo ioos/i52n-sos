@@ -130,3 +130,4 @@ fi
 sed -i "s/52n-sos-ioos-webapp/$LOG_NAME/g" ./WEB-INF/classes/logback.xml
 rm -f $TARGET
 zip -q -r $TARGET .
+chmod a+r $TARGET
