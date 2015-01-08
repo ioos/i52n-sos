@@ -38,7 +38,7 @@ See [Release notes document](https://github.com/ioos/i52n-sos/blob/master/RELEAS
 
 ## Mailing List
 
-<i52n@librelist.com> ([Archive](http://librelist.com/browser/i52n/))
+<i52n-sos@googlegroups.com> ([Sign-up and archive](https://groups.google.com/forum/#!forum/i52n-sos))
 
 ## Installation
 
