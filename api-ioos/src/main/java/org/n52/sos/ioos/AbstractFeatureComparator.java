@@ -16,34 +16,41 @@ public class AbstractFeatureComparator implements Comparator<AbstractFeature> {
 		if( o1 == null && o2 != null ){
 			return 1;
 		}
-		if( o1.getIdentifier() == null && o2.getIdentifier() == null ){
+		if( o1.getIdentifierCodeWithAuthority() == null && o2.getIdentifierCodeWithAuthority() == null ){
 			return 0;
 		}
-		if( o1.getIdentifier() != null && o2.getIdentifier() == null ){
+		if( o1.getIdentifierCodeWithAuthority() != null && o2.getIdentifierCodeWithAuthority() == null ){
 			return -1;
 		}
-		if( o1.getIdentifier() == null && o2.getIdentifier() != null ){
+		if( o1.getIdentifierCodeWithAuthority() == null && o2.getIdentifierCodeWithAuthority() != null ){
 			return 1;
 		}
-		if( o1.getIdentifier().getCodeSpace() != null && o2.getIdentifier() == null ){
+		if( o1.getIdentifierCodeWithAuthority().getCodeSpace() != null && o2.getIdentifierCodeWithAuthority() == null ){
 			return -1;
 		}
-		if( o1.getIdentifier().getCodeSpace() == null && o2.getIdentifier() != null ){
+		if( o1.getIdentifierCodeWithAuthority().getCodeSpace() == null && o2.getIdentifierCodeWithAuthority() != null ){
 			return 1;
 		}
-		if( o1.getIdentifier().getCodeSpace() != null && o2.getIdentifier().getCodeSpace() != null
-				&& !o1.getIdentifier().getCodeSpace().equals( o2.getIdentifier().getCodeSpace() ) ){
-			return o1.getIdentifier().getCodeSpace().compareTo( o2.getIdentifier().getCodeSpace() );
+		if( o1.getIdentifierCodeWithAuthority().getCodeSpace() != null
+				&& o2.getIdentifierCodeWithAuthority().getCodeSpace() != null
+				&& !o1.getIdentifierCodeWithAuthority().getCodeSpace().equals(
+						o2.getIdentifierCodeWithAuthority().getCodeSpace() ) ){
+			return o1.getIdentifierCodeWithAuthority().getCodeSpace().compareTo(
+					o2.getIdentifierCodeWithAuthority().getCodeSpace() );
 		}
-		if( o1.getIdentifier().getValue() == null && o2.getIdentifier().getValue() == null ){
+		if( o1.getIdentifierCodeWithAuthority().getValue() == null
+				&& o2.getIdentifierCodeWithAuthority().getValue() == null ){
 			return 0;
 		}
-		if( o1.getIdentifier().getValue() != null && o2.getIdentifier().getValue() == null ){
+		if( o1.getIdentifierCodeWithAuthority().getValue() != null
+				&& o2.getIdentifierCodeWithAuthority().getValue() == null ){
 			return -1;
 		}
-		if( o1.getIdentifier().getValue() == null && o2.getIdentifier().getValue() != null ){
+		if( o1.getIdentifierCodeWithAuthority().getValue() == null
+				&& o2.getIdentifierCodeWithAuthority().getValue() != null ){
 			return 1;
 		}
-		return o1.getIdentifier().getValue().compareTo( o2.getIdentifier().getValue() );
+		return o1.getIdentifierCodeWithAuthority().getValue().compareTo(
+				o2.getIdentifierCodeWithAuthority().getValue() );
 	}
 }

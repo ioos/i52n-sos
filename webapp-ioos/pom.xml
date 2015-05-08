@@ -3,13 +3,13 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <groupId>org.n52.sensorweb.sos</groupId>
-    <artifactId>52n-sos-ioos</artifactId>
+    <artifactId>i52n-sos</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>webapp-ioos</artifactId>
   <packaging>war</packaging>
-  <name>52North SOS IOOS Webapp</name>
+  <name>IOOS 52North SOS IOOS</name>
   <description>52North Sensor Observation Service WAR Customized for IOOS</description>
 
   <properties>
@@ -18,8 +18,8 @@
   </properties>
 
   <build>
-    <finalName>52n-sos-ioos-${project.version}</finalName>
-    <plugins>
+    <finalName>i52n-sos</finalName>
+    <plugins>  
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
@@ -59,38 +59,14 @@
               <directory>src/main/resources</directory>
               <filtering>true</filtering>
               <targetPath>WEB-INF/classes</targetPath>
-            </resource>              
+            </resource>
           </webResources>                    
         </configuration>
       </plugin>
     </plugins>
   </build>
 
-  <dependencies>    
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>binding-pox</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>binding-json</artifactId>
-    </dependency>        
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>binding-kvp</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>binding-soap</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>transactional-v20</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>core-v100</artifactId>
-    </dependency>    
+  <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>coding-ioos</artifactId>
@@ -101,21 +77,22 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>coding-json</artifactId>
-    </dependency>            
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>hibernate-datasource-h2</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
       <artifactId>hibernate-datasource-oracle</artifactId>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>webapp</artifactId>
+      <version>${n52.sos.version}</version>
       <type>war</type>
     </dependency>
+    <!-- 
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>webapp</artifactId>
+      <version>4.2.0</version>
+      <type>pom</type>
+    </dependency>
+     -->    
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>test-data-ioos</artifactId>

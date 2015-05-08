@@ -32,7 +32,7 @@ public class IoosGetCapabilitiesResponseEncoder extends GetCapabilitiesResponseE
 
         for (SosObservationOffering offering : offerings) {
             //don't encode offerings for sensors (too verbose)
-            AbstractAsset asset = AssetResolver.resolveAsset(offering.getOffering());
+            AbstractAsset asset = AssetResolver.resolveAsset(offering.getOffering().getIdentifier());
             if (asset instanceof SensorAsset) {
                 continue;
             }
@@ -40,7 +40,7 @@ public class IoosGetCapabilitiesResponseEncoder extends GetCapabilitiesResponseE
             ObservationOfferingType xbObservationOffering = xbObservationOfferings.addNewObservationOffering();
 
             // TODO check Name or ID
-            xbObservationOffering.setId(NcNameResolver.fixNcName(offering.getOffering()));
+            xbObservationOffering.setId(NcNameResolver.fixNcName(offering.getOffering().getIdentifier()));
 
             // only if fois are contained for the offering set the values of the envelope
             Encoder<XmlObject, SosEnvelope> encoder =
@@ -48,7 +48,7 @@ public class IoosGetCapabilitiesResponseEncoder extends GetCapabilitiesResponseE
             xbObservationOffering.addNewBoundedBy().addNewEnvelope().set(encoder.encode(offering.getObservedArea()));
 
             // add offering name
-            xbObservationOffering.addNewName().setStringValue(offering.getOffering());
+            xbObservationOffering.addNewName().setStringValue(offering.getOffering().getIdentifier());
 
             // set observableProperties [0..*]
             for (String phenomenon : offering.getObservableProperties()) {
@@ -79,7 +79,7 @@ public class IoosGetCapabilitiesResponseEncoder extends GetCapabilitiesResponseE
             // set procedures
             if (offering.getProcedures().contains(offering.getOffering())) {
                 // set only the offering's matching procedure (according to IOOS standard)                
-                xbObservationOffering.addNewProcedure().setHref(offering.getOffering());
+                xbObservationOffering.addNewProcedure().setHref(offering.getOffering().getIdentifier());
             } else {
                 // if not found, add all procedures (otherwise schema invalid)
                 for (String procedure : offering.getProcedures()) {

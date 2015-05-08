@@ -2,7 +2,6 @@ package org.n52.sos.encode;
 
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.LinkedHashSet;
@@ -487,8 +486,8 @@ public abstract class AbstractIoosNetcdfEncoder implements ObservationEncoder<Bi
         vPlatform.addAttribute(new Attribute(IoosNetcdfConstants.IOOS_CODE,
                 sensorDataset.getSensor().getStationAsset().getAssetId()));        
         //platform description
-        if (!stationSystem.getDescriptions().isEmpty()){
-            vPlatform.addAttribute(new Attribute(CFConstants.COMMENT, stationSystem.getDescriptions().get(0)));
+        if (!stationSystem.getDescription().isEmpty()){
+            vPlatform.addAttribute(new Attribute(CFConstants.COMMENT, stationSystem.getDescription()));
         }
         //wmo code
         addAttributeIfIdentifierExists(vPlatform, stationSystem, IoosDefConstants.WMO_ID_DEF, CFConstants.WMO_CODE);
@@ -608,7 +607,7 @@ public abstract class AbstractIoosNetcdfEncoder implements ObservationEncoder<Bi
                     SubSensor subSensor = subSensorEntry.getKey();
                     Value<?> value = subSensorEntry.getValue();
                     Object valObj = value.getValue();
-                    if (!(valObj instanceof BigDecimal)){
+                    if (!(valObj instanceof Double)){
                         throw new NoApplicableCodeException()
                             .withMessage("Value class " + valObj.getClass().getCanonicalName() + " not supported");                    
                     }
@@ -628,7 +627,7 @@ public abstract class AbstractIoosNetcdfEncoder implements ObservationEncoder<Bi
                             index.setDim(obsPropDimCounter++, sensorDataset.getSubSensors().indexOf(subSensor));                            
                         }
                     }
-                    array.set(index, ((BigDecimal) valObj).doubleValue());                    
+                    array.set(index, ((Double) valObj).doubleValue());                    
                 }
             }
         }

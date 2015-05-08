@@ -23,7 +23,6 @@
  */
 package org.n52.sos.ds.hibernate.testdata;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -78,8 +77,8 @@ import org.n52.sos.ogc.ows.OwsExceptionReport;
 import org.n52.sos.service.Configurator;
 import org.n52.sos.util.CollectionHelper;
 
-import com.axiomalaska.cf4j.CFFeatureType;
-import com.axiomalaska.cf4j.CFFeatureTypes;
+import ucar.nc2.constants.CF;
+
 import com.axiomalaska.ioos.sos.GeomHelper;
 import com.axiomalaska.ioos.sos.IoosSosConstants;
 import com.axiomalaska.ioos.sos.IoosSosUtil;
@@ -157,7 +156,7 @@ public class IoosHibernateTestDataManager{
         
         //network procedure
         final String networkAllSml = IoosTestDataSmlGenerator.createNetworkSensorMl(NETWORK_ALL.getAssetId(),
-                "All inclusive test sensor network");
+                "All inclusive test sensor network", "Test data network", "Test data network procedure", TEST);
         final Procedure networkProcedure = insertProcedure(NETWORK_ALL.getAssetId(), pdf,
                 new ArrayList<String>(), networkAllSml, session);
         
@@ -165,11 +164,11 @@ public class IoosHibernateTestDataManager{
         for (int i = 0; i < NUM_STATIONS; i++) {
             Collections.shuffle(PLATFORM_TYPES);
             final StationAsset station = new StationAsset(TEST, Integer.toString(i));
-            final double stationLng = randomLng();
             final double stationLat = randomLat();
+            final double stationLng = randomLng();
             final String stationSml = IoosTestDataSmlGenerator.createStationSensorMl(station.getAssetId(),
                     "Test station " + i, "Test station " + i, "Station number " + i + " for testing", PLATFORM_TYPES.get(0),
-                    "gov_federal", "NDBC", "test", "Station " + i + " Quality Page", "http://somesite.gov/qc/station" + i,
+                    "gov_federal", "NDBC", TEST, "Station " + i + " Quality Page", "http://somesite.gov/qc/station" + i,
                     stationLng, stationLat);
             final Procedure stationProcedure = insertProcedure(station.getAssetId(), pdf, CollectionHelper.list(NETWORK_ALL.getAssetId()),
                     stationSml, session);
@@ -186,12 +185,12 @@ public class IoosHibernateTestDataManager{
             //sensors
             
             //air temp timeseries
-            createSensor(i, CFFeatureTypes.TIME_SERIES, hNetworkOffering, networkProcedure, hStationOffering, stationProcedure, station,
+            createSensor(i, CF.FeatureType.timeSeries, hNetworkOffering, networkProcedure, hStationOffering, stationProcedure, station,
                     hStationFeature, stationPoint, airTempPhen, hAirTempObsProp, airTempUnit, measurementObsType, pdf,
                     codespaceCache, unitCache, session);
             
             //water temp timeseriesprofile
-            createSensor(i, CFFeatureTypes.TIME_SERIES_PROFILE, hNetworkOffering, networkProcedure, hStationOffering, stationProcedure, station,
+            createSensor(i, CF.FeatureType.timeSeriesProfile, hNetworkOffering, networkProcedure, hStationOffering, stationProcedure, station,
                     hStationFeature, stationPoint, waterTempPhen, hWaterTempObsProp, waterTempUnit, measurementObsType, pdf,
                     codespaceCache, unitCache, session);            
         }
@@ -201,7 +200,7 @@ public class IoosHibernateTestDataManager{
         Configurator.getInstance().getCacheController().update();
     }
 
-    private static void createSensor(int i, CFFeatureType featureType, Offering hNetworkOffering, Procedure networkProcedure,
+    private static void createSensor(int i, CF.FeatureType featureType, Offering hNetworkOffering, Procedure networkProcedure,
             Offering hStationOffering, Procedure stationProcedure, StationAsset station, FeatureOfInterest hStationFeature,
             Point stationPoint, Phenomenon phen, ObservableProperty obsProp, String unit, ObservationType obsType, ProcedureDescriptionFormat pdf,
             Map<String,Codespace> codespaceCache, Map<String,Unit> unitCache, Session session) throws OwsExceptionReport {
@@ -246,7 +245,7 @@ public class IoosHibernateTestDataManager{
         
         //add values
         DateTime obsEndTime = new DateTime(DateTimeZone.UTC).withMillisOfSecond(0).withSecondOfMinute(0).withMinuteOfHour(0);
-        if (featureType.equals(CFFeatureTypes.TIME_SERIES_PROFILE)) {
+        if (featureType.equals(CF.FeatureType.timeSeriesProfile)) {
             for (int h = 0; h < NUM_HEIGHTS_PER_PROFILE; h++) {
                 Geometry foiGeom = GeomHelper.createLatLngPoint(stationPoint.getY(), stationPoint.getX(), 0 - 5.0 * h);
                 String foiId;
@@ -272,8 +271,8 @@ public class IoosHibernateTestDataManager{
             OmObservation obs = new OmObservation();
             double obsValue = randomInRange(5.0,  32.0);
             DateTime obsTime = obsEndTime.minusHours(j);
-            QuantityValue quantityValue = new QuantityValue(BigDecimal.valueOf(obsValue), unit);
-            obs.setValue(new SingleObservationValue<BigDecimal>(new TimeInstant(obsTime), quantityValue));
+            QuantityValue quantityValue = new QuantityValue(obsValue, unit);
+            obs.setValue(new SingleObservationValue<Double>(new TimeInstant(obsTime), quantityValue));
             seriesObservationDAO.insertObservationSingleValue(obsConsts, feature, obs, codespaceCache, unitCache, session);
         }
         session.flush();

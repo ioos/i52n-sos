@@ -3,12 +3,13 @@
   <parent>
     <groupId>org.n52.sensorweb.sos</groupId>
     <artifactId>52n-sos</artifactId>
-    <version>4.1.0</version>
+    <!-- Upstream 52n version, change below in n52.sos.version property also -->
+    <version>4.2.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>52n-sos-ioos</artifactId>
+  <artifactId>i52n-sos</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-  <name>52North Sensor Observation Service for IOOS</name>
+  <name>IOOS 52North Sensor Observation Service</name>
   <description>52North Sensor Observation Service for IOOS</description>
   <packaging>pom</packaging>
   <modules>
@@ -22,13 +23,131 @@
   </modules>
   
   <properties>
-    <config.logger.fileappender.filename>52n-sos-ioos-webapp</config.logger.fileappender.filename>
-    <n52.sos.version>${project.parent.version}</n52.sos.version>
+    <!-- Upstream 52n version, change above in parent definition also -->
+    <n52.sos.version>4.2.0</n52.sos.version>  
+    <config.logger.fileappender.filename>i52n-sos</config.logger.fileappender.filename>
     <maven.build.timestamp.format>yyyy-MM-dd HH:mm z</maven.build.timestamp.format>
   </properties>
   
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>api</artifactId>
+        <version>${n52.sos.version}</version>    
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>third-party-ncname-resolver</artifactId>
+        <version>${n52.sos.version}</version>    
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>sqlite-config</artifactId>
+        <version>${n52.sos.version}</version>    
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>sqlite-config</artifactId>
+        <version>${n52.sos.version}</version>    
+        <type>test-jar</type>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>hibernate-datasource-oracle</artifactId>
+        <version>${n52.sos.version}</version>    
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>coding-ows-v110</artifactId>
+        <version>${n52.sos.version}</version>    
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>coding-sensorML</artifactId>
+        <version>${n52.sos.version}</version>    
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>coding-sensorML-v101</artifactId>
+        <version>${n52.sos.version}</version>    
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>coding-sos-v100</artifactId>
+        <version>${n52.sos.version}</version>    
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>coding-sos-v20</artifactId>
+        <version>${n52.sos.version}</version>    
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>admin-controller</artifactId>
+        <version>${n52.sos.version}</version>    
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>hibernate-common</artifactId>
+        <version>${n52.sos.version}</version>    
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>hibernate-datasource-common</artifactId>
+        <version>${n52.sos.version}</version>    
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>hibernate-session-factory</artifactId>
+        <version>${n52.sos.version}</version>    
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>hibernate-dao</artifactId>
+        <version>${n52.sos.version}</version>    
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>hibernate-feature</artifactId>
+        <version>${n52.sos.version}</version>    
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>hibernate-h2</artifactId>
+        <version>${n52.sos.version}</version>    
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>hibernate-mappings</artifactId>
+        <version>${n52.sos.version}</version>    
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>coding-wml-v20</artifactId>
+        <version>${n52.sos.version}</version>    
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>common-controller</artifactId>
+        <version>${n52.sos.version}</version>    
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>gc-dao</artifactId>
+        <version>${n52.sos.version}</version>    
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>cache</artifactId>
+        <version>${n52.sos.version}</version>    
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>test</artifactId>
+        <version>${n52.sos.version}</version>    
+      </dependency>
+      
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>api-ioos</artifactId>
@@ -57,8 +176,15 @@
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>webapp</artifactId>
-        <version>${project.parent.version}</version>
-      </dependency>      
+        <version>${n52.sos.version}</version>
+        <type>war</type>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>webapp</artifactId>
+        <version>${n52.sos.version}</version>
+        <type>pom</type>
+      </dependency>                    
       <dependency>
         <groupId>com.axiomalaska</groupId>
         <artifactId>ioos-sos-common</artifactId>

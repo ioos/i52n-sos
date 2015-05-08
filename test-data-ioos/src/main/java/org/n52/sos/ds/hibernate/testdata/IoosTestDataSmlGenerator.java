@@ -36,17 +36,25 @@ import com.axiomalaska.ioos.sos.IoosDefConstants;
 import com.axiomalaska.ioos.sos.IoosSosConstants;
 
 public class IoosTestDataSmlGenerator {
-    public static String createNetworkSensorMl(String id, String description) {
+    public static String createNetworkSensorMl(String id, String description, String shortName, String longName,
+    		String parentNetwork) {
         SensorMLDocument xbSensorMlDoc = createSensorMlDoc(id, description);
         SystemType xbSystem = (SystemType) xbSensorMlDoc.getSensorML().getMemberArray(0).getProcess();
         addIdentification(xbSystem, IoosDefConstants.NETWORK_ID, IoosDefConstants.NETWORK_ID_DEF, id);
+        addIdentification(xbSystem, IoosDefConstants.SHORT_NAME, IoosDefConstants.SHORT_NAME_DEF, shortName);
+        addIdentification(xbSystem, IoosDefConstants.LONG_NAME, IoosDefConstants.LONG_NAME_DEF, longName);
+
+        addClassification(xbSystem, IoosDefConstants.PARENT_NETWORK, IoosDefConstants.PARENT_NETWORK_DEF,
+                IoosSosConstants.ORGANIZATION_ONTOLOGY, parentNetwork);
+
+        addTestOperatorContact(xbSystem);
         addTestPublisherContact(xbSystem);
         return toText(xbSensorMlDoc);
     }
 
     public static String createStationSensorMl(String id, String description, String shortName, String longName,
             String platformType, String operatorSector, String publisher, String parentNetwork,
-            String qualityControlDocumentName, String qualityControlDocumentLink, double lng, double lat) {
+            String qualityControlDocumentName, String qualityControlDocumentLink, double lat, double lng) {
         SensorMLDocument xbSensorMlDoc = createSensorMlDoc(id, description);
         SystemType xbSystem = (SystemType) xbSensorMlDoc.getSensorML().getMemberArray(0).getProcess();
         addIdentification(xbSystem, IoosDefConstants.STATION_ID, IoosDefConstants.STATION_ID_DEF, id);        
@@ -69,8 +77,8 @@ public class IoosTestDataSmlGenerator {
             addQualityControlDocument(xbSystem, qualityControlDocumentName, qualityControlDocumentLink);
         }
 
-        addLocation(xbSystem, lng, lat);
-        
+        addLocation(xbSystem, lat, lng);
+
         return toText(xbSensorMlDoc);
     }
 
@@ -186,11 +194,11 @@ public class IoosTestDataSmlGenerator {
         xbDocument.addNewOnlineResource().setHref(onlineResource);
     }
 
-    private static void addLocation(SystemType xbSystem, double lng, double lat) {
+    private static void addLocation(SystemType xbSystem, double lat, double lng) {
         PointType xbPoint = xbSystem.addNewSmlLocation().addNewPoint();
         xbPoint.setSrsName(IoosSosConstants.EPSG_4326_DEF);
         DirectPositionType xbPos = xbPoint.addNewPos();
-        xbPos.setStringValue(lng + " " + lat);
+        xbPos.setStringValue(lat + " " + lng);
     }
     
     private static void addIo(SystemType xbSystem, SimpleIo io) {

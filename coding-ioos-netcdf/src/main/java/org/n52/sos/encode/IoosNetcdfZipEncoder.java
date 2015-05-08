@@ -23,7 +23,7 @@ import com.google.common.io.Files;
 public class IoosNetcdfZipEncoder extends AbstractIoosNetcdfEncoder{
     @SuppressWarnings("unused")
     private static final Logger LOGGER = LoggerFactory.getLogger(IoosNetcdfZipEncoder.class);
-    private static final String DOWNLOAD_FILENAME_FORMAT = "52n-sos-ioos_netcdf_%s.zip";
+    private static final String DOWNLOAD_FILENAME_FORMAT = "i52n-sos_netcdf_%s.zip";
 
     public static MediaType CONTENT_TYPE_NETCDF_ZIP = 
             new MediaType("application", "zip", "subtype", "x-netcdf");    

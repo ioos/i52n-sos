@@ -29,11 +29,10 @@ import java.util.Map;
 
 import javax.servlet.UnavailableException;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 import org.joda.time.DateTime;
 import org.n52.sos.cache.ContentCache;
 import org.n52.sos.service.Configurator;
+import org.n52.sos.util.JSONUtils;
 import org.n52.sos.web.AbstractController;
 import org.n52.sos.web.IoosControllerConstants;
 import org.springframework.stereotype.Controller;
@@ -55,8 +54,8 @@ public class InfoController extends AbstractController {
 
     private static final String PROCEDURE_LATEST_TIMES = "procedure_latest_times";
     
-    private String existsResponse(boolean exists) throws JSONException {
-        return new JSONObject().put(EXISTS, exists).toString();
+    private String existsResponse(boolean exists) {
+        return JSONUtils.nodeFactory().objectNode().put(EXISTS, exists).toString();
     }
 
     private ContentCache getCache() throws UnavailableException {
@@ -69,21 +68,21 @@ public class InfoController extends AbstractController {
     @ResponseBody
     @RequestMapping(value = IoosControllerConstants.Paths.INFO_EXISTS_OFFERING, method = RequestMethod.GET,
         produces = "application/json; charset=UTF-8")    
-    public String existsOffering(@PathVariable String offeringId) throws UnavailableException, JSONException {        
+    public String existsOffering(@PathVariable String offeringId) throws UnavailableException {        
         return existsResponse(getCache().getOfferings().contains(offeringId));
     }
 
     @ResponseBody
     @RequestMapping(value = IoosControllerConstants.Paths.INFO_EXISTS_PROCEDURE, method = RequestMethod.GET,
         produces = "application/json; charset=UTF-8")    
-    public String existsProcedure(@PathVariable String procedureId) throws UnavailableException, JSONException {        
+    public String existsProcedure(@PathVariable String procedureId) throws UnavailableException {        
         return existsResponse(getCache().getProcedures().contains(procedureId));
     }
 
     @ResponseBody
     @RequestMapping(value = IoosControllerConstants.Paths.INFO_EXISTS_FEATURE, method = RequestMethod.GET,
         produces = "application/json; charset=UTF-8")    
-    public String existsFeature(@PathVariable String featureId) throws UnavailableException, JSONException {
+    public String existsFeature(@PathVariable String featureId) throws UnavailableException {
         return existsResponse(getCache().getFeaturesOfInterest().contains(featureId));
     }
 
@@ -98,11 +97,11 @@ public class InfoController extends AbstractController {
     @ResponseBody
     @RequestMapping(value = IoosControllerConstants.Paths.INFO_ALL_OBSERVATIONS_TIME_RANGE, method = RequestMethod.GET,
         produces = "application/json; charset=UTF-8")    
-    public String allObsTimeRange() throws UnavailableException, JSONException {
+    public String allObsTimeRange() throws UnavailableException {
         Map<String,DateTime> map = Maps.newHashMap();
         map.put(MIN, getCache().getMinPhenomenonTime());
         map.put(MAX, getCache().getMaxPhenomenonTime());
-        return new JSONObject(map).toString();
+        return JSONUtils.toJSON(map).toString();
     }
 
     @ResponseBody

@@ -461,8 +461,8 @@ public class IoosUtil {
     
     public static SubSensor createSubSensor(SensorAsset sensor, SamplingFeature foi) {
         //return null if sensor or station id is same as foi
-        if (sensor.getAssetId().equals(foi.getIdentifier().getValue()) ||
-                sensor.getStationAsset().getAssetId().equals(foi.getIdentifier().getValue())) {
+        if (sensor.getAssetId().equals(foi.getIdentifierCodeWithAuthority().getValue()) ||
+                sensor.getStationAsset().getAssetId().equals(foi.getIdentifierCodeWithAuthority().getValue())) {
             return null;
         }
                 

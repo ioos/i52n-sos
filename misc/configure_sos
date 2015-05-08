@@ -1,5 +1,5 @@
 #!/bin/bash
-#configure a 52n-sos-ioos war with a datasource and set configuration settings
+#configure an i52n-sos war with a datasource and set configuration settings
 #if [ "$#" -lt 5 ]; then
 #  echo "Usage: configure_sos DATASOURCE_FILE TARGET_FILENAME SOS_URL ADMIN_PASSWORD LOG_NAME [SOURCE_WAR]"
 #  exit 1
@@ -85,7 +85,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 CWD=`pwd`
 HASHED_PASSWORD=`java -jar $SCRIPT_DIR/../password-hasher/target/password-hasher-*.jar $PASSWORD`
 
-TMP_DIR=/tmp/52n-sos-ioos-config
+TMP_DIR=/tmp/i52n-sos
 
 if [[ "$DATASOURCE_FILE" != /* ]]; then
   #relative output, make absolute in the cwd
@@ -104,7 +104,7 @@ fi
 
 if [ -z "$SOURCE_WAR" ]; then 
   #SOURCE_WAR is unset, default to target war in project tree
-  SOURCE_WAR="$SCRIPT_DIR"/../webapp-ioos/target/52n-sos-ioos*.war
+  SOURCE_WAR="$SCRIPT_DIR"/../webapp-ioos/target/i52n-sos.war
 fi
 
 if [[ "$SOURCE_WAR" != /* ]]; then
@@ -127,7 +127,7 @@ sqlite3 ./configuration.db "update uri_settings set value = '$SOS_URL' where ide
 if [[ ! -z "$ACTIVE_RESPONSE_FORMAT" ]]; then
   sqlite3 ./configuration.db "update observation_encodings set active=0 where responseFormat != '$ACTIVE_RESPONSE_FORMAT';"
 fi
-sed -i "s/52n-sos-ioos-webapp/$LOG_NAME/g" ./WEB-INF/classes/logback.xml
+sed -i "s/i52n-sos/$LOG_NAME/g" ./WEB-INF/classes/logback.xml
 rm -f $TARGET
 zip -q -r $TARGET .
 chmod a+r $TARGET
