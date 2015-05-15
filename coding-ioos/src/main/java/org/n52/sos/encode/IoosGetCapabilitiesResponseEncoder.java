@@ -77,7 +77,7 @@ public class IoosGetCapabilitiesResponseEncoder extends GetCapabilitiesResponseE
             }
 
             // set procedures
-            if (offering.getProcedures().contains(offering.getOffering())) {
+            if (offering.getProcedures().contains(offering.getOffering().getIdentifier())) {
                 // set only the offering's matching procedure (according to IOOS standard)                
                 xbObservationOffering.addNewProcedure().setHref(offering.getOffering().getIdentifier());
             } else {
