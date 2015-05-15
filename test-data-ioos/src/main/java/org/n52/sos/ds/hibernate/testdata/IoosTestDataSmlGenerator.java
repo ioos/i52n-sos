@@ -54,7 +54,8 @@ public class IoosTestDataSmlGenerator {
 
     public static String createStationSensorMl(String id, String description, String shortName, String longName,
             String platformType, String operatorSector, String publisher, String parentNetwork,
-            String qualityControlDocumentName, String qualityControlDocumentLink, double lat, double lng) {
+            String sponsor, String qualityControlDocumentName, String qualityControlDocumentLink,
+            double lat, double lng) {
         SensorMLDocument xbSensorMlDoc = createSensorMlDoc(id, description);
         SystemType xbSystem = (SystemType) xbSensorMlDoc.getSensorML().getMemberArray(0).getProcess();
         addIdentification(xbSystem, IoosDefConstants.STATION_ID, IoosDefConstants.STATION_ID_DEF, id);        
@@ -69,6 +70,8 @@ public class IoosTestDataSmlGenerator {
                 IoosSosConstants.ORGANIZATION_ONTOLOGY, publisher);
         addClassification(xbSystem, IoosDefConstants.PARENT_NETWORK, IoosDefConstants.PARENT_NETWORK_DEF,
                 IoosSosConstants.ORGANIZATION_ONTOLOGY, parentNetwork);
+        addClassification(xbSystem, IoosDefConstants.SPONSOR, IoosDefConstants.SPONSOR_DEF,
+                IoosSosConstants.ORGANIZATION_ONTOLOGY, sponsor);
 
         addTestOperatorContact(xbSystem);
         addTestPublisherContact(xbSystem);
@@ -159,16 +162,16 @@ public class IoosTestDataSmlGenerator {
         ContactList.Member xbOperator = xbContactList.addNewMember();
         xbOperator.setRole(IoosDefConstants.OPERATOR_DEF);
         ResponsibleParty xbOperatorRp = xbOperator.addNewResponsibleParty();
-        xbOperatorRp.setOrganizationName("NDBC");
+        xbOperatorRp.setOrganizationName("IOOS");
         ContactInfo xbOperatorCi = xbOperatorRp.addNewContactInfo();
         Address xbOperatorAddress = xbOperatorCi.addNewAddress();
-        xbOperatorAddress.addNewDeliveryPoint().setStringValue("Bldg. 3205");
-        xbOperatorAddress.setCity("Stennis Space Center");
-        xbOperatorAddress.setAdministrativeArea("MS");
-        xbOperatorAddress.setPostalCode("39529");
+        xbOperatorAddress.addNewDeliveryPoint().setStringValue("1100 Wayne Ave., Suite 1225");
+        xbOperatorAddress.setCity("Silver Spring");
+        xbOperatorAddress.setAdministrativeArea("MD");
+        xbOperatorAddress.setPostalCode("20910");
         xbOperatorAddress.setCountry("USA");
-        xbOperatorAddress.setElectronicMailAddress("webmaster.ndbc@noaa.gov");
-        xbOperatorCi.addNewOnlineResource().setHref("http://www.ndbc.noaa.gov/");
+        xbOperatorAddress.setElectronicMailAddress("noaa.ioos.webmaster@noaa.gov");
+        xbOperatorCi.addNewOnlineResource().setHref("http://http://www.ioos.noaa.gov");
     }
 
     private static void addTestPublisherContact(SystemType xbSystem) {

@@ -168,7 +168,8 @@ public class IoosHibernateTestDataManager{
             final double stationLng = randomLng();
             final String stationSml = IoosTestDataSmlGenerator.createStationSensorMl(station.getAssetId(),
                     "Test station " + i, "Test station " + i, "Station number " + i + " for testing", PLATFORM_TYPES.get(0),
-                    "gov_federal", "NDBC", TEST, "Station " + i + " Quality Page", "http://somesite.gov/qc/station" + i,
+                    "gov_federal", "IOOS", TEST, "IOOS",
+                    "Station " + i + " Quality Page", "http://somesite.gov/qc/station" + i,
                     stationLng, stationLat);
             final Procedure stationProcedure = insertProcedure(station.getAssetId(), pdf, CollectionHelper.list(NETWORK_ALL.getAssetId()),
                     stationSml, session);
