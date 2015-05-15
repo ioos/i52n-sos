@@ -308,6 +308,7 @@ public class IoosSensorMLEncoderv101 extends SensorMLEncoderv101 {
                     obsTimeRangeValue.setRangeEnd(maxProcedureObsTime);
 
                     SweTimeRange obsTimeRange = new SweTimeRange();
+                    obsTimeRange.setDefinition(IoosSweConstants.OBSERVATION_TIME_RANGE_DEF);
                     obsTimeRange.setValue(obsTimeRangeValue);
                     
                     SweField obsTimeRangeField = new SweField(IoosSweConstants.OBSERVATION_TIME_RANGE, obsTimeRange);
