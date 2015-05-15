@@ -63,13 +63,15 @@ UPDATE "string_settings"
 SET value = 'USA'
 WHERE identifier = 'serviceProvider.country';
 
-UPDATE "string_settings"
+UPDATE "multilingual_string_settings_values"
 SET value = 'IOOS 52N SOS'
-WHERE identifier = 'serviceIdentification.title';
+WHERE identifier = 'serviceIdentification.title'
+AND lang = 'eng';
 
-UPDATE "string_settings"
+UPDATE "multilingual_string_settings_values"
 SET value = 'IOOS 52North Sensor Observation Service'
-WHERE identifier = 'serviceIdentification.abstract';
+WHERE identifier = 'serviceIdentification.abstract'
+AND lang = 'eng';
 
 UPDATE "string_settings"
 SET value = 'http://opengeospatial.net'
@@ -94,3 +96,153 @@ SET active = 0
 WHERE procedureDescriptionFormat != 'text/xml; subtype="sensorML/1.0.1/profiles/ioos_sos/1.0';
 
 INSERT INTO "observation_encodings" VALUES('text/xml; subtype="om/1.0.0/profiles/ioos_sos/1.0"','SOS','1.0.0',1);
+
+-- REMOVE ONCE THESE VALUES ARE IN THE UPSTREAM DEFAULT SETTINGS
+
+INSERT INTO "settings"
+SELECT 'exi.fidelity.lexical.value'
+WHERE NOT EXISTS (
+  SELECT identifier
+  FROM "settings"
+  WHERE identifier = 'exi.fidelity.lexical.value'
+);
+
+INSERT INTO "boolean_settings"
+SELECT '1', 'exi.fidelity.lexical.value'
+WHERE NOT EXISTS (
+  SELECT value
+  FROM "boolean_settings"
+  WHERE identifier = 'exi.fidelity.lexical.value'
+);
+
+--CHOICE
+INSERT INTO "settings"
+SELECT 'exi.fidelity'
+WHERE NOT EXISTS (
+  SELECT identifier
+  FROM "settings"
+  WHERE identifier = 'exi.fidelity'
+);
+
+INSERT INTO "string_settings"
+SELECT 'exi.fidelity.specific', 'exi.fidelity'
+WHERE NOT EXISTS (
+  SELECT value
+  FROM "string_settings"
+  WHERE identifier = 'exi.fidelity'
+);
+
+INSERT INTO "settings"
+SELECT 'exi.fidelity.comments'
+WHERE NOT EXISTS (
+  SELECT identifier
+  FROM "settings"
+  WHERE identifier = 'exi.fidelity.comments'
+);
+
+INSERT INTO "boolean_settings"
+SELECT 0, 'exi.fidelity.comments'
+WHERE NOT EXISTS (
+  SELECT value
+  FROM "boolean_settings"
+  WHERE identifier = 'exi.fidelity.comments'
+);
+
+--CHOICE
+INSERT INTO "settings"
+SELECT 'exi.grammar'
+WHERE NOT EXISTS (
+  SELECT identifier
+  FROM "settings"
+  WHERE identifier = 'exi.grammar'
+);
+
+INSERT INTO "string_settings"
+SELECT 'exi.grammar.schemaless', 'exi.grammar'
+WHERE NOT EXISTS (
+  SELECT value
+  FROM "string_settings"
+  WHERE identifier = 'exi.grammar'
+);
+
+--CHOICE
+INSERT INTO "settings"
+SELECT 'exi.grammar.schema'
+WHERE NOT EXISTS (
+  SELECT identifier
+  FROM "settings"
+  WHERE identifier = 'exi.grammar.schema'
+);
+
+INSERT INTO "string_settings"
+SELECT 'exi.grammar.schema.sos.20', 'exi.grammar.schema'
+WHERE NOT EXISTS (
+  SELECT value
+  FROM "string_settings"
+  WHERE identifier = 'exi.grammar.schema'
+);
+
+--CHOICE
+INSERT INTO "settings"
+SELECT 'exi.alignment'
+WHERE NOT EXISTS (
+  SELECT identifier
+  FROM "settings"
+  WHERE identifier = 'exi.alignment'
+);
+
+INSERT INTO "string_settings"
+SELECT 'BIT_PACKED', 'exi.alignment'
+WHERE NOT EXISTS (
+  SELECT value
+  FROM "string_settings"
+  WHERE identifier = 'exi.alignment'
+);
+
+INSERT INTO "settings"
+SELECT 'exi.fidelity.prefixes'
+WHERE NOT EXISTS (
+  SELECT identifier
+  FROM "settings"
+  WHERE identifier = 'exi.fidelity.comment'
+);
+
+INSERT INTO "boolean_settings"
+SELECT 1, 'exi.fidelity.prefixes'
+WHERE NOT EXISTS (
+  SELECT value
+  FROM "boolean_settings"
+  WHERE identifier = 'exi.fidelity.prefixes'
+);
+
+INSERT INTO "settings"
+SELECT 'exi.fidelity.processing.instructions'
+WHERE NOT EXISTS (
+  SELECT identifier
+  FROM "settings"
+  WHERE identifier = 'exi.fidelity.comment'
+);
+
+INSERT INTO "boolean_settings"
+SELECT 0, 'exi.fidelity.processing.instructions'
+WHERE NOT EXISTS (
+  SELECT value
+  FROM "boolean_settings"
+  WHERE identifier = 'exi.fidelity.processing.instructions'
+);
+
+INSERT INTO "settings"
+SELECT 'exi.fidelity.dtd'
+WHERE NOT EXISTS (
+  SELECT identifier
+  FROM "settings"
+  WHERE identifier = 'exi.fidelity.comment'
+);
+
+INSERT INTO "boolean_settings"
+SELECT 0, 'exi.fidelity.dtd'
+WHERE NOT EXISTS (
+  SELECT value
+  FROM "boolean_settings"
+  WHERE identifier = 'exi.fidelity.dtd'
+);
