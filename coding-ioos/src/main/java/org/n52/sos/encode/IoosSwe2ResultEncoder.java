@@ -501,6 +501,8 @@ public class IoosSwe2ResultEncoder {
                 xbQuantity.setDefinition(phenComponent.getIdentifier());
                 if (phenComponent.getUnit() != null) {
                     xbQuantity.setUom(createUnitReference(phenComponent.getUnit()));
+                } else {
+                	xbQuantity.addNewUom().setCode("UNKNOWN");
                 }
         	} else if( valueType.equals( TextValue.class ) ){
                 TextType xbText = (TextType) xbField.addNewAbstractDataComponent()
