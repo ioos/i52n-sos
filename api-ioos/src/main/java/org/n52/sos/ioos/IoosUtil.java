@@ -125,7 +125,8 @@ public class IoosUtil {
             //get foi
             AbstractFeature aFoi = obsConst.getFeatureOfInterest();
             if( !( aFoi instanceof SamplingFeature ) ){
-                throw new NoApplicableCodeException().withMessage("Encountered a feature which isn't a SamplingFeature");
+                throw new NoApplicableCodeException()
+                		.withMessage("Encountered a feature which isn't a SamplingFeature");
             }
             SamplingFeature foi = (SamplingFeature) aFoi;
 
@@ -133,9 +134,10 @@ public class IoosUtil {
             for (Point point : points ){
                 try {
                     //TODO is this correct?
-                    point = (Point) GeometryHandler.getInstance().switchCoordinateAxisOrderIfNeeded(point);
+                    point = (Point) GeometryHandler.getInstance().switchCoordinateAxisFromToDatasourceIfNeeded(point);
                 } catch (OwsExceptionReport e) {
-                    throw new NoApplicableCodeException().withMessage("Exception while normalizing feature coordinate axis order.");
+                    throw new NoApplicableCodeException()
+                    		.withMessage("Exception while normalizing feature coordinate axis order.");
                 }
                 stationPoints.put( sensor.getStationAsset(), FeatureUtil.clonePoint2d( point ) );
                 sensorLngs.put(sensor, point.getX());

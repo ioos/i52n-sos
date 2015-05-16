@@ -307,7 +307,8 @@ public class IoosOmEncoderv100 implements ObservationEncoder<XmlObject, Object>{
         	Point stationPoint = ioosSosObs.getSingularStationPoint( station );
         	if( stationPoint != null ){
         	    //switch coord axis order back if necessary, since we switched them to x,y order above
-        	    stationPoint = (Point) GeometryHandler.getInstance().switchCoordinateAxisOrderIfNeeded(stationPoint);
+        	    stationPoint = (Point) GeometryHandler.getInstance()
+        	    		.switchCoordinateAxisFromToDatasourceIfNeeded(stationPoint);
                 PointType xb_point = xb_pointMembers.addNewPoint();
                 xb_point.addNewName().setStringValue( station.getAssetId() );
                 xb_point.addNewPos().setStringValue( JTSHelper.getCoordinatesString( stationPoint ) );        	        		

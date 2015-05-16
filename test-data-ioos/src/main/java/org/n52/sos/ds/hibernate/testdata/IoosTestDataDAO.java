@@ -162,7 +162,7 @@ public class IoosTestDataDAO {
                         .uniqueResult();                
             }
 
-            if (HibernateHelper.isEntitySupported(ObservationInfo.class, session)) {
+            if (HibernateHelper.isEntitySupported(ObservationInfo.class)) {
                 if(count == 0) {
                     count = (Long) session.createCriteria(ObservationInfo.class)
                             .add(Restrictions.eq("observableProperty", obsProp))
