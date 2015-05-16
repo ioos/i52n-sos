@@ -35,8 +35,11 @@ import net.opengis.swe.x101.TimeObjectPropertyType;
 
 import org.apache.xmlbeans.XmlObject;
 import org.joda.time.DateTime;
+import org.n52.sos.config.annotation.Configurable;
+import org.n52.sos.config.annotation.Setting;
 import org.n52.sos.exception.ows.concrete.UnsupportedEncoderInputException;
 import org.n52.sos.ioos.Ioos52nConstants;
+import org.n52.sos.ioos.IoosSettings;
 import org.n52.sos.ioos.IoosUtil;
 import org.n52.sos.ioos.asset.StationAsset;
 import org.n52.sos.ioos.om.IoosSosObservation;
@@ -68,6 +71,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 import com.vividsolutions.jts.geom.Point;
 
+@Configurable
 public class IoosOmEncoderv100 implements ObservationEncoder<XmlObject, Object>{
     /** logger */
     private static final Logger LOGGER = LoggerFactory.getLogger(IoosOmEncoderv100.class);
@@ -93,6 +97,11 @@ public class IoosOmEncoderv100 implements ObservationEncoder<XmlObject, Object>{
     private static final Set<EncoderKey> ENCODER_KEYS = CodingHelper.encoderKeysForElements( CONTENT_TYPE_IOOS_OM_M10.toString(),
     		IoosSosObservation.class, GetObservationResponse.class, GetObservationByIdResponse.class);
 
+    /**
+     * Disclaimer from IoosSettings
+     */
+    private String disclaimer;
+    
     public IoosOmEncoderv100() {
         LOGGER.debug("Encoder for the following keys initialized successfully: {}!",
                 Joiner.on(", ").join(ENCODER_KEYS));
@@ -174,6 +183,11 @@ public class IoosOmEncoderv100 implements ObservationEncoder<XmlObject, Object>{
         throw new UnsupportedEncoderInputException(this, element);
     }
 
+    @Setting(IoosSettings.DISCLAIMER)
+    public void setDisclaimer(final String disclaimer) {
+        this.disclaimer = disclaimer;
+    }
+
     protected XmlObject createObservationCollection(List<OmObservation> sosObservationCollection, String resultModel)
     		throws OwsExceptionReport {
     	// create ObservationCollectionDocument and add Collection
@@ -183,14 +197,16 @@ public class IoosOmEncoderv100 implements ObservationEncoder<XmlObject, Object>{
         xb_obsCol.setId(SosConstants.OBS_COL_ID_PREFIX + new DateTime().getMillis());
 
         //top level disclaimer
-        MetaDataPropertyType xb_disclaimerMetadataProperty = xb_obsCol.addNewMetaDataProperty();;
-        xb_disclaimerMetadataProperty.setTitle("disclaimer");        
-        GenericMetaDataDocument xb_disclaimerMetadataDoc = GenericMetaDataDocument.Factory.newInstance();
-        GenericMetaDataType xb_disclaimerMetadata = xb_disclaimerMetadataDoc.addNewGenericMetaData();         
-        DescriptionDocument xb_disclaimerDescriptionDoc = DescriptionDocument.Factory.newInstance();
-        xb_disclaimerDescriptionDoc.addNewDescription().setStringValue( IoosSosConstants.DISCLAIMER_TEXT );
-        XmlHelper.append( xb_disclaimerMetadata, xb_disclaimerDescriptionDoc );
-        XmlHelper.append( xb_disclaimerMetadataProperty, xb_disclaimerMetadataDoc );        
+        if (disclaimer != null && !disclaimer.trim().isEmpty()) {
+	        MetaDataPropertyType xb_disclaimerMetadataProperty = xb_obsCol.addNewMetaDataProperty();;
+	        xb_disclaimerMetadataProperty.setTitle("disclaimer");        
+	        GenericMetaDataDocument xb_disclaimerMetadataDoc = GenericMetaDataDocument.Factory.newInstance();
+	        GenericMetaDataType xb_disclaimerMetadata = xb_disclaimerMetadataDoc.addNewGenericMetaData();         
+	        DescriptionDocument xb_disclaimerDescriptionDoc = DescriptionDocument.Factory.newInstance();        
+	        xb_disclaimerDescriptionDoc.addNewDescription().setStringValue(disclaimer.trim());
+	        XmlHelper.append( xb_disclaimerMetadata, xb_disclaimerDescriptionDoc );
+	        XmlHelper.append( xb_disclaimerMetadataProperty, xb_disclaimerMetadataDoc );        
+        }
 
         //ioos template version        
         MetaDataPropertyType xb_templateVersionMetadataProperty = xb_obsCol.addNewMetaDataProperty();

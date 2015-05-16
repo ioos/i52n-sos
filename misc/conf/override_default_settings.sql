@@ -97,6 +97,22 @@ WHERE procedureDescriptionFormat != 'text/xml; subtype="sensorML/1.0.1/profiles/
 
 INSERT INTO "observation_encodings" VALUES('text/xml; subtype="om/1.0.0/profiles/ioos_sos/1.0"','SOS','1.0.0',1);
 
+INSERT INTO "settings"
+SELECT 'ioos.disclaimer'
+WHERE NOT EXISTS (
+  SELECT identifier
+  FROM "settings"
+  WHERE identifier = 'ioos.disclaimer'
+);
+
+INSERT INTO "string_settings"
+SELECT 'Data provided without any guarantee of accuracy. Provider assumes no liability whatsoever. USE AT YOUR OWN RISK.', 'ioos.disclaimer'
+WHERE NOT EXISTS (
+  SELECT value
+  FROM "string_settings"
+  WHERE identifier = 'ioos.disclaimer'
+);
+
 -- REMOVE ONCE THESE VALUES ARE IN THE UPSTREAM DEFAULT SETTINGS
 
 INSERT INTO "settings"
