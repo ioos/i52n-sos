@@ -444,10 +444,12 @@ public class IoosUtil {
         for (OmObservation sosObservation : observationCollection) {
             sosObservation.getObservationConstellation().getFeatureOfInterest();
             SamplingFeature samplingFeature = (SamplingFeature) sosObservation.getObservationConstellation().getFeatureOfInterest();
-            if( envelope == null ){
-                envelope = samplingFeature.getGeometry().getEnvelopeInternal();
-            } else {
-                envelope.expandToInclude(samplingFeature.getGeometry().getEnvelopeInternal());              
+            if (samplingFeature != null && samplingFeature.getGeometry() != null) {
+	            if( envelope == null ){
+	                envelope = samplingFeature.getGeometry().getEnvelopeInternal();
+	            } else {
+	                envelope.expandToInclude(samplingFeature.getGeometry().getEnvelopeInternal());              
+	            }
             }
         }
         return envelope;
