@@ -270,7 +270,7 @@ public class IoosHibernateTestDataManager{
             Map<String,Codespace> codespaceCache, Map<String,Unit> unitCache, Session session) throws OwsExceptionReport{
         for (int j = 0; j < NUM_OBS_PER_SENSOR; j++){
             OmObservation obs = new OmObservation();
-            double obsValue = randomInRange(5.0,  32.0);
+            double obsValue = randomInRange(5.0,  32.0, 3);
             DateTime obsTime = obsEndTime.minusHours(j);
             QuantityValue quantityValue = new QuantityValue(obsValue, unit);
             obs.setValue(new SingleObservationValue<Double>(new TimeInstant(obsTime), quantityValue));
@@ -329,16 +329,17 @@ public class IoosHibernateTestDataManager{
     }
     
     private static double randomLng(){
-        return randomInRange(-180.0, 180.0);
+        return randomInRange(-180.0, 180.0, 6);
     }
 
     private static double randomLat(){
         //stay away from the poles because they often break software
-        return randomInRange(-75.0, 75.0);
+        return randomInRange(-75.0, 75.0, 6);
     }
     
-    private static double randomInRange(double min, double max){
-        return min + Math.random() * (max - min);        
+    private static double randomInRange(double min, double max, int decimalPlaces){
+    	double co = Math.pow(10, decimalPlaces);
+        return Math.round(min + Math.random() * (max - min) * co) / co;        
     }
 
     private static ContentCache getCache(){
