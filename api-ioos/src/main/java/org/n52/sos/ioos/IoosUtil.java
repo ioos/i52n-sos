@@ -113,10 +113,20 @@ public class IoosUtil {
             Map<String,OmObservableProperty> phenomenaMap = new HashMap<String,OmObservableProperty>();
             if( absPhen instanceof OmCompositePhenomenon ){
                 for( OmObservableProperty phen : ( (OmCompositePhenomenon) absPhen).getPhenomenonComponents() ){
+                	//TODO should the unit be set like this? seems sketchy
+                    if (phen.getUnit() == null && sosObs.getValue() != null && sosObs.getValue().getValue() != null
+                    		&& sosObs.getValue().getValue().getUnit() != null) {
+                		phen.setUnit(sosObs.getValue().getValue().getUnit());
+                	}
                     phenomenaMap.put( phen.getIdentifier(), phen );
                 }
             } else {
                 OmObservableProperty phen = (OmObservableProperty) absPhen;
+                //TODO should the unit be set like this? seems sketchy
+                if (phen.getUnit() == null && sosObs.getValue() != null && sosObs.getValue().getValue() != null
+                		&& sosObs.getValue().getValue().getUnit() != null) {
+                    phen.setUnit(sosObs.getValue().getValue().getUnit());
+                }
                 phenomenaMap.put( phen.getIdentifier(), phen );
             }
             List<OmObservableProperty> phenomena = new ArrayList<OmObservableProperty>( phenomenaMap.values() );

@@ -514,11 +514,15 @@ public abstract class AbstractIoosNetcdfEncoder implements ObservationEncoder<Bi
             String standardName = IoosSosUtil.getNameFromUri(obsProp.getIdentifier());
             Variable vObsProp = writer.addVariable(null, standardName, DataType.DOUBLE, obsPropDims);
             vObsProp.addAttribute(new Attribute(CFConstants.STANDARD_NAME, standardName));
-            vObsProp.addAttribute(new Attribute(CFConstants.LONG_NAME, obsProp.getIdentifier()));
+            if (obsProp.getIdentifier() != null) {
+            	vObsProp.addAttribute(new Attribute(CFConstants.LONG_NAME, obsProp.getIdentifier()));
+            }
             vObsProp.addAttribute(new Attribute(CFConstants.COORDINATES, coordinateString));
             vObsProp.addAttribute(new Attribute(CFConstants.FILL_VALUE, DOUBLE_FILL_VALUE));
-            vObsProp.addAttribute(new Attribute(CFConstants.UNITS,
-                    IoosSosUtil.getNameFromUri(obsProp.getUnit())));
+            if (obsProp.getUnit() != null) {
+	            vObsProp.addAttribute(new Attribute(CFConstants.UNITS,
+	                    IoosSosUtil.getNameFromUri(obsProp.getUnit())));
+            }
             obsPropVarMap.put(obsProp, vObsProp);
 
             //init obs prop data array
