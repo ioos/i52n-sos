@@ -113,8 +113,12 @@ WHERE NOT EXISTS (
   WHERE identifier = 'ioos.disclaimer'
 );
 
--- REMOVE ONCE THESE VALUES ARE IN THE UPSTREAM DEFAULT SETTINGS
+--ENABLE OPERATIONS
+INSERT INTO "operations" (operation, service, version, active) VALUES ('InsertObservation', 'SOS', '2.0.0', 1);
+INSERT INTO "operations" (operation, service, version, active) VALUES ('InsertSensor', 'SOS', '2.0.0', 1);
+INSERT INTO "operations" (operation, service, version, active) VALUES ('UpdateSensorDescription', 'SOS', '2.0.0', 1);
 
+-- REMOVE ONCE THESE VALUES ARE IN THE UPSTREAM DEFAULT SETTINGS
 INSERT INTO "settings"
 SELECT 'exi.fidelity.lexical.value'
 WHERE NOT EXISTS (
