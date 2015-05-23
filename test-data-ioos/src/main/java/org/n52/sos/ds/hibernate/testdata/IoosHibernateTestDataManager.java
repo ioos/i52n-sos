@@ -338,8 +338,9 @@ public class IoosHibernateTestDataManager{
     }
     
     private static double randomInRange(double min, double max, int decimalPlaces){
-    	double co = Math.pow(10, decimalPlaces);
-        return Math.round(min + Math.random() * (max - min) * co) / co;        
+        double unroundedValue = min + Math.random() * (max - min);
+        double co = Math.pow(10, decimalPlaces);
+        return Math.round(unroundedValue * co) / co;        
     }
 
     private static ContentCache getCache(){
