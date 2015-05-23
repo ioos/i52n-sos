@@ -1,13 +1,33 @@
 RELEASE NOTES
 
-Changes since last stable release
+RELEASE 1.0.0
 ==================================
+ 
+See http://ioos.github.io/i52n-sos/upgrade.html#1.0.0 for upgrade instructions.
  
  --- New features ---
  
+    * Implemented non-zipped netCDF GetObs response format application/x-netcdf
+      (single sensor only, CF/ACDD/NODC/IOOS conventions)
+    * User configurable disclaimer in GetObservation responses (see IOOS tab in settings)      
+    
  --- Changes ---    
     
+    * Updated upsteam 52 North SOS from 4.0.2-SNAPSHOT to 4.2.0
+    ** Numeric observation values now stored as floating points (double precision)
+       instead of fixed decimal numbers. Database upgrade script required (see docs).
+    ** EXI bindings
+    ** See upstream RELEASE-NOTES (verisons 52n-sensorweb-sos-4.1 - 52n-sensorweb-sos-4.2.0):
+       for more details: https://github.com/52North/SOS/blob/master/RELEASE-NOTES           
+    * netCDF encoding: use doubles for all numeric variables
+    * netCDF encoding: generation time included in history attribute
+    
  --- Fixed bugs --- 
+
+    * Fix missing profileBinDescription definition attributes
+    * Fix netCDF cdm_data_type
+    * Fix missing observationTimeRange definition in network SensorML
+    
 
 Release 0.8.1
 ==================================
