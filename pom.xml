@@ -315,4 +315,25 @@
       <url>http://nexus.axiomalaska.com/nexus/content/repositories/public-snapshots</url>
     </snapshotRepository>
   </distributionManagement>
+  <profiles>
+    <!-- hack for Java 7 around upstream -Xdoclint:none fix for Java 8 -->
+    <profile>
+      <id>doclint-java8-disable</id>
+      <activation>
+        <jdk>1.7</jdk>
+      </activation>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <additionalJOption>-J-Xmx512m</additionalJOption>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
