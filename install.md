@@ -45,35 +45,37 @@ to your Java application server. If you're using Tomcat, just copy the war to yo
 # Complete the install wizard
 
 The new SOS is easily configured using the installation wizard. Open the newly deployed applications homepage in a browser
-(e.g. {{http://localhost:8080/52n-sos-ioos-${project.version}}}) and complete the wizard.
+(e.g. <http://localhost:8080/i52n-sos> and complete the wizard.
 
 On the **Datasource configuration** page, choose the following options:
   
-* **Datasource:** (if using PostgreSQL choose PostgreSQL/PostGIS, NOT PostgreSQL/PostGIS Core)
+* **Datasource:** (if using PostgreSQL choose __PostgreSQL/PostGIS__, NOT PostgreSQL/PostGIS Core/Custom Core)
 * **Transactional Profile:** enabled (default)
 * **Spatial Filtering Profile:** enabled (default)
-* **Actions - Create tables:** enabled (default), **UNLESS YOU ARE UPGRADING**, in which case choose Update schema.
+* **Actions - Create tables:** enabled (default), **UNLESS YOU ARE UPGRADING**, in which case choose __Force updating existing tables__.
   
-On the **Settings** page, fill in the fields with your deployment specific information. The following fields should typically be set:
+On the **Settings** page, fill in the fields with your deployment specific information.
+The following fields should typically be set:
+
 * **Service Provider:** All required fields
 * **Service Identification:** All required fields
 * **Service:**
-  * SOS URL (publicly accessible URL of SOS endpoint, e.g. http://yourdomain.org/52n-sos-ioos/sos)
-  * Cache Feeder Threads - more threads = better for cache processing, tune for your hardware 
+  * **SOS URL:** Publicly accessible URL of SOS endpoint, e.g. http://yourdomain.org/i52n-sos/sos
+  * **Cache Feeder Threads:** Number of threads to use for cache reloading (more threads = better for cache processing, tune for your hardware, 8 is a good default)
   
-Finally, enter a username and password for the SOS' admin pages. After that, you should be all set. 
+Finally, enter a username and password for the SOS' admin pages.
 
 # Test the application
  
 If all went well, you should now be able to test your application.
 Its location will vary depending on your settings, but if you're testing locally a likely location is
-<http://localhost:8080/52n-sos-ioos-VERSION> (replace version with the version of the release you downloaded).
+<http://localhost:8080/i52n-sos>.
 
 See the [test data instructions](./testdata.html) for information on how to insert and remove test data from the SOS.
 
 Using the test client, make a
-[GetCapabilities](http://localhost:8080/52n-sos-ioos-VERSION/sos/kvp?service=SOS&request=GetCapabilities&AcceptVersions=1.0.0)
+[GetCapabilities](http://localhost:8080/i52n-sos/sos/kvp?service=SOS&request=GetCapabilities&AcceptVersions=1.0.0)
 request.
   
-See other example requests in the [client interface](http://localhost:8080/52n-sos-ioos-VERSION/client).  
+See other example requests in the [client interface](http://localhost:8080/i52n-sos/client).  
 
