@@ -212,7 +212,20 @@
       </dependency>      
     </dependencies>
   </dependencyManagement>
-  
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-release-plugin</artifactId>
+          <configuration>
+            <connectionUrl>${project.scm.url}</connectionUrl>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
   <repositories>
     <repository>
       <id>n52-releases</id>
