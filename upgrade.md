@@ -15,6 +15,8 @@ title: Upgrade Instructions
 
 ## Pre-1.0.0 to 1.0.0 <a name="1.0.0"></a>
 
+__NOTE:__ Be sure to disable any sensor harvesting and external access while installing the SOS, as SOS requests to the server before it is initialized will cause a crash due to [this bug](https://github.com/ioos/i52n-sos/issues/22). Will resolve in future releases.
+
 ### Update settings (before installation of new version)
 
 Due to [an issue](https://github.com/52North/SOS/issues/231) in the upstream SOS, the exported JSON settings from 
