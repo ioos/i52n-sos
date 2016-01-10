@@ -77,7 +77,6 @@ public class IoosUtil {
         HashMap<StationAsset,Point> stationPoints = Maps.newHashMap();
         
         SetMultimap<SensorAsset,OmObservableProperty> sensorPhens = HashMultimap.create();
-//        Map<StationAsset,TimePeriod> stationPeriodMap = new HashMap<StationAsset,TimePeriod>();
 
         // maps to keep track of unique dimension values by sensor (these may or may not vary, determining the feature type)        
         SetMultimap<SensorAsset,Double> sensorLngs = HashMultimap.create();
@@ -245,20 +244,14 @@ public class IoosUtil {
         //now we know about each station's dimensions, sort into CF feature types
         
         //sampling time periods
-//        TimePeriod pointSamplingTimePeriod = new TimePeriod();
-        TimePeriod timeSeriesSamplingTimePeriod = new TimePeriod();
-//        TimePeriod profileSamplingTimePeriod = new TimePeriod(); 
+        TimePeriod timeSeriesSamplingTimePeriod = new TimePeriod(); 
         TimePeriod timeSeriesProfileSamplingTimePeriod = new TimePeriod();
         TimePeriod trajectorySamplingTimePeriod = new TimePeriod();
         TimePeriod trajectoryProfileSamplingTimePeriod = new TimePeriod();
         
         //station datasets
-//        Map<SensorAsset,PointSensorDataset> pointSensorDatasets =
-//                new HashMap<SensorAsset,PointSensorDataset>();
         Map<SensorAsset,TimeSeriesSensorDataset> timeSeriesSensorDatasets =
                 new HashMap<SensorAsset,TimeSeriesSensorDataset>();
-//        Map<SensorAsset,ProfileSensorDataset> profileSensorDatasets =
-//                new HashMap<SensorAsset,ProfileSensorDataset>();
         Map<SensorAsset,TimeSeriesProfileSensorDataset> timeSeriesProfileSensorDatasets =
                 new HashMap<SensorAsset,TimeSeriesProfileSensorDataset>();
         Map<SensorAsset,TrajectorySensorDataset> trajectorySensorDatasets =
@@ -267,32 +260,24 @@ public class IoosUtil {
                 new HashMap<SensorAsset,TrajectoryProfileSensorDataset>();
                 
         //phenomena
-//        Set<OmObservableProperty> pointPhenomena = new HashSet<OmObservableProperty>();
         Set<OmObservableProperty> timeSeriesPhenomena = new HashSet<OmObservableProperty>();
-//        Set<OmObservableProperty> profilePhenomena = new HashSet<OmObservableProperty>();
         Set<OmObservableProperty> timeSeriesProfilePhenomena = new HashSet<OmObservableProperty>();
         Set<OmObservableProperty> trajectoryPhenomena = new HashSet<OmObservableProperty>();
         Set<OmObservableProperty> trajectoryProfilePhenomena = new HashSet<OmObservableProperty>();
         
-        //envelopes
-//        Envelope pointEnvelope = new Envelope(); 
+        //envelopes 
         Envelope timeSeriesEnvelope = new Envelope();
-//        Envelope profileEnvelope = new Envelope();
         Envelope timeSeriesProfileEnvelope = new Envelope();
         Envelope trajectoryEnvelope = new Envelope();
         Envelope trajectoryProfileEnvelope = new Envelope();
 
-        //station points
-//        HashMap<StationAsset,Point> pointStationPoints = Maps.newHashMap(); 
+        //station points 
         HashMap<StationAsset,Point> timeSeriesStationPoints = Maps.newHashMap();
-//        HashMap<StationAsset,Point> profileStationPoints = Maps.newHashMap();
         HashMap<StationAsset,Point> timeSeriesProfileStationPoints = Maps.newHashMap();
         HashMap<StationAsset,Point> trajectoryStationPoints = Maps.newHashMap();
         HashMap<StationAsset,Point> trajectoryProfileStationPoints = Maps.newHashMap();
-
-//        SetMultimap<SensorAsset,Double> pointSensorHeights = HashMultimap.create(); 
+ 
         SetMultimap<SensorAsset,Double> timeSeriesSensorHeights = HashMultimap.create();
-//        SetMultimap<SensorAsset,Double> profileSensorHeights = HashMultimap.create();
         SetMultimap<SensorAsset,Double> timeSeriesProfileSensorHeights = HashMultimap.create();
         SetMultimap<SensorAsset,Double> trajectorySensorHeights = HashMultimap.create();
         SetMultimap<SensorAsset,Double> trajectoryProfileSensorHeights = HashMultimap.create();
@@ -306,17 +291,14 @@ public class IoosUtil {
             int lngCount = sensorLngs.get( sensor ).size();
             int latCount = sensorLats.get( sensor ).size();
             int heightCount = sensorHeights.get( sensor ).size();
-//            int timeCount = sensorTimes.size();
             
             boolean locationVaries = lngCount > 0 && latCount > 0 && (lngCount > 1 || latCount > 1);
             boolean heightVaries = heightCount > 1;
-//            boolean timeVaries = timeCount > 1;
             
             //set static dimension values where applicable
             Double staticLng = null;
             Double staticLat = null;
             Double staticHeight = null;
-//            Time staticTime = null;
             if( !locationVaries ){
                 if( !sensorLngs.get( sensor ).isEmpty() ){
                     staticLng = sensorLngs.get( sensor ).iterator().next();
@@ -330,27 +312,6 @@ public class IoosUtil {
                     staticHeight = sensorHeights.get( sensor ).iterator().next();
                 }
             }
-//            if( !timeVaries ){
-//                if( !sensorTimes.isEmpty() ){                
-//                    staticTime = sensorTimes.iterator().next();
-//                }
-//            }
-            
-            //put data on applicable feature type maps
-//            if( !locationVaries && !heightVaries && !timeVaries ){
-//                //point
-//                pointSamplingTimePeriod.extendToContain( sensorTimes );
-//                pointSensorDatasets.put( sensor, new PointSensorDataset( sensor, staticLng, staticLat,
-//                        staticHeight, staticTime, obsValuesEntry.getValue() ) );
-//                pointPhenomena.addAll( sensorPhens.get( sensor ) );
-//                if( staticLng != null && staticLat != null ){ 
-//                    pointEnvelope.expandToInclude( staticLng, staticLat );
-//                }
-//                pointStationPoints.putAll( station, stationPoints.get( station ) );
-//                if( sensorHeights.get( sensor ) != null ){
-//                    pointSensorHeights.putAll( sensor, sensorHeights.get( sensor ) );                 
-//                }
-//            } else if( !locationVaries && !heightVaries && timeVaries){
           if( !locationVaries && !heightVaries ){            
                 //time series
                 timeSeriesSamplingTimePeriod.extendToContain( sensorTimes );
@@ -364,20 +325,6 @@ public class IoosUtil {
                 if( sensorHeights.get( sensor ) != null ){                
                     timeSeriesSensorHeights.putAll( sensor, sensorHeights.get( sensor ) );
                 }
-//            } else if( !locationVaries && heightVaries && !timeVaries ){
-//                //profile
-//                profileSamplingTimePeriod.extendToContain( sensorTimes );
-//                profileSensorDatasets.put( sensor, new ProfileSensorDataset( sensor, staticLng, staticLat,
-//                        staticTime, obsValuesEntry.getValue() ) );
-//                profilePhenomena.addAll( sensorPhens.get( sensor ) );
-//                if( staticLng != null && staticLat != null ){
-//                    profileEnvelope.expandToInclude( staticLng, staticLat );
-//                }
-//                profileStationPoints.putAll( station, stationPoints.get( station ) );
-//                if( sensorHeights.get( sensor ) != null ){                
-//                  profileSensorHeights.putAll( sensor, sensorHeights.get( sensor ) );
-//                }
-//            } else if( !locationVaries && heightVaries && timeVaries ){
           } else if( !locationVaries && heightVaries ){                
                 //time series profile
                 timeSeriesProfileSamplingTimePeriod.extendToContain( sensorTimes );
@@ -391,7 +338,6 @@ public class IoosUtil {
                 if( sensorHeights.get( sensor ) != null ){
                     timeSeriesProfileSensorHeights.putAll( sensor, sensorHeights.get( sensor ) );
                 }
-//            } else if( locationVaries && !heightVaries && timeVaries ){
           } else if( locationVaries && !heightVaries ){                
                 //trajectory
                 trajectorySamplingTimePeriod.extendToContain( sensorTimes );
@@ -403,7 +349,6 @@ public class IoosUtil {
                 if( sensorHeights.get( sensor ) != null ){
                     trajectorySensorHeights.putAll( sensor, sensorHeights.get( sensor ) );
                 }
-//            } else if( locationVaries && heightVaries && timeVaries ){
           } else if( locationVaries && heightVaries ){                
                 //trajectory profile
                 trajectoryProfileSamplingTimePeriod.extendToContain( sensorTimes );
