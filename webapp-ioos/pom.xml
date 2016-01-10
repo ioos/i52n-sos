@@ -24,6 +24,7 @@
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
           <filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
           <nonFilteredFileExtensions>
             <nonFilteredFileExtensions>db</nonFilteredFileExtensions>
           </nonFilteredFileExtensions>
