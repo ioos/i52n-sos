@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.hibernate.Session;
+import org.n52.sos.ds.hibernate.HibernateSessionHolder;
 import org.n52.sos.exception.ows.InvalidParameterValueException;
 import org.n52.sos.exception.ows.NoApplicableCodeException;
 import org.n52.sos.ioos.asset.AbstractAsset;
@@ -43,14 +45,15 @@ import org.n52.sos.ogc.ows.OwsExceptionReport;
 import org.n52.sos.util.GeometryHandler;
 import org.slf4j.Logger;
 
-import ucar.nc2.constants.CF;
-
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Maps;
 import com.google.common.collect.SetMultimap;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
+
+import ucar.nc2.constants.CF;
 
 public class IoosUtil {
     /**
@@ -63,12 +66,15 @@ public class IoosUtil {
      */
     public static List<IoosSosObservation> createIoosSosObservations(List<OmObservation> omObservations )
             throws OwsExceptionReport {
+        HibernateSessionHolder sessionHolder = new HibernateSessionHolder();
+        Session session = sessionHolder.getSession();
+
         // the main map of observation value strings by asset, time, phenomenon, and subsensor (height, profile bin, etc)
         Map<SensorAsset,Map<Time,Map<OmObservableProperty,Map<SubSensor,Value<?>>>>> obsValuesMap
             = new HashMap<SensorAsset,Map<Time,Map<OmObservableProperty,Map<SubSensor,Value<?>>>>>();
 
-        //keep track of other data associated with station
-        SetMultimap<StationAsset,Point> stationPoints = HashMultimap.create();
+        //keep track of other data associated with station and sensor
+        HashMap<StationAsset,Point> stationPoints = Maps.newHashMap();
         
         SetMultimap<SensorAsset,OmObservableProperty> sensorPhens = HashMultimap.create();
 //        Map<StationAsset,TimePeriod> stationPeriodMap = new HashMap<StationAsset,TimePeriod>();
@@ -113,18 +119,18 @@ public class IoosUtil {
             Map<String,OmObservableProperty> phenomenaMap = new HashMap<String,OmObservableProperty>();
             if( absPhen instanceof OmCompositePhenomenon ){
                 for( OmObservableProperty phen : ( (OmCompositePhenomenon) absPhen).getPhenomenonComponents() ){
-                	//TODO should the unit be set like this? seems sketchy
+                    //TODO should the unit be set like this? seems sketchy
                     if (phen.getUnit() == null && sosObs.getValue() != null && sosObs.getValue().getValue() != null
-                    		&& sosObs.getValue().getValue().getUnit() != null) {
-                		phen.setUnit(sosObs.getValue().getValue().getUnit());
-                	}
+                            && sosObs.getValue().getValue().getUnit() != null) {
+                        phen.setUnit(sosObs.getValue().getValue().getUnit());
+                    }
                     phenomenaMap.put( phen.getIdentifier(), phen );
                 }
             } else {
                 OmObservableProperty phen = (OmObservableProperty) absPhen;
                 //TODO should the unit be set like this? seems sketchy
                 if (phen.getUnit() == null && sosObs.getValue() != null && sosObs.getValue().getValue() != null
-                		&& sosObs.getValue().getValue().getUnit() != null) {
+                        && sosObs.getValue().getValue().getUnit() != null) {
                     phen.setUnit(sosObs.getValue().getValue().getUnit());
                 }
                 phenomenaMap.put( phen.getIdentifier(), phen );
@@ -136,22 +142,30 @@ public class IoosUtil {
             AbstractFeature aFoi = obsConst.getFeatureOfInterest();
             if( !( aFoi instanceof SamplingFeature ) ){
                 throw new NoApplicableCodeException()
-                		.withMessage("Encountered a feature which isn't a SamplingFeature");
+                        .withMessage("Encountered a feature which isn't a SamplingFeature");
             }
             SamplingFeature foi = (SamplingFeature) aFoi;
 
-            Set<Point> points = FeatureUtil.getFeaturePoints( foi );
-            for (Point point : points ){
+            //set station geometry if it hasn't been already
+            if (!stationPoints.containsKey(sensor.getStationAsset())){
+                Geometry stationGeom = FeatureUtil.getStationGeom(session, sensor.getStationAsset());
+                if (stationGeom != null) {
+                    stationPoints.put(sensor.getStationAsset(), FeatureUtil.getCentroidWithSRID(stationGeom));
+                }
+            }
+
+            Set<Point> obsPoints = FeatureUtil.getFeaturePoints( foi );
+            for (Point obsPoint : obsPoints ){
                 try {
                     //TODO is this correct?
-                    point = (Point) GeometryHandler.getInstance().switchCoordinateAxisFromToDatasourceIfNeeded(point);
+                    obsPoint = (Point) GeometryHandler.getInstance()
+                            .switchCoordinateAxisFromToDatasourceIfNeeded(obsPoint);
                 } catch (OwsExceptionReport e) {
                     throw new NoApplicableCodeException()
-                    		.withMessage("Exception while normalizing feature coordinate axis order.");
+                            .withMessage("Exception while normalizing feature coordinate axis order.");
                 }
-                stationPoints.put( sensor.getStationAsset(), FeatureUtil.clonePoint2d( point ) );
-                sensorLngs.put(sensor, point.getX());
-                sensorLats.put(sensor, point.getY());
+                sensorLngs.put(sensor, obsPoint.getX());
+                sensorLats.put(sensor, obsPoint.getY());
             }            
             Set<Double> featureHeights = FeatureUtil.getFeatureHeights( foi );
             sensorHeights.putAll(sensor, featureHeights);
@@ -217,17 +231,17 @@ public class IoosUtil {
                 sensorObsMap.put( obsTime, obsPropMap );
             }
 
-            OmObservableProperty phen = phenomenaMap.get( phenId );                        
+            OmObservableProperty phen = phenomenaMap.get( phenId );
             Map<SubSensor,Value<?>> subSensorMap = obsPropMap.get( phen );
             if( subSensorMap == null ){
                 subSensorMap = new HashMap<SubSensor,Value<?>>();
-                obsPropMap.put( phen, subSensorMap );                        
+                obsPropMap.put( phen, subSensorMap );
             }
 
             //add obs value to subsensor map (null subsensors are ok)
-            subSensorMap.put(createSubSensor(sensor, foi), obsValue);                   
+            subSensorMap.put(createSubSensor(sensor, foi), obsValue);
         }
-        
+
         //now we know about each station's dimensions, sort into CF feature types
         
         //sampling time periods
@@ -269,12 +283,12 @@ public class IoosUtil {
         Envelope trajectoryProfileEnvelope = new Envelope();
 
         //station points
-//        SetMultimap<StationAsset,Point> pointStationPoints = HashMultimap.create(); 
-        SetMultimap<StationAsset,Point> timeSeriesStationPoints = HashMultimap.create();
-//        SetMultimap<StationAsset,Point> profileStationPoints = HashMultimap.create();
-        SetMultimap<StationAsset,Point> timeSeriesProfileStationPoints = HashMultimap.create();
-        SetMultimap<StationAsset,Point> trajectoryStationPoints = HashMultimap.create();
-        SetMultimap<StationAsset,Point> trajectoryProfileStationPoints = HashMultimap.create();
+//        HashMap<StationAsset,Point> pointStationPoints = Maps.newHashMap(); 
+        HashMap<StationAsset,Point> timeSeriesStationPoints = Maps.newHashMap();
+//        HashMap<StationAsset,Point> profileStationPoints = Maps.newHashMap();
+        HashMap<StationAsset,Point> timeSeriesProfileStationPoints = Maps.newHashMap();
+        HashMap<StationAsset,Point> trajectoryStationPoints = Maps.newHashMap();
+        HashMap<StationAsset,Point> trajectoryProfileStationPoints = Maps.newHashMap();
 
 //        SetMultimap<SensorAsset,Double> pointSensorHeights = HashMultimap.create(); 
         SetMultimap<SensorAsset,Double> timeSeriesSensorHeights = HashMultimap.create();
@@ -346,7 +360,7 @@ public class IoosUtil {
                 if( staticLng != null && staticLat != null ){
                     timeSeriesEnvelope.expandToInclude( staticLng, staticLat );
                 }
-                timeSeriesStationPoints.putAll( station, stationPoints.get( station ) );
+                timeSeriesStationPoints.put( station, stationPoints.get( station ) );
                 if( sensorHeights.get( sensor ) != null ){                
                     timeSeriesSensorHeights.putAll( sensor, sensorHeights.get( sensor ) );
                 }
@@ -373,7 +387,7 @@ public class IoosUtil {
                 if( staticLng != null && staticLat != null ){
                     timeSeriesProfileEnvelope.expandToInclude( staticLng, staticLat );
                 }
-                timeSeriesProfileStationPoints.putAll( station, stationPoints.get( station ) );
+                timeSeriesProfileStationPoints.put( station, stationPoints.get( station ) );
                 if( sensorHeights.get( sensor ) != null ){
                     timeSeriesProfileSensorHeights.putAll( sensor, sensorHeights.get( sensor ) );
                 }
@@ -385,7 +399,7 @@ public class IoosUtil {
                         obsValuesEntry.getValue() ) );
                 trajectoryPhenomena.addAll( sensorPhens.get( sensor ) );
                 expandEnvelopeToInclude( trajectoryEnvelope, sensorLngs.get( sensor ), sensorLats.get( sensor ) );
-                trajectoryStationPoints.putAll( station, stationPoints.get( station ) );
+                trajectoryStationPoints.put( station, stationPoints.get( station ) );
                 if( sensorHeights.get( sensor ) != null ){
                     trajectorySensorHeights.putAll( sensor, sensorHeights.get( sensor ) );
                 }
@@ -397,7 +411,7 @@ public class IoosUtil {
                         obsValuesEntry.getValue() ) );
                 trajectoryProfilePhenomena.addAll( sensorPhens.get( sensor ) );
                 expandEnvelopeToInclude( trajectoryProfileEnvelope, sensorLngs.get( sensor ), sensorLats.get( sensor ) );
-                trajectoryProfileStationPoints.putAll( station, stationPoints.get( station ) );
+                trajectoryProfileStationPoints.put( station, stationPoints.get( station ) );
                 if( sensorHeights.get( sensor ) != null ){
                     trajectoryProfileSensorHeights.putAll( sensor, sensorHeights.get( sensor ) );
                 }
@@ -409,27 +423,35 @@ public class IoosUtil {
 
         //timeSeries
         if( timeSeriesSensorDatasets.size() > 0 ){
-            iSosObsList.add( new IoosSosObservation( CF.FeatureType.timeSeries, timeSeriesSamplingTimePeriod,
-                    timeSeriesSensorDatasets, timeSeriesPhenomena, timeSeriesEnvelope, timeSeriesStationPoints ) );
+            iSosObsList.add( new IoosSosObservation( CF.FeatureType.timeSeries,
+                    timeSeriesSamplingTimePeriod, timeSeriesSensorDatasets, timeSeriesPhenomena,
+                    timeSeriesEnvelope, timeSeriesStationPoints, timeSeriesSensorHeights ) );
         }
 
         //time series profile
         if( timeSeriesProfileSensorDatasets.size() > 0 ){
-            iSosObsList.add( new IoosSosObservation( CF.FeatureType.timeSeriesProfile, timeSeriesProfileSamplingTimePeriod,
-                    timeSeriesProfileSensorDatasets, timeSeriesProfilePhenomena, timeSeriesProfileEnvelope, timeSeriesProfileStationPoints ) );
+            iSosObsList.add( new IoosSosObservation( CF.FeatureType.timeSeriesProfile,
+                    timeSeriesProfileSamplingTimePeriod, timeSeriesProfileSensorDatasets,
+                    timeSeriesProfilePhenomena, timeSeriesProfileEnvelope,
+                    timeSeriesProfileStationPoints, timeSeriesProfileSensorHeights ) );
         }
 
         //trajectory
         if( trajectorySensorDatasets.size() > 0 ){
-            iSosObsList.add( new IoosSosObservation( CF.FeatureType.trajectory, trajectorySamplingTimePeriod,
-                    trajectorySensorDatasets, trajectoryPhenomena, trajectoryEnvelope, trajectoryStationPoints ) );
+            iSosObsList.add( new IoosSosObservation( CF.FeatureType.trajectory,
+                    trajectorySamplingTimePeriod, trajectorySensorDatasets, trajectoryPhenomena,
+                    trajectoryEnvelope, trajectoryStationPoints, trajectorySensorHeights ) );
         }
 
         //trajectoryProfile
         if( trajectoryProfileSensorDatasets.size() > 0 ){
-            iSosObsList.add( new IoosSosObservation( CF.FeatureType.trajectoryProfile, trajectoryProfileSamplingTimePeriod,
-                    trajectoryProfileSensorDatasets, trajectoryProfilePhenomena, trajectoryProfileEnvelope, trajectoryProfileStationPoints ) );
+            iSosObsList.add( new IoosSosObservation( CF.FeatureType.trajectoryProfile,
+                    trajectoryProfileSamplingTimePeriod, trajectoryProfileSensorDatasets,
+                    trajectoryProfilePhenomena, trajectoryProfileEnvelope,
+                    trajectoryProfileStationPoints, trajectoryProfileSensorHeights ) );
         }        
+
+        sessionHolder.returnSession(session);
         return iSosObsList;
     }
 
@@ -455,11 +477,11 @@ public class IoosUtil {
             sosObservation.getObservationConstellation().getFeatureOfInterest();
             SamplingFeature samplingFeature = (SamplingFeature) sosObservation.getObservationConstellation().getFeatureOfInterest();
             if (samplingFeature != null && samplingFeature.getGeometry() != null) {
-	            if( envelope == null ){
-	                envelope = samplingFeature.getGeometry().getEnvelopeInternal();
-	            } else {
-	                envelope.expandToInclude(samplingFeature.getGeometry().getEnvelopeInternal());              
-	            }
+                if( envelope == null ){
+                    envelope = samplingFeature.getGeometry().getEnvelopeInternal();
+                } else {
+                    envelope.expandToInclude(samplingFeature.getGeometry().getEnvelopeInternal());
+                }
             }
         }
         return envelope;

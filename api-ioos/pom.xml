@@ -13,7 +13,13 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>api</artifactId>
-    </dependency>  
+    </dependency>
+    <!-- Shouldn't depend on hibernate-session-factory in API, but have to -->
+    <!-- be able to execute queries for station features, etc -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>hibernate-session-factory</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>

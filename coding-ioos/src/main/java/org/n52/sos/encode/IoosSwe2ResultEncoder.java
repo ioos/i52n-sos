@@ -50,6 +50,7 @@ import org.n52.sos.ioos.data.subsensor.IndexedSubSensor;
 import org.n52.sos.ioos.data.subsensor.PointProfileSubSensor;
 import org.n52.sos.ioos.data.subsensor.ProfileSubSensor;
 import org.n52.sos.ioos.data.subsensor.SubSensor;
+import org.n52.sos.ioos.feature.FeatureUtil;
 import org.n52.sos.ioos.om.IoosSosObservation;
 import org.n52.sos.ogc.OGCConstants;
 import org.n52.sos.ogc.gml.time.Time;
@@ -88,11 +89,11 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class IoosSwe2ResultEncoder {
     private static final Logger LOGGER = LoggerFactory.getLogger(IoosSwe2ResultEncoder.class);    
-    
+
     public static XmlObject encodeResult(Encoder<?,?> encoder, IoosSosObservation ioosSosObs )
-            throws InvalidParameterValueException, UnsupportedEncoderInputException{       
+            throws InvalidParameterValueException, UnsupportedEncoderInputException{
         CF.FeatureType featureType = ioosSosObs.getFeatureType();
-        
+
         //TODO move to OM encoder constructor? might just need to be done once
 
         //fix xml options for IOOS
@@ -104,34 +105,33 @@ public class IoosSwe2ResultEncoder {
         IoosXmlOptionCharEscapeMap charMap = new IoosXmlOptionCharEscapeMap();
         charMap.setEscapeString(Ioos52nConstants.BLOCK_SEPARATOR_TO_ESCAPE, Ioos52nConstants.BLOCK_SEPARATOR_ESCAPED);
         xmlOpts.setSaveSubstituteCharacters(charMap);
-        
+
         // == DATA BLOCK ==
         // == USE SWE 2.0 HERE (AND ONLY HERE) ==
         //parent data record
         DataRecordDocument xb_dataRecordDoc = DataRecordDocument.Factory.newInstance( xmlOpts );
         DataRecordType xb_dataRecord = xb_dataRecordDoc.addNewDataRecord();
         xb_dataRecord.setDefinition(IoosSweConstants.OBSERVATION_RECORD_DEF);
-        
-        
+
         //STATIC DATA
         Field xb_stationsField = xb_dataRecord.addNewField();
         xb_stationsField.setName(IoosSweConstants.STATIONS);
-        
+
         DataRecordType xb_staticStationsDataRecord = (DataRecordType) xb_stationsField.addNewAbstractDataComponent()
                 .substitute( Ioos52nConstants.QN_DATA_RECORD_SWE_200, DataRecordType.type );
         xb_staticStationsDataRecord.setDefinition(IoosSweConstants.STATIONS_DEF);
-        
+
         //loop through stations
         for( StationAsset station : ioosSosObs.getStations() ){
             //station
             Field xb_stationField = xb_staticStationsDataRecord.addNewField();
             xb_stationField.setName( station.getAssetShortId() );
-            
+
             DataRecordType xb_staticStationDataRecord = (DataRecordType) xb_stationField.addNewAbstractDataComponent()
                     .substitute( Ioos52nConstants.QN_DATA_RECORD_SWE_200, DataRecordType.type );
             xb_staticStationDataRecord.setId( station.getAssetShortId() + "_" + featureType.name().toLowerCase() );
             xb_staticStationDataRecord.setDefinition(IoosSweConstants.STATION_DEF);
-            
+
             //station id
             Field xb_stationIdField = xb_staticStationDataRecord.addNewField();
             xb_stationIdField.setName(IoosDefConstants.STATION_ID);
@@ -140,31 +140,41 @@ public class IoosSwe2ResultEncoder {
                     .substitute( Ioos52nConstants.QN_TEXT_SWE_200, TextType.type );
 
             if( station instanceof FakeStationAsset ){
-                xb_stationIdText.setDefinition( OGCConstants.URN_UNIQUE_IDENTIFIER );            	
+                xb_stationIdText.setDefinition( OGCConstants.URN_UNIQUE_IDENTIFIER );
             } else {
-                xb_stationIdText.setDefinition( IoosDefConstants.STATION_ID_DEF );            	
+                xb_stationIdText.setDefinition( IoosDefConstants.STATION_ID_DEF );
             }
             xb_stationIdText.setValue( station.getAssetId() );
 
             //station location
-            Point stationPoint = ioosSosObs.getSingularStationPoint( station );
-            
-            if( stationPoint != null ){	
-        		IoosUtil.checkSrid( stationPoint.getSRID(), LOGGER );        
+            Point stationPoint = ioosSosObs.getStationPoint( station );
+
+            if( stationPoint != null ){
+                IoosUtil.checkSrid( stationPoint.getSRID(), LOGGER );
             }
-            
-            createLocationVector(xb_staticStationDataRecord, station, stationPoint);
-            
+
+            Double stationHeight = FeatureUtil.getPointZOrNull(stationPoint);
+            createLocationVector(xb_staticStationDataRecord, station, stationPoint,
+                    stationHeight);
+
             //sensors
             Field xb_sensorsField = xb_staticStationDataRecord.addNewField();
             xb_sensorsField.setName(IoosSweConstants.SENSORS);
-            
+
             DataRecordType xb_sensorsDataRecord = (DataRecordType) xb_sensorsField.addNewAbstractDataComponent()
                     .substitute( Ioos52nConstants.QN_DATA_RECORD_SWE_200, DataRecordType.type );
             xb_sensorsDataRecord.setDefinition(IoosSweConstants.SENSORS_DEF);
-            
+
             //sensor
             for( SensorAsset sensor : ioosSosObs.getSensors( station )){
+                Double sensorHeight = ioosSosObs.getSingularSensorHeight(sensor);
+                //calculate sensor offset height from station height, or use unadulterated
+                //sensor height if station height is null
+                Double sensorOffsetHeight = sensorHeight;
+                if (stationHeight != null && sensorHeight != null) {
+                    sensorOffsetHeight = sensorHeight - stationHeight;
+                }
+
                 Field xb_sensorField = xb_sensorsDataRecord.addNewField();
                 xb_sensorField.setName( sensor.getAssetShortId() );
 
@@ -191,7 +201,7 @@ public class IoosSwe2ResultEncoder {
                 //TODO use sensor point instead of station point
                 if (featureType.equals(CF.FeatureType.timeSeriesProfile) || featureType.equals(CF.FeatureType.profile)) {
                     //create full sensor location for profiles
-                    createLocationVector(xb_sensorDataRecord, sensor, stationPoint);
+                    createLocationVector(xb_sensorDataRecord, sensor, stationPoint, sensorOffsetHeight);
                 } else {
                     //default to just showing height
                     Field xbSensorHeightField = xb_sensorDataRecord.addNewField();
@@ -203,9 +213,8 @@ public class IoosSwe2ResultEncoder {
                     xbSensorHeightQuantity.setAxisID( IoosSosConstants.HEIGHT_AXIS_ID );
                     xbSensorHeightQuantity.setReferenceFrame(getFrame(station));
                     xbSensorHeightQuantity.addNewUom().setCode( IoosSosConstants.METER_UOM );
-                    if( stationPoint != null && stationPoint.getCoordinate() != null
-                            && !Double.isNaN(stationPoint.getCoordinate().z ) ){
-                        xbSensorHeightQuantity.setValue( stationPoint.getCoordinate().z );
+                    if( sensorOffsetHeight != null && !Double.isNaN(sensorOffsetHeight)) {
+                        xbSensorHeightQuantity.setValue(sensorOffsetHeight);
                     }                    
                 }
 
@@ -324,7 +333,7 @@ public class IoosSwe2ResultEncoder {
                     xbDataRecordForObsProps = xbProfileObservationDataRecord;
                 }
 
-                for( OmObservableProperty obsProp : sensorDataset.getPhenomena() ){                	
+                for( OmObservableProperty obsProp : sensorDataset.getPhenomena() ){
                     addPhenToDataRecord( obsPropValueTypes.get( obsProp ), xbDataRecordForObsProps, obsProp );
                 }
             }
@@ -406,16 +415,16 @@ public class IoosSwe2ResultEncoder {
     }
     
 
-    private static void createLocationVector(DataRecordType xbDataRecord, AbstractAsset asset, Point point) {
+    private static void createLocationVector(DataRecordType xbDataRecord, AbstractAsset asset,
+            Point point, Double height) {
         Field xbField = xbDataRecord.addNewField();
-        
-        
+
         VectorType xbVector = (VectorType) xbField.addNewAbstractDataComponent()
                 .substitute( Ioos52nConstants.QN_VECTOR_SWE_200, VectorType.type );
-        
+
         if (asset instanceof StationAsset) {
             xbField.setName(IoosSweConstants.PLATFORM_LOCATION);
-            xbVector.setDefinition(IoosSweConstants.PLATFORM_LOCATION_DEF);    
+            xbVector.setDefinition(IoosSweConstants.PLATFORM_LOCATION_DEF);
         } else if (asset instanceof SensorAsset) {
             xbField.setName(IoosSweConstants.SENSOR_LOCATION);
             xbVector.setDefinition(IoosSweConstants.SENSOR_LOCATION_DEF);
@@ -445,32 +454,32 @@ public class IoosSwe2ResultEncoder {
         if( point != null ){
             xb_longitudeQuantity.setValue(point.getX());
         }
-        
+
         //height
-        Coordinate xb_heightCoordinate = xbVector.addNewCoordinate();
-        xb_heightCoordinate.setName(IoosCfConstants.HEIGHT);
-        QuantityType xb_heightQuantity = xb_heightCoordinate.addNewQuantity();
-        xb_heightQuantity.setDefinition(IoosCfConstants.HEIGHT_DEF);
-        xb_heightQuantity.setAxisID(IoosSosConstants.HEIGHT_AXIS_ID);
-        xb_heightQuantity.addNewUom().setCode( IoosSosConstants.METER_UOM );
-        if (point != null && point.getCoordinate() != null && !Double.isNaN(point.getCoordinate().z )) {
-            xb_heightQuantity.setValue(point.getCoordinate().z);
+        if (height != null && !height.isNaN()) {
+            Coordinate xb_heightCoordinate = xbVector.addNewCoordinate();
+            xb_heightCoordinate.setName(IoosCfConstants.HEIGHT);
+            QuantityType xb_heightQuantity = xb_heightCoordinate.addNewQuantity();
+            xb_heightQuantity.setDefinition(IoosCfConstants.HEIGHT_DEF);
+            xb_heightQuantity.setAxisID(IoosSosConstants.HEIGHT_AXIS_ID);
+            xb_heightQuantity.addNewUom().setCode( IoosSosConstants.METER_UOM );        
+            xb_heightQuantity.setValue(height);
         }
     }
 
     @SuppressWarnings("rawtypes")
     private static Map<OmObservableProperty,Class<? extends Value>> mapValueTypesForObsProps( IoosSosObservation ioosSosObs ){
-    	Map<OmObservableProperty,Class<? extends Value>> obsPropValueTypeMap = new HashMap<OmObservableProperty,Class<? extends Value>>();
+        Map<OmObservableProperty,Class<? extends Value>> obsPropValueTypeMap = new HashMap<OmObservableProperty,Class<? extends Value>>();
         for( AbstractSensorDataset sensorDataset : ioosSosObs.getSensorDatasets() ){
-        	for( Map<OmObservableProperty, Map<SubSensor, Value<?>>> sensorDataValues : sensorDataset.getDataValues().values() ){
-        		for( OmObservableProperty obsProp : sensorDataValues.keySet() ){
-        			if( obsPropValueTypeMap.get( obsProp ) == null ){
-                    	for( Value<?> value : sensorDataValues.get( obsProp ).values() ){
-                    		obsPropValueTypeMap.put( obsProp, value.getClass() );
-                    	}
-        			}
-        		}
-        	}        	
+            for( Map<OmObservableProperty, Map<SubSensor, Value<?>>> sensorDataValues : sensorDataset.getDataValues().values() ){
+                for( OmObservableProperty obsProp : sensorDataValues.keySet() ){
+                    if( obsPropValueTypeMap.get( obsProp ) == null ){
+                        for( Value<?> value : sensorDataValues.get( obsProp ).values() ){
+                            obsPropValueTypeMap.put( obsProp, value.getClass() );
+                        }
+                    }
+                }
+            }
         }
         return obsPropValueTypeMap;
     }
@@ -484,35 +493,35 @@ public class IoosSwe2ResultEncoder {
      */
     @SuppressWarnings("rawtypes")
     public static void addPhenToDataRecord( Class<? extends Value> valueType, DataRecordType xb_dataRecord,
-    		OmObservableProperty phenComponent ){
+            OmObservableProperty phenComponent ){
         Field xbField = xb_dataRecord.addNewField();
         if( valueType != null ){
-        	if( valueType.equals( BooleanValue.class ) ){
+            if( valueType.equals( BooleanValue.class ) ){
                 BooleanType xbBool = (BooleanType) xbField.addNewAbstractDataComponent()
                     .substitute( Ioos52nConstants.QN_BOOLEAN_SWE_200, BooleanType.type );
                 xbBool.setDefinition(phenComponent.getIdentifier());
-        	} else if( valueType.equals( CountValue.class ) ){
+            } else if( valueType.equals( CountValue.class ) ){
                 CountType xbCount = (CountType) xbField.addNewAbstractDataComponent()
                     .substitute( Ioos52nConstants.QN_COUNT_SWE_200, CountType.type );
                 xbCount.setDefinition(phenComponent.getIdentifier());
-        	} else if( valueType.equals( QuantityValue.class ) ){
+            } else if( valueType.equals( QuantityValue.class ) ){
                 QuantityType xbQuantity = (QuantityType) xbField.addNewAbstractDataComponent()
                     .substitute( Ioos52nConstants.QN_QUANTITY_SWE_200, QuantityType.type );
                 xbQuantity.setDefinition(phenComponent.getIdentifier());
                 if (phenComponent.getUnit() != null) {
                     xbQuantity.setUom(createUnitReference(phenComponent.getUnit()));
                 } else {
-                	xbQuantity.addNewUom().setCode("UNKNOWN");
+                    xbQuantity.addNewUom().setCode("UNKNOWN");
                 }
-        	} else if( valueType.equals( TextValue.class ) ){
+            } else if( valueType.equals( TextValue.class ) ){
                 TextType xbText = (TextType) xbField.addNewAbstractDataComponent()
                     .substitute( Ioos52nConstants.QN_TEXT_SWE_200, TextType.type );
                 xbText.setDefinition(phenComponent.getIdentifier());
-        	} else if( valueType.equals( CategoryValue.class ) ){
+            } else if( valueType.equals( CategoryValue.class ) ){
                 CategoryType xbCategory = (CategoryType) xbField.addNewAbstractDataComponent()
                     .substitute( Ioos52nConstants.QN_CATEGORY_SWE_200, CategoryType.type );
                 xbCategory.setDefinition(phenComponent.getIdentifier());
-        	}
+            }
         }
         if( !xbField.isSetAbstractDataComponent() ){
             TextType xbText = (TextType) xbField.addNewAbstractDataComponent()
@@ -652,13 +661,13 @@ public class IoosSwe2ResultEncoder {
                         SortedMap<OmObservableProperty, Value<?>> obsPropMap = subSensorMap.get( subSensor );                                                
                         //output data values                            
                         for( OmObservableProperty phen : obsPropMap.keySet() ){
-                        	Value<?> value = obsPropMap.get( phen );
+                            Value<?> value = obsPropMap.get( phen );
 
-                        	//TODO check value type 
+                            //TODO check value type 
 
                             //value
                             if( value != null ){
-                                valueMatrix.append( value.getValue() );                            
+                                valueMatrix.append( value.getValue() );
                             }
                             valueMatrix.append( Ioos52nConstants.TOKEN_SEPARATOR );
                         }
@@ -667,15 +676,15 @@ public class IoosSwe2ResultEncoder {
                     //delete last TokenSeperator
                     valueMatrix.delete( valueMatrix.length() - Ioos52nConstants.TOKEN_SEPARATOR.length(), valueMatrix.length() );
                     valueMatrix.append( Ioos52nConstants.BLOCK_SEPARATOR );
-                    
-                    recordCount++;                    
-                }                
-            }                            
+
+                    recordCount++;
+                }
+            }
         }
-        
+
         return new EncodedValuesResult( valueMatrix.toString(), recordCount );
     }
-    
+
     private static void addTextEncoding(DataArrayType xbDataArray) {
         TextEncodingType xb_textEncoding = (TextEncodingType) xbDataArray.addNewEncoding().addNewAbstractEncoding()
                 .substitute( SweConstants.QN_TEXT_ENCODING_SWE_200, TextEncodingType.type );
@@ -683,16 +692,16 @@ public class IoosSwe2ResultEncoder {
         xb_textEncoding.setTokenSeparator( Ioos52nConstants.TOKEN_SEPARATOR );
         xb_textEncoding.setBlockSeparator( Character.toString(Ioos52nConstants.BLOCK_SEPARATOR_TO_ESCAPE) );
     }
-    
+
     private static void addValues(DataArrayType xbDataArray, String values){
         EncodedValuesPropertyType xb_values = xbDataArray.addNewValues();        
         xb_values.newCursor().setTextValue( values );           
     }
-    
+
     private static String getFrame(AbstractAsset asset) {
         return "#" + asset.getAssetShortId() + IoosSweConstants.FRAME_SUFFIX;
     }
-    
+
     private static void fixDataChoice(DataChoiceType xbDataChoice) {
         if (xbDataChoice.getItemArray().length < 2) {
             xbDataChoice.addNewItem().setName(IoosSosConstants.DUMMY_ITEM);

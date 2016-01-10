@@ -179,7 +179,8 @@ public class IoosHibernateTestDataManager{
                     CollectionHelper.list(samplingPointFoiType), session);                    
 
             SamplingFeature stationFeature = new SamplingFeature(new CodeWithAuthority(station.getAssetId()));
-            Point stationPoint = GeomHelper.createLatLngPoint(stationLat, stationLng);
+            double stationHeight = Math.round(Math.random() * 30.0) / 10.0;
+            Point stationPoint = GeomHelper.createLatLngPoint(stationLat, stationLng, stationHeight);
             stationFeature.setGeometry(stationPoint);
             FeatureOfInterest hStationFeature = featureOfInterestDAO.checkOrInsertFeatureOfInterest(stationFeature, session);
 

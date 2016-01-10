@@ -42,6 +42,7 @@ import org.n52.sos.ioos.Ioos52nConstants;
 import org.n52.sos.ioos.IoosSettings;
 import org.n52.sos.ioos.IoosUtil;
 import org.n52.sos.ioos.asset.StationAsset;
+import org.n52.sos.ioos.feature.FeatureUtil;
 import org.n52.sos.ioos.om.IoosSosObservation;
 import org.n52.sos.ogc.gml.GmlConstants;
 import org.n52.sos.ogc.om.OmConstants;
@@ -95,7 +96,7 @@ public class IoosOmEncoderv100 implements ObservationEncoder<XmlObject, Object>{
                     Collections.singleton(CONTENT_TYPE_IOOS_OM_M10.toString())));
 
     private static final Set<EncoderKey> ENCODER_KEYS = CodingHelper.encoderKeysForElements( CONTENT_TYPE_IOOS_OM_M10.toString(),
-    		IoosSosObservation.class, GetObservationResponse.class, GetObservationByIdResponse.class);
+            IoosSosObservation.class, GetObservationResponse.class, GetObservationByIdResponse.class);
 
     /**
      * Disclaimer from IoosSettings
@@ -124,7 +125,7 @@ public class IoosOmEncoderv100 implements ObservationEncoder<XmlObject, Object>{
 
     @Override
     public void addNamespacePrefixToMap(Map<String, String> nameSpacePrefixMap) {
-    	nameSpacePrefixMap.put(OmConstants.NS_OM, OmConstants.NS_OM_PREFIX);
+        nameSpacePrefixMap.put(OmConstants.NS_OM, OmConstants.NS_OM_PREFIX);
         nameSpacePrefixMap.put(SweConstants.NS_SWE_20, Ioos52nConstants.SWE2_PREFIX);        
     }
 
@@ -161,8 +162,8 @@ public class IoosOmEncoderv100 implements ObservationEncoder<XmlObject, Object>{
                 OmConstants.OM_100_SCHEMA_LOCATION,
                 SweConstants.SWE_101_SCHEMA_LOCATION,
                 SweConstants.SWE_20_SCHEMA_LOCATION);
-    }	
-	
+    }
+
     @Override
     public XmlObject encode(Object element) throws OwsExceptionReport {
         return encode(element, new EnumMap<HelperValues, String>(HelperValues.class));
@@ -170,15 +171,15 @@ public class IoosOmEncoderv100 implements ObservationEncoder<XmlObject, Object>{
 
     @Override
     public XmlObject encode(Object element, Map<HelperValues, String> additionalValues) throws OwsExceptionReport {
-    	if (element instanceof IoosSosObservation) {
-    		IoosSosObservation ioosSosObs = (IoosSosObservation) element;
-       		return encodeIoosObservation(ioosSosObs);
+        if (element instanceof IoosSosObservation) {
+            IoosSosObservation ioosSosObs = (IoosSosObservation) element;
+               return encodeIoosObservation(ioosSosObs);
         } else if (element instanceof GetObservationResponse) {
             GetObservationResponse response = (GetObservationResponse) element;
             return createObservationCollection(response.getObservationCollection(), response.getResultModel());
         } else if (element instanceof GetObservationByIdResponse) {
-        	GetObservationByIdResponse response = (GetObservationByIdResponse) element;
-        	return createObservationCollection(response.getObservationCollection(), response.getResultModel());
+            GetObservationByIdResponse response = (GetObservationByIdResponse) element;
+            return createObservationCollection(response.getObservationCollection(), response.getResultModel());
         }
         throw new UnsupportedEncoderInputException(this, element);
     }
@@ -189,8 +190,8 @@ public class IoosOmEncoderv100 implements ObservationEncoder<XmlObject, Object>{
     }
 
     protected XmlObject createObservationCollection(List<OmObservation> sosObservationCollection, String resultModel)
-    		throws OwsExceptionReport {
-    	// create ObservationCollectionDocument and add Collection
+            throws OwsExceptionReport {
+        // create ObservationCollectionDocument and add Collection
         ObservationCollectionDocument xb_obsColDoc = ObservationCollectionDocument.Factory.newInstance(
                 XmlOptionsHelper.getInstance().getXmlOptions());
         ObservationCollectionType xb_obsCol = xb_obsColDoc.addNewObservationCollection();
@@ -198,14 +199,14 @@ public class IoosOmEncoderv100 implements ObservationEncoder<XmlObject, Object>{
 
         //top level disclaimer
         if (disclaimer != null && !disclaimer.trim().isEmpty()) {
-	        MetaDataPropertyType xb_disclaimerMetadataProperty = xb_obsCol.addNewMetaDataProperty();;
-	        xb_disclaimerMetadataProperty.setTitle("disclaimer");        
-	        GenericMetaDataDocument xb_disclaimerMetadataDoc = GenericMetaDataDocument.Factory.newInstance();
-	        GenericMetaDataType xb_disclaimerMetadata = xb_disclaimerMetadataDoc.addNewGenericMetaData();         
-	        DescriptionDocument xb_disclaimerDescriptionDoc = DescriptionDocument.Factory.newInstance();        
-	        xb_disclaimerDescriptionDoc.addNewDescription().setStringValue(disclaimer.trim());
-	        XmlHelper.append( xb_disclaimerMetadata, xb_disclaimerDescriptionDoc );
-	        XmlHelper.append( xb_disclaimerMetadataProperty, xb_disclaimerMetadataDoc );        
+            MetaDataPropertyType xb_disclaimerMetadataProperty = xb_obsCol.addNewMetaDataProperty();
+            xb_disclaimerMetadataProperty.setTitle("disclaimer");
+            GenericMetaDataDocument xb_disclaimerMetadataDoc = GenericMetaDataDocument.Factory.newInstance();
+            GenericMetaDataType xb_disclaimerMetadata = xb_disclaimerMetadataDoc.addNewGenericMetaData();
+            DescriptionDocument xb_disclaimerDescriptionDoc = DescriptionDocument.Factory.newInstance();
+            xb_disclaimerDescriptionDoc.addNewDescription().setStringValue(disclaimer.trim());
+            XmlHelper.append( xb_disclaimerMetadata, xb_disclaimerDescriptionDoc );
+            XmlHelper.append( xb_disclaimerMetadataProperty, xb_disclaimerMetadataDoc );
         }
 
         //ioos template version        
@@ -217,18 +218,18 @@ public class IoosOmEncoderv100 implements ObservationEncoder<XmlObject, Object>{
         xb_softwareVersionMetadataProperty.set( IoosEncoderUtil.getSoftwareVersionMetaData() );
         
         if (sosObservationCollection != null) {
-        	if ( sosObservationCollection.size() > 0) {
-        		xb_obsCol.addNewBoundedBy();
+            if ( sosObservationCollection.size() > 0) {
+                xb_obsCol.addNewBoundedBy();
                 xb_obsCol.setBoundedBy( IoosEncoderUtil.createBoundedBy(IoosUtil.swapEnvelopeAxisOrder(
                         IoosUtil.createEnvelope(sosObservationCollection))));
                 
                 //add the observation members (one per feature type)
                 List<IoosSosObservation> ioosSosObsList = IoosUtil.createIoosSosObservations(sosObservationCollection);
 
-				for( IoosSosObservation ioosSosObs : ioosSosObsList ){
-		        	xb_obsCol.addNewMember().set(encodeIoosObservation(ioosSosObs));
-				}
-        	} else {
+                for( IoosSosObservation ioosSosObs : ioosSosObsList ){
+                    xb_obsCol.addNewMember().set(encodeIoosObservation(ioosSosObs));
+                }
+            } else {
                 ObservationPropertyType xb_obs = xb_obsCol.addNewMember();
                 xb_obs.setHref( GmlConstants.NIL_INAPPLICABLE );
             }
@@ -239,8 +240,8 @@ public class IoosOmEncoderv100 implements ObservationEncoder<XmlObject, Object>{
 
         // set schema location
         XmlHelper.makeGmlIdsUnique(xb_obsColDoc.getDomNode());
-        return xb_obsColDoc;    	
-    }    
+        return xb_obsColDoc;
+    }
 
     protected XmlObject encodeIoosObservation( IoosSosObservation ioosSosObs ) throws OwsExceptionReport {
         ObservationDocument xb_obsDoc = ObservationDocument.Factory.newInstance();
@@ -265,7 +266,7 @@ public class IoosOmEncoderv100 implements ObservationEncoder<XmlObject, Object>{
         for( StationAsset station : ioosSosObs.getStations() ){
             MemberDocument xb_memberDoc = MemberDocument.Factory.newInstance();
             AssociationType xb_member = (AssociationType) xb_memberDoc.addNewMember()
-            		.substitute( Ioos52nConstants.QN_MEMBER, AssociationType.type );
+                    .substitute( Ioos52nConstants.QN_MEMBER, AssociationType.type );
             xb_member.setHref( station.getAssetId() );
             XmlHelper.append( xb_process, xb_member );
         }
@@ -273,7 +274,7 @@ public class IoosOmEncoderv100 implements ObservationEncoder<XmlObject, Object>{
         //observedProperty
         PhenomenonPropertyType xb_observedProperty = xb_obsType.addNewObservedProperty();
         CompositePhenomenonType xb_compPhen = (CompositePhenomenonType) xb_observedProperty.addNewPhenomenon()
-                .substitute( Ioos52nConstants.QN_COMPOSITE_PHENOMENON, CompositePhenomenonType.type );        
+                .substitute( Ioos52nConstants.QN_COMPOSITE_PHENOMENON, CompositePhenomenonType.type );
         xb_compPhen.setDimension( BigInteger.valueOf( ioosSosObs.getPhenomena().size() ) );
         xb_compPhen.setId( IoosSosConstants.OBSERVED_PROPERTIES_ID_PREFIX );
         xb_compPhen.addNewName().setStringValue("Response Observed Properties");
@@ -291,27 +292,27 @@ public class IoosOmEncoderv100 implements ObservationEncoder<XmlObject, Object>{
             OmObservableProperty sosObsProp = phenMap.get( phenId );
             xb_compPhen.addNewComponent().setHref( sosObsProp.getIdentifier() );
         }
-        
+
         // featureOfInterest
         FeaturePropertyType xb_FeatureProp = xb_obsType.addNewFeatureOfInterest();
         FeatureCollectionType xb_featureCollection = (FeatureCollectionType) xb_FeatureProp.addNewFeature()
                 .substitute( GmlConstants.QN_FEATURE_COLLECTION, FeatureCollectionType.type );
-        
+
         //feature type metadata
         MetaDataPropertyType xb_featureTypeMetaDataProp = xb_featureCollection.addNewMetaDataProperty();
         xb_featureTypeMetaDataProp.setTitle( IoosSosConstants.FEATURE_TYPE );        
         GenericMetaDataDocument xb_featureTypeMetadataDoc = GenericMetaDataDocument.Factory.newInstance();
-        GenericMetaDataType xb_featureTypeMetadata = xb_featureTypeMetadataDoc.addNewGenericMetaData();         
+        GenericMetaDataType xb_featureTypeMetadata = xb_featureTypeMetadataDoc.addNewGenericMetaData();
         NameDocument xb_featureTypeNameDoc = NameDocument.Factory.newInstance();
         CodeType xb_featureTypeName = xb_featureTypeNameDoc.addNewName();
         xb_featureTypeName.setStringValue( ioosSosObs.getFeatureType().name() );
         xb_featureTypeName.setCodeSpace( IoosSosConstants.CF_FEATURE_TYPES_CODESPACE );
         XmlHelper.append( xb_featureTypeMetadata, xb_featureTypeNameDoc );
-        XmlHelper.append( xb_featureTypeMetaDataProp, xb_featureTypeMetadataDoc );        
-        
+        XmlHelper.append( xb_featureTypeMetaDataProp, xb_featureTypeMetadataDoc );
+
         // setBoundedBy
         if (ioosSosObs.getEnvelope() != null) {
-            xb_featureCollection.setBoundedBy( IoosEncoderUtil.createBoundedBy( ioosSosObs.getEnvelope() ) );            
+            xb_featureCollection.setBoundedBy( IoosEncoderUtil.createBoundedBy( ioosSosObs.getEnvelope() ) );
         }
 
         MultiPointType xb_multipoint = (MultiPointType) xb_featureCollection.addNewLocation()
@@ -320,15 +321,17 @@ public class IoosOmEncoderv100 implements ObservationEncoder<XmlObject, Object>{
         PointArrayPropertyType xb_pointMembers = xb_multipoint.addNewPointMembers();
 
         for( StationAsset station : ioosSosObs.getSortedStationsWithPoints() ){
-        	Point stationPoint = ioosSosObs.getSingularStationPoint( station );
-        	if( stationPoint != null ){
-        	    //switch coord axis order back if necessary, since we switched them to x,y order above
-        	    stationPoint = (Point) GeometryHandler.getInstance()
-        	    		.switchCoordinateAxisFromToDatasourceIfNeeded(stationPoint);
+            Point stationPoint = ioosSosObs.getStationPoint( station );
+            if( stationPoint != null ){
+                // make stationPoint 2D, since gml:location shouldn't contain z
+                stationPoint = FeatureUtil.clonePoint2d( stationPoint );
+                //switch coord axis order back if necessary, since we switched them to x,y order above
+                stationPoint = (Point) GeometryHandler.getInstance()
+                        .switchCoordinateAxisFromToDatasourceIfNeeded(stationPoint);
                 PointType xb_point = xb_pointMembers.addNewPoint();
                 xb_point.addNewName().setStringValue( station.getAssetId() );
-                xb_point.addNewPos().setStringValue( JTSHelper.getCoordinatesString( stationPoint ) );        	        		
-        	}
+                xb_point.addNewPos().setStringValue( JTSHelper.getCoordinatesString( stationPoint ) );
+            }
         }
 
         XmlObject xb_sweResult = IoosSwe2ResultEncoder.encodeResult( this, ioosSosObs );
