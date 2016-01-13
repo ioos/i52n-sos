@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.hibernate.Session;
 import org.n52.sos.ds.hibernate.HibernateSessionHolder;
+import org.n52.sos.exception.CodedException;
 import org.n52.sos.exception.ows.InvalidParameterValueException;
 import org.n52.sos.exception.ows.NoApplicableCodeException;
 import org.n52.sos.ioos.asset.AbstractAsset;
@@ -74,9 +75,10 @@ public class IoosUtil {
             = new HashMap<SensorAsset,Map<Time,Map<OmObservableProperty,Map<SubSensor,Value<?>>>>>();
 
         //keep track of other data associated with station and sensor
-        HashMap<StationAsset,Point> stationPoints = Maps.newHashMap();
+        HashMap<AbstractAsset,Point> assetPoints = Maps.newHashMap();
         
         SetMultimap<SensorAsset,OmObservableProperty> sensorPhens = HashMultimap.create();
+        HashMap<SamplingFeature, SubSensor> foiSubSensors = Maps.newHashMap();
 
         // maps to keep track of unique dimension values by sensor (these may or may not vary, determining the feature type)        
         SetMultimap<SensorAsset,Double> sensorLngs = HashMultimap.create();
@@ -145,13 +147,9 @@ public class IoosUtil {
             }
             SamplingFeature foi = (SamplingFeature) aFoi;
 
-            //set station geometry if it hasn't been already
-            if (!stationPoints.containsKey(sensor.getStationAsset())){
-                Geometry stationGeom = FeatureUtil.getStationGeom(session, sensor.getStationAsset());
-                if (stationGeom != null) {
-                    stationPoints.put(sensor.getStationAsset(), FeatureUtil.getCentroidWithSRID(stationGeom));
-                }
-            }
+            //load station and sensor geometry if they haven't been already
+            loadAssetPoint(assetPoints, sensor.getStationAsset(), session);
+            loadAssetPoint(assetPoints, sensor, session);
 
             Set<Point> obsPoints = FeatureUtil.getFeaturePoints( foi );
             for (Point obsPoint : obsPoints ){
@@ -238,7 +236,10 @@ public class IoosUtil {
             }
 
             //add obs value to subsensor map (null subsensors are ok)
-            subSensorMap.put(createSubSensor(sensor, foi), obsValue);
+            if (!foiSubSensors.containsKey(foi)) {
+                foiSubSensors.put(foi, createSubSensor(assetPoints, sensor, foi));
+            }
+            subSensorMap.put(foiSubSensors.get(foi), obsValue);
         }
 
         //now we know about each station's dimensions, sort into CF feature types
@@ -321,7 +322,7 @@ public class IoosUtil {
                 if( staticLng != null && staticLat != null ){
                     timeSeriesEnvelope.expandToInclude( staticLng, staticLat );
                 }
-                timeSeriesStationPoints.put( station, stationPoints.get( station ) );
+                timeSeriesStationPoints.put( station, assetPoints.get( station ) );
                 if( sensorHeights.get( sensor ) != null ){                
                     timeSeriesSensorHeights.putAll( sensor, sensorHeights.get( sensor ) );
                 }
@@ -334,7 +335,7 @@ public class IoosUtil {
                 if( staticLng != null && staticLat != null ){
                     timeSeriesProfileEnvelope.expandToInclude( staticLng, staticLat );
                 }
-                timeSeriesProfileStationPoints.put( station, stationPoints.get( station ) );
+                timeSeriesProfileStationPoints.put( station, assetPoints.get( station ) );
                 if( sensorHeights.get( sensor ) != null ){
                     timeSeriesProfileSensorHeights.putAll( sensor, sensorHeights.get( sensor ) );
                 }
@@ -345,7 +346,7 @@ public class IoosUtil {
                         obsValuesEntry.getValue() ) );
                 trajectoryPhenomena.addAll( sensorPhens.get( sensor ) );
                 expandEnvelopeToInclude( trajectoryEnvelope, sensorLngs.get( sensor ), sensorLats.get( sensor ) );
-                trajectoryStationPoints.put( station, stationPoints.get( station ) );
+                trajectoryStationPoints.put( station, assetPoints.get( station ) );
                 if( sensorHeights.get( sensor ) != null ){
                     trajectorySensorHeights.putAll( sensor, sensorHeights.get( sensor ) );
                 }
@@ -356,7 +357,7 @@ public class IoosUtil {
                         obsValuesEntry.getValue() ) );
                 trajectoryProfilePhenomena.addAll( sensorPhens.get( sensor ) );
                 expandEnvelopeToInclude( trajectoryProfileEnvelope, sensorLngs.get( sensor ), sensorLats.get( sensor ) );
-                trajectoryProfileStationPoints.put( station, stationPoints.get( station ) );
+                trajectoryProfileStationPoints.put( station, assetPoints.get( station ) );
                 if( sensorHeights.get( sensor ) != null ){
                     trajectoryProfileSensorHeights.putAll( sensor, sensorHeights.get( sensor ) );
                 }
@@ -439,14 +440,15 @@ public class IoosUtil {
         return new Envelope(envelope.getMinY(), envelope.getMaxY(),
                 envelope.getMinX(), envelope.getMaxX());
     }       
-    
-    public static SubSensor createSubSensor(SensorAsset sensor, SamplingFeature foi) {
-        //return null if sensor or station id is same as foi
-        if (sensor.getAssetId().equals(foi.getIdentifierCodeWithAuthority().getValue()) ||
-                sensor.getStationAsset().getAssetId().equals(foi.getIdentifierCodeWithAuthority().getValue())) {
+
+    private static SubSensor createSubSensor(HashMap<AbstractAsset,Point> assetPoints,
+            SensorAsset sensor, SamplingFeature foi) {
+        //return null if foi is the same as the main sensor or station id and location
+        if (foiIsAsset(assetPoints, foi, sensor.getStationAsset())
+                || foiIsAsset(assetPoints, foi, sensor)) {
             return null;
         }
-                
+
         //check for valid subsensor
         SubSensor subSensor = null;
         Geometry geom = foi.getGeometry();
@@ -455,14 +457,14 @@ public class IoosUtil {
             //profile height
             if (!Double.isNaN(point.getCoordinate().z)) {
                 subSensor = new PointProfileSubSensor(point.getCoordinate().z);
-            }                
+            }
         } else if (geom instanceof LineString) {
             LineString lineString = (LineString) geom;
             //profile bin
             if (lineString.getNumPoints() == 2) {
                 Point topPoint = lineString.getPointN(0);
                 Point bottomPoint = lineString.getPointN(1);
-                
+
                 if (FeatureUtil.equal2d(topPoint, bottomPoint)
                         && !Double.isNaN(topPoint.getCoordinate().z)
                         && !Double.isNaN(bottomPoint.getCoordinate().z)){
@@ -471,7 +473,32 @@ public class IoosUtil {
                     subSensor = new BinProfileSubSensor(topHeight, bottomHeight);
                 }
             }
-        }                
+        }
         return subSensor;
+    }
+
+    private static void loadAssetPoint(HashMap<AbstractAsset,Point> assetPoints, AbstractAsset asset,
+            Session session) throws CodedException {
+        if (!assetPoints.containsKey(asset)) {
+            Geometry assetGeom = FeatureUtil.getAssetGeom(session, asset);
+            if (assetGeom != null) {
+                assetPoints.put(asset, FeatureUtil.getCentroidWithSRID(assetGeom));
+            } else {
+                assetPoints.put(asset, null);
+            }
+        }
+    }
+
+    private static boolean foiIsAsset(HashMap<AbstractAsset,Point> assetPoints, SamplingFeature foi,
+            AbstractAsset asset) {
+        Point assetPoint = assetPoints.get(asset);
+        if (!foi.getIdentifier().startsWith(asset.getAssetId())) {
+            return false;
+        }
+        if (assetPoint != null && FeatureUtil.equal3d(assetPoint,
+                FeatureUtil.getCentroidWithSRID(foi.getGeometry()))) {
+            return true;
+        }
+        return false;
     }
 }

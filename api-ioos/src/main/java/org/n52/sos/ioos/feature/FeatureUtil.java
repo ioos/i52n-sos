@@ -6,7 +6,7 @@ import java.util.Set;
 import org.n52.sos.ds.FeatureQueryHandlerQueryObject;
 import org.n52.sos.exception.CodedException;
 import org.n52.sos.exception.ows.NoApplicableCodeException;
-import org.n52.sos.ioos.asset.StationAsset;
+import org.n52.sos.ioos.asset.AbstractAsset;
 import org.n52.sos.ogc.gml.AbstractFeature;
 import org.n52.sos.ogc.om.features.samplingFeatures.SamplingFeature;
 import org.n52.sos.ogc.ows.OwsExceptionReport;
@@ -74,6 +74,10 @@ public class FeatureUtil {
         return a.getX() == b.getX() && a.getY() == b.getY();
     }
 
+    public static boolean equal3d(Point a, Point b){
+        return a.equals(b) && a.getCoordinate().z == b.getCoordinate().z;
+    }
+
     public static Double getPointZOrNull(Point point) {
       if (Double.isNaN(point.getCoordinate().z)) {
         return null;
@@ -93,26 +97,26 @@ public class FeatureUtil {
       return centroid;
     }
 
-    public static Geometry getStationGeom(Object connection, StationAsset station) throws CodedException {
-      FeatureQueryHandlerQueryObject queryObject = new FeatureQueryHandlerQueryObject()
-          .setConnection(connection)
-          .setFeatureIdentifiers(Sets.newHashSet(station.getAssetId()));
-      AbstractFeature feature;
-    try {
-      feature = Configurator.getInstance().getFeatureQueryHandler()
-          .getFeatureByID(queryObject);
-    } catch (OwsExceptionReport e) {
+    public static Geometry getAssetGeom(Object connection, AbstractAsset asset) throws CodedException {
+        FeatureQueryHandlerQueryObject queryObject = new FeatureQueryHandlerQueryObject()
+                .setConnection(connection)
+                .setFeatureIdentifiers(Sets.newHashSet(asset.getAssetId()));
+        AbstractFeature feature;
+        try {
+            feature = Configurator.getInstance().getFeatureQueryHandler()
+                    .getFeatureByID(queryObject);
+        } catch (OwsExceptionReport e) {
             throw new NoApplicableCodeException()
-        .withMessage("Error while querying for station feature: " + station.getAssetId())
-        .causedBy(e);
-    }
-    if (feature == null) {
-      return null;
-    }
-    if (!(feature instanceof SamplingFeature)) {
-      return null;
-    }
-    SamplingFeature samplingFeature = (SamplingFeature) feature;
-    return samplingFeature.getGeometry();
+                .withMessage("Error while querying for asset feature: " + asset.getAssetId())
+                .causedBy(e);
+        }
+        if (feature == null) {
+            return null;
+        }
+        if (!(feature instanceof SamplingFeature)) {
+            return null;
+        }
+        SamplingFeature samplingFeature = (SamplingFeature) feature;
+        return samplingFeature.getGeometry();
     }
 }
