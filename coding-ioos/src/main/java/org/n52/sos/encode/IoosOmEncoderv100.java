@@ -326,9 +326,6 @@ public class IoosOmEncoderv100 implements ObservationEncoder<XmlObject, Object>{
             if( stationPoint != null ){
                 // make stationPoint 2D, since gml:location shouldn't contain z
                 stationPoint = FeatureUtil.clonePoint2d( stationPoint );
-                //switch coord axis order back if necessary, since we switched them to x,y order above
-                stationPoint = (Point) GeometryHandler.getInstance()
-                        .switchCoordinateAxisFromToDatasourceIfNeeded(stationPoint);
                 PointType xb_point = xb_pointMembers.addNewPoint();
                 xb_point.addNewName().setStringValue( station.getAssetId() );
                 xb_point.addNewPos().setStringValue( JTSHelper.getCoordinatesString( stationPoint ) );
