@@ -85,14 +85,6 @@
       <version>${n52.sos.version}</version>
       <type>war</type>
     </dependency>
-    <!-- 
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>webapp</artifactId>
-      <version>4.2.0</version>
-      <type>pom</type>
-    </dependency>
-     -->    
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>test-data-ioos</artifactId>

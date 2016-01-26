@@ -4,7 +4,7 @@
     <groupId>org.n52.sensorweb.sos</groupId>
     <artifactId>52n-sos</artifactId>
     <!-- Upstream 52n version, change below in n52.sos.version property also -->
-    <version>4.2.0</version>
+    <version>4.3.6</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>i52n-sos</artifactId>
@@ -24,7 +24,7 @@
   
   <properties>
     <!-- Upstream 52n version, change above in parent definition also -->
-    <n52.sos.version>4.2.0</n52.sos.version>  
+    <n52.sos.version>4.3.6</n52.sos.version>
     <config.logger.fileappender.filename>i52n-sos</config.logger.fileappender.filename>
     <maven.build.timestamp.format>yyyy-MM-dd HH:mm z</maven.build.timestamp.format>
   </properties>
@@ -90,7 +90,13 @@
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>hibernate-common</artifactId>
-        <version>${n52.sos.version}</version>    
+        <version>${n52.sos.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>api-aqd-v10</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
@@ -147,7 +153,6 @@
         <artifactId>test</artifactId>
         <version>${n52.sos.version}</version>    
       </dependency>
-      
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>api-ioos</artifactId>
@@ -172,7 +177,7 @@
         <groupId>${project.groupId}</groupId>
         <artifactId>ioos-controller</artifactId>
         <version>${project.version}</version>    
-      </dependency>      
+      </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>webapp</artifactId>
