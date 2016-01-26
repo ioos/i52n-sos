@@ -5,10 +5,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.regex.Pattern;
 
-import org.n52.sos.ogc.filter.FilterConstants.SpatialOperator;
 import org.n52.sos.encode.IoosEncoderUtil;
+import org.n52.sos.ogc.filter.FilterConstants.SpatialOperator;
 import org.n52.sos.ogc.filter.SpatialFilter;
 import org.n52.sos.ogc.ows.OwsExceptionReport;
 import org.n52.sos.ogc.sos.SosConstants;
@@ -34,14 +33,14 @@ public class IoosGetObservationKvpDecoderv100 extends GetObservationKvpDecoderv1
                 if (IoosEncoderUtil.isIoos10BboxString(foiParamValue)) {
                     List<String> coordinates = Lists.newArrayList(
                             foiParamValue.substring(foiParamValue.lastIndexOf(':') + 1).split(","));
-    
+
                     String lowerCorner =
                             String.format(Locale.US, "%s %s", new BigDecimal(coordinates.get(Constants.INT_0)).toString(),
                                     new BigDecimal(coordinates.get(Constants.INT_1)).toString());
                     String upperCorner =
                             String.format(Locale.US, "%s %s", new BigDecimal(coordinates.get(Constants.INT_2)).toString(),
                                     new BigDecimal(coordinates.get(Constants.INT_3)).toString());
-    
+
                     spatialFilter = new SpatialFilter();
                     //fake the value reference to the SOS 2.0 standard
                     spatialFilter.setValueReference("om:featureOfInterest/*/sams:shape");
