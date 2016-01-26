@@ -39,6 +39,7 @@ import org.n52.sos.ogc.om.OmObservableProperty;
 import org.n52.sos.ogc.om.OmObservation;
 import org.n52.sos.ogc.om.OmObservationConstellation;
 import org.n52.sos.ogc.om.SingleObservationValue;
+import org.n52.sos.ogc.om.StreamingValue;
 import org.n52.sos.ogc.om.features.samplingFeatures.SamplingFeature;
 import org.n52.sos.ogc.om.values.QuantityValue;
 import org.n52.sos.ogc.om.values.Value;
@@ -47,6 +48,7 @@ import org.n52.sos.util.GeometryHandler;
 import org.slf4j.Logger;
 
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.SetMultimap;
 import com.vividsolutions.jts.geom.Envelope;
@@ -87,8 +89,22 @@ public class IoosUtil {
 
         int fakeStationCounter = 0;
         Map<String,FakeStationAsset> fakeStations = new HashMap<String,FakeStationAsset>();
-        
+
+        //unpack streaming values first
+        List<OmObservation> fixedSosObs = Lists.newArrayList();
         for( OmObservation sosObs : omObservations ){
+            ObservationValue<?> sosObsValue = sosObs.getValue();
+            if (sosObsValue != null) {
+                if (sosObsValue instanceof SingleObservationValue) {
+                    fixedSosObs.add(sosObs);
+                } else if (sosObsValue instanceof StreamingValue) {
+                    StreamingValue<?> streamingValue = (StreamingValue<?>) sosObsValue;
+                    fixedSosObs.addAll(streamingValue.getObservation());
+                }
+            }
+        }
+
+        for( OmObservation sosObs : fixedSosObs ){
             OmObservationConstellation obsConst = sosObs.getObservationConstellation();
 
             //first, resolve the procId to an asset type
@@ -183,7 +199,7 @@ public class IoosUtil {
 
             String phenId = obsConst.getObservableProperty().getIdentifier();
             ObservationValue<?> iObsValue = sosObs.getValue();
-            if( !(iObsValue instanceof SingleObservationValue) ){
+            if (!(iObsValue instanceof SingleObservationValue)) {
                 throw new NoApplicableCodeException().withMessage("Only SingleObservationValues are supported.");
             }
             SingleObservationValue<?> singleObsValue = (SingleObservationValue<?>) iObsValue;
