@@ -59,6 +59,11 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
+        <artifactId>binding-kvp</artifactId>
+        <version>${n52.sos.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
         <artifactId>coding-ows-v110</artifactId>
         <version>${n52.sos.version}</version>    
       </dependency>

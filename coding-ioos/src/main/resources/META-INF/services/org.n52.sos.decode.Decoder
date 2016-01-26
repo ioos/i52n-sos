@@ -1,1 +1,2 @@
 org.n52.sos.decode.IoosSensorMLDecoderv101
+org.n52.sos.decode.kvp.v1.IoosGetObservationKvpDecoderv100

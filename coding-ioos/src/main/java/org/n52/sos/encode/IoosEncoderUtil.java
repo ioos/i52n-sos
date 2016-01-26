@@ -6,6 +6,8 @@ import net.opengis.gml.EnvelopeType;
 import net.opengis.gml.MetaDataPropertyType;
 import net.opengis.gml.VersionDocument;
 
+import java.util.regex.Pattern;
+
 import org.n52.sos.ioos.Ioos52nSosVersionHandler;
 import org.n52.sos.util.XmlHelper;
 import org.n52.sos.util.XmlOptionsHelper;
@@ -17,6 +19,10 @@ import com.vividsolutions.jts.geom.Envelope;
  * Shared IOOS encoding methods
  */
 public class IoosEncoderUtil {
+    private static final Pattern IOOS_WSDD_10_BBOX_PATTERN = Pattern
+            .compile("^BBOX:\\s*[-+]?\\d*\\.?\\d+(\\s*,\\s*[-+]?\\d*\\.?\\d+){3}\\s*$",
+                    Pattern.CASE_INSENSITIVE);
+
     public static MetaDataPropertyType getIoosVersionMetaData(){
         return getVersionMetaData(IoosSosConstants.IOOS_TEMPLATE_VERSION,
                 IoosSosConstants.IOOS_VERSION_DEFINITION, IoosSosConstants.IOOS_VERSION_M10);
@@ -58,5 +64,9 @@ public class IoosEncoderUtil {
         
         xb_envelope.setSrsName( IoosSosConstants.SRS_URL_PREFIX + 4326 );
         return xb_boundingShape;   		
+   	}
+
+   	public static boolean isIoos10BboxString (String bbox) {
+   	    return IOOS_WSDD_10_BBOX_PATTERN.matcher(bbox).matches();
    	}
 }
