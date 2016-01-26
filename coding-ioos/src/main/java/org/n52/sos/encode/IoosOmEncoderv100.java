@@ -96,7 +96,8 @@ public class IoosOmEncoderv100 implements ObservationEncoder<XmlObject, Object>{
                     Collections.singleton(CONTENT_TYPE_IOOS_OM_M10.toString())));
 
     private static final Set<EncoderKey> ENCODER_KEYS = CodingHelper.encoderKeysForElements( CONTENT_TYPE_IOOS_OM_M10.toString(),
-            IoosSosObservation.class, GetObservationResponse.class, GetObservationByIdResponse.class);
+            IoosSosObservation.class, GetObservationResponse.class,
+            GetObservationByIdResponse.class, OmObservation.class);
 
     /**
      * Disclaimer from IoosSettings
