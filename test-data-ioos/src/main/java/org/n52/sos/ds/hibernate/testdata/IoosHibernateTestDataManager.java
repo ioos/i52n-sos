@@ -330,7 +330,14 @@ public class IoosHibernateTestDataManager{
     }
     
     private static double randomLng(){
-        return randomInRange(-180.0, 180.0, 6);
+        //make test data lngs three digits for easy differentiation from lats
+        double lng = randomInRange(100.0, 180.0, 6);
+        //return a negative number if lng is even
+        if (lng % 2 == 0) {
+            return 0 - lng;
+        } else {
+            return lng;
+        }
     }
 
     private static double randomLat(){
