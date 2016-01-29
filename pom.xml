@@ -4,7 +4,7 @@
     <groupId>org.n52.sensorweb.sos</groupId>
     <artifactId>52n-sos</artifactId>
     <!-- Upstream 52n version, change below in n52.sos.version property also -->
-    <version>4.3.6</version>
+    <version>4.3.6.1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>i52n-sos</artifactId>
@@ -24,7 +24,7 @@
   
   <properties>
     <!-- Upstream 52n version, change above in parent definition also -->
-    <n52.sos.version>4.3.6</n52.sos.version>
+    <n52.sos.version>4.3.6.1</n52.sos.version>
     <config.logger.fileappender.filename>i52n-sos</config.logger.fileappender.filename>
     <maven.build.timestamp.format>yyyy-MM-dd HH:mm z</maven.build.timestamp.format>
   </properties>
