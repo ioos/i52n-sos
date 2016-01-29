@@ -104,7 +104,12 @@ public class IoosGetCapabilitiesResponseEncoder extends GetCapabilitiesResponseE
             // set responseFormat [0..*]
             if (offering.isSetResponseFormats()) {
                 for (String responseFormat : offering.getResponseFormats()) {
-                    xbObservationOffering.addNewResponseFormat().setStringValue(responseFormat);
+                    //FIXME workaround for invalid responseFormat until eda4d65 gets included in a release
+                    //https://github.com/52North/SOS/pull/387
+                    //remove after eda4d65 is merged to upstream release 
+                    if (!responseFormat.equals("http://dd.eionet.europa.eu/schemaset/id2011850eu-1.0")) {
+                        xbObservationOffering.addNewResponseFormat().setStringValue(responseFormat);
+                    }
                 }
             }
 
