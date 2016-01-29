@@ -333,7 +333,7 @@ public class IoosHibernateTestDataManager{
         //make test data lngs three digits for easy differentiation from lats
         double lng = randomInRange(100.0, 180.0, 6);
         //return a negative number if lng is even
-        if (lng % 2 == 0) {
+        if ((int) Math.round(lng) % 2 == 0) {
             return 0 - lng;
         } else {
             return lng;
