@@ -1,16 +1,4 @@
 #!/bin/bash
-#configure an i52n-sos war with a datasource and set configuration settings
-#if [ "$#" -lt 5 ]; then
-#  echo "Usage: configure_sos DATASOURCE_FILE TARGET_FILENAME SOS_URL ADMIN_PASSWORD LOG_NAME [SOURCE_WAR]"
-#  exit 1
-#fi
-
-#DATASOURCE_FILE=$1
-#TARGET=$2
-#SOS_URL=$3
-#PASSWORD=$4
-#LOG_NAME=$5
-#SOURCE_WAR=$6
 
 usage()
 {
