@@ -176,7 +176,7 @@
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>test-data-ioos</artifactId>
-        <version>${project.version}</version>    
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
@@ -219,7 +219,13 @@
         <groupId>edu.ucar</groupId>
         <artifactId>netcdf</artifactId>
         <version>4.3.22</version>
-      </dependency>      
+      </dependency>
+      <!-- override xerces version in upstream pom.xml -->
+      <dependency>
+        <groupId>xerces</groupId>
+        <artifactId>xercesImpl</artifactId>
+        <version>2.11.0</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -237,6 +243,15 @@
   </build>
 
   <repositories>
+    <!-- Specify Maven Central manually first so that it's checked for dependencies first -->
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>central</id>
+      <name>Central Repository</name>
+      <url>https://repo.maven.apache.org/maven2</url>
+    </repository>
     <repository>
       <id>n52-releases</id>
       <name>52n Releases</name>

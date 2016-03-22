@@ -1,0 +1,32 @@
+# this doesn't work yet because v1.0.1 hasn't been released
+version: '2'
+
+services:
+  app:
+    image: ioos/i52n-sos:1.0.1
+    ports:
+      - "8083:8080"
+    volumes:
+      - config:/srv/apps/i52n-sos
+    restart: always
+    networks:
+      - i52n-sos
+  db:
+    image: mdillon/postgis:9.5
+    ports:
+      - "5435:5432"
+    volumes:
+      - ./docker/init-db.sh::/docker-entrypoint-initdb.d/init-db.sh
+      - db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=SOME_PASSWORD
+    restart: always
+    networks:
+      - i52n-sos
+
+networks:
+  i52n-sos:
+
+volumes:
+  config:
+  db:

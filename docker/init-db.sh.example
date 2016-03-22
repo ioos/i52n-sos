@@ -1,0 +1,12 @@
+#create user
+psql --username "$POSTGRES_USER" -c "CREATE USER sos WITH PASSWORD 'YOUR_PASSWORD'";
+
+#or, if you don't want to store the password above in plain text,
+#use the result of `SELECT md5('YOUR_PASSWORD' || 'sos' );` here (note 'md5' prefix):
+#psql --username "$POSTGRES_USER" -c "CREATE USER sos WITH PASSWORD 'md5YOUR_PASSWORD_MD5'";
+
+#create database
+psql --username "$POSTGRES_USER" -c "CREATE DATABASE sos OWNER sos;"
+
+#create postgis extension
+psql --username "$POSTGRES_USER" -c "CREATE EXTENSION postgis;" sos
