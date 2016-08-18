@@ -89,6 +89,11 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
+        <artifactId>split-and-merge</artifactId>
+        <version>${n52.sos.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
         <artifactId>admin-controller</artifactId>
         <version>${n52.sos.version}</version>    
       </dependency>
