@@ -8,7 +8,7 @@ services:
       - "8083:8080"
     volumes:
       - config:/srv/apps/i52n-sos
-    restart: always
+    restart: unless-stopped
     networks:
       - i52n-sos
   db:
@@ -16,11 +16,11 @@ services:
     ports:
       - "5435:5432"
     volumes:
-      - ./docker/init-db.sh::/docker-entrypoint-initdb.d/init-db.sh
+      - ./docker/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
       - db:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=SOME_PASSWORD
-    restart: always
+    restart: unless-stopped
     networks:
       - i52n-sos
 

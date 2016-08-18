@@ -1,7 +1,7 @@
 FROM tomcat:8.0
 MAINTAINER Shane St Clair<shane@axds.co>
 
-RUN apt-get update && apt-get install -y --no-install-recommends openjdk-7-jdk && rm -rf /var/lib/apt/lists*
+RUN apt-get update && apt-get install -y --no-install-recommends openjdk-7-jdk && rm -rf /var/lib/apt/lists/*
 
 #Borrowed from maven:3 Dockerfile
 ENV MAVEN_VERSION 3.3.9
@@ -48,13 +48,13 @@ ADD docker/logback.xml /srv/apps/i52n-sos/WEB-INF/classes/logback.xml
 #change webapps dir to /srv/apps
 RUN sed -i -e 's/appBase="webapps"/appBase="\/srv\/apps"/' $CATALINA_HOME/conf/server.xml
 
-#Add and user i52n user
-RUN useradd --system --home-dir=/srv/apps/i52n-sos i52n \
-      && chown -R i52n:i52n /srv/apps/i52n-sos \
-      && chown -R i52n:i52n $CATALINA_HOME
+#Add sensor user
+RUN useradd --system --home-dir=/srv/apps/i52n-sos sensor \
+      && chown -R sensor:sensor /srv/apps/i52n-sos \
+      && chown -R sensor:sensor $CATALINA_HOME
 
-#Run as i52n user
-USER i52n
+#Run as sensor user
+USER sensor
 
 #Create volume for data persistence
 VOLUME /srv/apps/i52n-sos
