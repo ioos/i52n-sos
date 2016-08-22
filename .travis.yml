@@ -1,7 +1,8 @@
 language: java
 sudo: false
 jdk:
-  - oraclejdk7
+  # java 7 not supported due to apache jena 3.x
+  #- oraclejdk7
   # openjdk7 erroring with buffer overflow when test data is loaded
   #- openjdk7
   - oraclejdk8
