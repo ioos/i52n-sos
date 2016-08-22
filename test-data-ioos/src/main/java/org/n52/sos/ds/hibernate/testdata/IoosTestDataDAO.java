@@ -8,21 +8,17 @@ import org.hibernate.criterion.Restrictions;
 import org.n52.sos.ds.hibernate.entities.FeatureOfInterest;
 import org.n52.sos.ds.hibernate.entities.FeatureOfInterestType;
 import org.n52.sos.ds.hibernate.entities.ObservableProperty;
-import org.n52.sos.ds.hibernate.entities.series.Series;
-import org.n52.sos.ds.hibernate.entities.series.SeriesObservation;
 import org.n52.sos.ds.hibernate.entities.ObservationConstellation;
-import org.n52.sos.ds.hibernate.entities.series.SeriesObservationInfo;
-import org.n52.sos.ds.hibernate.entities.ObservationInfo;
 import org.n52.sos.ds.hibernate.entities.ObservationType;
 import org.n52.sos.ds.hibernate.entities.Offering;
 import org.n52.sos.ds.hibernate.entities.Procedure;
 import org.n52.sos.ds.hibernate.entities.ProcedureDescriptionFormat;
-import org.n52.sos.ds.hibernate.entities.TFeatureOfInterest;
 import org.n52.sos.ds.hibernate.entities.TOffering;
 import org.n52.sos.ds.hibernate.entities.TProcedure;
 import org.n52.sos.ds.hibernate.entities.Unit;
 import org.n52.sos.ds.hibernate.entities.ValidProcedureTime;
-import org.n52.sos.ds.hibernate.util.HibernateHelper;
+import org.n52.sos.ds.hibernate.entities.observation.series.Series;
+import org.n52.sos.ds.hibernate.entities.observation.series.SeriesObservation;
 
 public class IoosTestDataDAO {
     public static void deleteOfferingObservations(final String offeringIdentifier, final Session session) {        
@@ -89,11 +85,11 @@ public class IoosTestDataDAO {
 
     public static void deleteFeatures(final String featureIdentifierPattern, final Session session) {
         @SuppressWarnings("unchecked")
-        List<TFeatureOfInterest> features = session.createCriteria(TFeatureOfInterest.class)
+        List<FeatureOfInterest> features = session.createCriteria(FeatureOfInterest.class)
                 .add(Restrictions.like(FeatureOfInterest.IDENTIFIER, featureIdentifierPattern))
                 .list();
         
-        for (TFeatureOfInterest feature : features) {
+        for (FeatureOfInterest feature : features) {
             session.delete(feature);
         }
         session.flush();
@@ -162,14 +158,6 @@ public class IoosTestDataDAO {
                         .uniqueResult();                
             }
 
-            if (HibernateHelper.isEntitySupported(ObservationInfo.class)) {
-                if(count == 0) {
-                    count = (Long) session.createCriteria(ObservationInfo.class)
-                            .add(Restrictions.eq("observableProperty", obsProp))
-                            .setProjection(Projections.rowCount())
-                            .uniqueResult();                
-                }
-            }
 
             if (count == 0) {
                 session.delete(obsProp);
@@ -198,7 +186,7 @@ public class IoosTestDataDAO {
         @SuppressWarnings("unchecked")
         List<Unit> units = session.createCriteria(Unit.class).list();
         for (Unit unit : units ) {
-            long count = (Long) session.createCriteria(SeriesObservationInfo.class)
+            long count = (Long) session.createCriteria(SeriesObservation.class)
                     .add(Restrictions.eq("unit", unit))
                     .setProjection(Projections.rowCount())
                     .uniqueResult();

@@ -47,7 +47,7 @@ import org.n52.sos.ds.hibernate.dao.OfferingDAO;
 import org.n52.sos.ds.hibernate.dao.ProcedureDAO;
 import org.n52.sos.ds.hibernate.dao.ProcedureDescriptionFormatDAO;
 import org.n52.sos.ds.hibernate.dao.ValidProcedureTimeDAO;
-import org.n52.sos.ds.hibernate.dao.series.SeriesObservationDAO;
+import org.n52.sos.ds.hibernate.dao.observation.series.SeriesObservationDAO;
 import org.n52.sos.ds.hibernate.entities.Codespace;
 import org.n52.sos.ds.hibernate.entities.FeatureOfInterest;
 import org.n52.sos.ds.hibernate.entities.FeatureOfInterestType;
@@ -69,12 +69,15 @@ import org.n52.sos.ogc.gml.time.TimeInstant;
 import org.n52.sos.ogc.om.OmConstants;
 import org.n52.sos.ogc.om.OmObservableProperty;
 import org.n52.sos.ogc.om.OmObservation;
+import org.n52.sos.ogc.om.OmObservationConstellation;
 import org.n52.sos.ogc.om.SingleObservationValue;
 import org.n52.sos.ogc.om.features.SfConstants;
 import org.n52.sos.ogc.om.features.samplingFeatures.SamplingFeature;
 import org.n52.sos.ogc.om.values.QuantityValue;
 import org.n52.sos.ogc.ows.OwsExceptionReport;
+import org.n52.sos.ogc.sos.SosProcedureDescription;
 import org.n52.sos.service.Configurator;
+import org.n52.sos.util.CodingHelper;
 import org.n52.sos.util.CollectionHelper;
 
 import ucar.nc2.constants.CF;
@@ -142,13 +145,16 @@ public class IoosHibernateTestDataManager{
         } catch (UnitCreationException e) {
             throw new NoApplicableCodeException().causedBy(e);
         }
+
+        OmObservableProperty airTempOmObsProp = new OmObservableProperty(airTempPhen.getId());
+        OmObservableProperty waterTempOmObsProp = new OmObservableProperty(waterTempPhen.getId());
         
         final ObservableProperty hAirTempObsProp = observablePropertyDAO.getOrInsertObservableProperty(
-                CollectionHelper.list(new OmObservableProperty(airTempPhen.getId())), session).get(0);
+                CollectionHelper.list(airTempOmObsProp), false, session).get(0);
         final String airTempUnit = IoosSosConstants.UDUNITS_URN_PREFIX + airTempPhen.getUnit().getSymbol();        
 
         final ObservableProperty hWaterTempObsProp = observablePropertyDAO.getOrInsertObservableProperty(
-                CollectionHelper.list(new OmObservableProperty(waterTempPhen.getId())), session).get(0);
+                CollectionHelper.list(waterTempOmObsProp), false, session).get(0);
         final String waterTempUnit = IoosSosConstants.UDUNITS_URN_PREFIX + waterTempPhen.getUnit().getSymbol();
 
         final ProcedureDescriptionFormat pdf = procedureDescriptionFormatDAO
@@ -157,8 +163,11 @@ public class IoosHibernateTestDataManager{
         //network procedure
         final String networkAllSml = IoosTestDataSmlGenerator.createNetworkSensorMl(NETWORK_ALL.getAssetId(),
                 "All inclusive test sensor network", "Test data network", "Test data network procedure", TEST);
-        final Procedure networkProcedure = insertProcedure(NETWORK_ALL.getAssetId(), pdf,
-                new ArrayList<String>(), networkAllSml, session);
+
+        org.n52.sos.ogc.sensorML.System networkSystem = new org.n52.sos.ogc.sensorML.System();
+        networkSystem.setIdentifier(NETWORK_ALL.getAssetId());
+
+        final Procedure networkProcedure = insertProcedure(networkSystem, pdf, networkAllSml, session);
         
         //stations
         for (int i = 0; i < NUM_STATIONS; i++) {
@@ -171,8 +180,12 @@ public class IoosHibernateTestDataManager{
                     "gov_federal", "IOOS", TEST, "IOOS",
                     "Station " + i + " Quality Page", "http://somesite.gov/qc/station" + i,
                     stationLng, stationLat);
-            final Procedure stationProcedure = insertProcedure(station.getAssetId(), pdf, CollectionHelper.list(NETWORK_ALL.getAssetId()),
-                    stationSml, session);
+
+            org.n52.sos.ogc.sensorML.System stationSystem = new org.n52.sos.ogc.sensorML.System();
+            stationSystem.setIdentifier(station.getAssetId());
+            stationSystem.setParentProcedures(CollectionHelper.list(NETWORK_ALL.getAssetId()));
+
+            final Procedure stationProcedure = insertProcedure(stationSystem, pdf, stationSml, session);
                         
             final Offering hStationOffering = offeringDAO.getAndUpdateOrInsertNewOffering(station.getAssetId(),
                     station.getAssetId(), new ArrayList<RelatedFeature>(), CollectionHelper.list(measurementObsType),
@@ -188,13 +201,13 @@ public class IoosHibernateTestDataManager{
             
             //air temp timeseries
             createSensor(i, CF.FeatureType.timeSeries, hNetworkOffering, networkProcedure, hStationOffering, stationProcedure, station,
-                    hStationFeature, stationPoint, airTempPhen, hAirTempObsProp, airTempUnit, measurementObsType, pdf,
-                    codespaceCache, unitCache, session);
+                    stationFeature, hStationFeature, stationPoint, airTempPhen, airTempOmObsProp, hAirTempObsProp, airTempUnit,
+                    measurementObsType, pdf, codespaceCache, unitCache, session);
             
             //water temp timeseriesprofile
             createSensor(i, CF.FeatureType.timeSeriesProfile, hNetworkOffering, networkProcedure, hStationOffering, stationProcedure, station,
-                    hStationFeature, stationPoint, waterTempPhen, hWaterTempObsProp, waterTempUnit, measurementObsType, pdf,
-                    codespaceCache, unitCache, session);            
+                    stationFeature, hStationFeature, stationPoint, waterTempPhen, waterTempOmObsProp, hWaterTempObsProp, waterTempUnit,
+                    measurementObsType, pdf, codespaceCache, unitCache, session);
         }
 
         tx.commit();
@@ -203,8 +216,9 @@ public class IoosHibernateTestDataManager{
     }
 
     private static void createSensor(int i, CF.FeatureType featureType, Offering hNetworkOffering, Procedure networkProcedure,
-            Offering hStationOffering, Procedure stationProcedure, StationAsset station, FeatureOfInterest hStationFeature,
-            Point stationPoint, Phenomenon phen, ObservableProperty obsProp, String unit, ObservationType obsType, ProcedureDescriptionFormat pdf,
+            Offering hStationOffering, Procedure stationProcedure, StationAsset station, SamplingFeature samplingFeature,
+            FeatureOfInterest hStationFeature, Point stationPoint, Phenomenon phen,
+            OmObservableProperty omObsProp, ObservableProperty obsProp, String unit, ObservationType obsType, ProcedureDescriptionFormat pdf,
             Map<String,Codespace> codespaceCache, Map<String,Unit> unitCache, Session session) throws OwsExceptionReport {
         String phenShortName = getPhenomenonShortId(phen.getId());
         final SimpleIo airTempSimpleIo = new SimpleIo(phenShortName, phen.getId(), unit);
@@ -214,20 +228,26 @@ public class IoosHibernateTestDataManager{
                 "Test station " + i + " " + phen.getName() + " sensor",
                 "Station number " + i + " " + phen.getName() + " sensor",
                 CollectionHelper.list(airTempSimpleIo));
-        final Procedure sensorProcedure = insertProcedure(sensor.getAssetId(), pdf, CollectionHelper.list(station.getAssetId()),
-                sensorSml, session);
+
+        //TODO switch to manually build System instead of making xml
+        //TODO decode xml
+        Object decodedXml = CodingHelper.decodeXmlObject(sensorSml);
+        org.n52.sos.ogc.sensorML.System sensorSystem = new org.n52.sos.ogc.sensorML.System();
+        sensorSystem.setIdentifier(sensor.getAssetId());
+        sensorSystem.setParentProcedures(CollectionHelper.list(station.getAssetId()));
+        final Procedure sensorProcedure = insertProcedure(sensorSystem, pdf, sensorSml, session);
 
         Set<ObservationConstellation> obsConsts = new HashSet<ObservationConstellation>();
         Set<ObservationConstellation> sensorObsConsts = new HashSet<ObservationConstellation>();
-        
+
         // when offering and procedure are same hiddenChild is false, otherwise true
         ObservationConstellation sensorForNetworkOffering = obsConstDAO.checkOrInsertObservationConstellation(
-                sensorProcedure, obsProp, hNetworkOffering, true, session);            
+                sensorProcedure, obsProp, hNetworkOffering, true, session);
         obsConsts.add(sensorForNetworkOffering);
-        sensorObsConsts.add(sensorForNetworkOffering);            
-                
+        sensorObsConsts.add(sensorForNetworkOffering);
+
         obsConsts.add(obsConstDAO.checkOrInsertObservationConstellation(stationProcedure,
-                obsProp, hNetworkOffering, true, session));            
+                obsProp, hNetworkOffering, true, session));
         obsConsts.add(obsConstDAO.checkOrInsertObservationConstellation(networkProcedure,
                 obsProp, hNetworkOffering, false, session));
 
@@ -235,7 +255,7 @@ public class IoosHibernateTestDataManager{
                 sensorProcedure, obsProp, hStationOffering, true, session);
         obsConsts.add(sensorForStationOffering);
         sensorObsConsts.add(sensorForStationOffering);
-        
+
         obsConsts.add(obsConstDAO.checkOrInsertObservationConstellation(stationProcedure,
                 obsProp, hStationOffering, false, session));
 
@@ -244,7 +264,13 @@ public class IoosHibernateTestDataManager{
             obsConst.setObservationType(obsType);
             session.save(obsConst);
         }
-        
+
+        //create OmObservationConstellation for OmObservations
+        OmObservationConstellation omObsConst = new OmObservationConstellation();
+        omObsConst.setProcedure(sensorSystem);
+        omObsConst.setObservableProperty(omObsProp);
+        omObsConst.setFeatureOfInterest(samplingFeature);
+
         //add values
         DateTime obsEndTime = new DateTime(DateTimeZone.UTC).withMillisOfSecond(0).withSecondOfMinute(0).withMinuteOfHour(0);
         if (featureType.equals(CF.FeatureType.timeSeriesProfile)) {
@@ -259,18 +285,21 @@ public class IoosHibernateTestDataManager{
                 SamplingFeature profileFeature = new SamplingFeature(new CodeWithAuthority(foiId));
                 profileFeature.setGeometry(foiGeom);
                 FeatureOfInterest hProfileFeature = featureOfInterestDAO.checkOrInsertFeatureOfInterest(profileFeature, session);
-                insertObservation(sensorObsConsts, obsEndTime, hProfileFeature, unit, codespaceCache, unitCache, session);
+                insertObservation(sensorObsConsts, omObsConst, obsEndTime, hProfileFeature, unit, codespaceCache, unitCache, session);
             }
         } else {
             //normal time series
-            insertObservation(sensorObsConsts, obsEndTime, hStationFeature, unit, codespaceCache, unitCache, session);                 
+            insertObservation(sensorObsConsts, omObsConst, obsEndTime, hStationFeature, unit, codespaceCache, unitCache, session);
         }
     }
 
-    private static void insertObservation(Set<ObservationConstellation> obsConsts, DateTime obsEndTime, FeatureOfInterest feature, String unit,
-            Map<String,Codespace> codespaceCache, Map<String,Unit> unitCache, Session session) throws OwsExceptionReport{
+    private static void insertObservation(Set<ObservationConstellation> obsConsts, OmObservationConstellation omObsConst,
+            DateTime obsEndTime, FeatureOfInterest feature, String unit, Map<String,Codespace> codespaceCache,
+            Map<String,Unit> unitCache, Session session) throws OwsExceptionReport{
         for (int j = 0; j < NUM_OBS_PER_SENSOR; j++){
             OmObservation obs = new OmObservation();
+            obs.setObservationConstellation(omObsConst);
+
             double obsValue = randomInRange(5.0,  32.0, 3);
             DateTime obsTime = obsEndTime.minusHours(j);
             QuantityValue quantityValue = new QuantityValue(obsValue, unit);
@@ -281,13 +310,13 @@ public class IoosHibernateTestDataManager{
         session.clear();
     }
 
-    private static Procedure insertProcedure(String identifier, ProcedureDescriptionFormat pdf, Collection<String> parentProcedures,
-            String procedureXml, Session session) {
-        Procedure procedure = procedureDAO.getOrInsertProcedure(identifier, pdf, parentProcedures, session);
+    private static Procedure insertProcedure(SosProcedureDescription procedureDesc, ProcedureDescriptionFormat pdf,
+            String procedureXml, Session session) throws OwsExceptionReport {
+        Procedure procedure = procedureDAO.getOrInsertProcedure(procedureDesc.getIdentifier(), pdf, procedureDesc, false, session);
         validProcedureTimeDAO.insertValidProcedureTime(procedure, pdf, procedureXml, new DateTime(DateTimeZone.UTC), session);
         return procedure;
     }
-    
+
     public static boolean hasTestData() throws OwsExceptionReport{
         return !(getCache().getOfferingsForProcedure(NETWORK_ALL.getAssetId()).isEmpty());
     }
@@ -303,7 +332,7 @@ public class IoosHibernateTestDataManager{
         IoosTestDataDAO.deleteOfferingObservations(NETWORK_ALL.getAssetId(), session);
 
         IoosTestDataDAO.deleteOfferingObservationConstellations(TEST_NETWORK_PATTERN, session);
-        IoosTestDataDAO.deleteOfferingObservationConstellations(TEST_STATION_PATTERN, session);        
+        IoosTestDataDAO.deleteOfferingObservationConstellations(TEST_STATION_PATTERN, session);
         IoosTestDataDAO.deleteOfferingObservationConstellations(TEST_SENSOR_PATTERN, session);
 
         IoosTestDataDAO.deleteOfferings(TEST_NETWORK_PATTERN, session);
@@ -315,9 +344,9 @@ public class IoosHibernateTestDataManager{
         IoosTestDataDAO.deleteProcedures(TEST_NETWORK_PATTERN, session);
         IoosTestDataDAO.deleteProcedures(TEST_STATION_PATTERN, session);
         IoosTestDataDAO.deleteProcedures(TEST_SENSOR_PATTERN, session);
-        
+
         IoosTestDataDAO.deleteFeatures(TEST_STATION_PATTERN, session);
-        
+
         IoosTestDataDAO.deleteOrphanFeatureOfInterestTypes(session);
         IoosTestDataDAO.deleteOrphanObservableProperties(session);
         IoosTestDataDAO.deleteOrphanObservationType(session);
@@ -348,13 +377,13 @@ public class IoosHibernateTestDataManager{
     private static double randomInRange(double min, double max, int decimalPlaces){
         double unroundedValue = min + Math.random() * (max - min);
         double co = Math.pow(10, decimalPlaces);
-        return Math.round(unroundedValue * co) / co;        
+        return Math.round(unroundedValue * co) / co;
     }
 
     private static ContentCache getCache(){
         return Configurator.getInstance().getCache();
     }
-    
+
     private static String getPhenomenonShortId(String phenomenon){
         String[] split = phenomenon.split("/");
         return split[split.length - 1];

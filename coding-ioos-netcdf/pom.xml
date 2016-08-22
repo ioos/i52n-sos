@@ -14,6 +14,10 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>coding-ioos</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>test-data-ioos</artifactId>
       <scope>test</scope>
     </dependency>
