@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.n52.sos.ds.AbstractDescribeSensorDAO;
@@ -486,7 +487,7 @@ public abstract class AbstractIoosNetcdfEncoder implements ObservationEncoder<Bi
         vPlatform.addAttribute(new Attribute(IoosNetcdfConstants.IOOS_CODE,
                 sensorDataset.getSensor().getStationAsset().getAssetId()));        
         //platform description
-        if (!stationSystem.getDescription().isEmpty()){
+        if (!StringUtils.isEmpty(stationSystem.getDescription())){
             vPlatform.addAttribute(new Attribute(CFConstants.COMMENT, stationSystem.getDescription()));
         }
         //wmo code

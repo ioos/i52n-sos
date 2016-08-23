@@ -358,7 +358,7 @@ public class IoosHibernateTestDataManager{
         Configurator.getInstance().getCacheController().update();
     }
     
-    private static double randomLng(){
+    public static double randomLng(){
         //make test data lngs three digits for easy differentiation from lats
         double lng = randomInRange(100.0, 180.0, 6);
         //return a negative number if lng is even
@@ -369,12 +369,12 @@ public class IoosHibernateTestDataManager{
         }
     }
 
-    private static double randomLat(){
+    public static double randomLat(){
         //stay away from the poles because they often break software
         return randomInRange(-75.0, 75.0, 6);
     }
     
-    private static double randomInRange(double min, double max, int decimalPlaces){
+    public static double randomInRange(double min, double max, int decimalPlaces){
         double unroundedValue = min + Math.random() * (max - min);
         double co = Math.pow(10, decimalPlaces);
         return Math.round(unroundedValue * co) / co;

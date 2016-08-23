@@ -5,6 +5,7 @@ import org.junit.Rule;
 import org.junit.runner.RunWith;
 
 import org.n52.sos.config.SettingsManager;
+import org.n52.sos.ioos.service.it.functional.IoosGetObservationIntegrationTest;
 import org.n52.sos.service.SosService;
 import org.n52.sos.service.it.Client;
 import org.n52.sos.service.it.ComplianceSuite;
@@ -51,8 +52,9 @@ public class IOOSSOSComplianceTestSuite
     @Override
     public Class<?>[] getTests() {
         return new Class<?>[] {
-            org.n52.sos.ioos.service.it.functional.DescribeSensorProcedureDescriptionFormatTest.class,
-            org.n52.sos.ioos.service.it.functional.IoosSensorMLFormatDescribeSensorTest.class
+//          DescribeSensorProcedureDescriptionFormatTest.class,
+//          IoosSensorMLFormatDescribeSensorTest.class
+            IoosGetObservationIntegrationTest.class
         };
     }
 

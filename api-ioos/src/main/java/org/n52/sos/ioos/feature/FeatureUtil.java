@@ -79,7 +79,7 @@ public class FeatureUtil {
     }
 
     public static Double getPointZOrNull(Point point) {
-      if (Double.isNaN(point.getCoordinate().z)) {
+      if (point == null || Double.isNaN(point.getCoordinate().z)) {
         return null;
       }
       return point.getCoordinate().z;

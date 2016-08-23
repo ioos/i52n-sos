@@ -32,7 +32,7 @@ public class IoosEncoderUtil {
         return getVersionMetaData(IoosSosConstants.SOFTWARE_VERSION, null,
                 Ioos52nSosVersionHandler.getIoosVersion());
     }
-    
+
     public static MetaDataPropertyType getVersionMetaData(String title, String definition, String version){
         MetaDataPropertyType xb_versionMetadataProperty = MetaDataPropertyType.Factory.newInstance();
         if (title != null) {
@@ -50,20 +50,24 @@ public class IoosEncoderUtil {
         xb_versionDoc.setVersion( version );
         XmlHelper.append( xb_versionMetadataProperty, xb_versionDoc );
         return xb_versionMetadataProperty;
-    }    
+    }
 
     
    	public static BoundingShapeType createBoundedBy( Envelope envelope ){
-    	BoundingShapeType xb_boundingShape = BoundingShapeType.Factory.newInstance(XmlOptionsHelper.getInstance().getXmlOptions());
+        if (envelope == null) {
+            return null;
+        }
+
+        BoundingShapeType xb_boundingShape = BoundingShapeType.Factory.newInstance(XmlOptionsHelper.getInstance().getXmlOptions());
         EnvelopeType xb_envelope = xb_boundingShape.addNewEnvelope();
 
         DirectPositionType xb_lowerCorner = xb_envelope.addNewLowerCorner();
-		xb_lowerCorner.setStringValue(envelope.getMinY() + " " + envelope.getMinX());
+        xb_lowerCorner.setStringValue(envelope.getMinY() + " " + envelope.getMinX());
         DirectPositionType xb_upperCorner = xb_envelope.addNewUpperCorner();
         xb_upperCorner.setStringValue(envelope.getMaxY() + " " + envelope.getMaxX());
-        
+
         xb_envelope.setSrsName( IoosSosConstants.SRS_URL_PREFIX + 4326 );
-        return xb_boundingShape;   		
+        return xb_boundingShape;
    	}
 
    	public static boolean isIoos10BboxString (String bbox) {
