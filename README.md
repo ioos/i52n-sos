@@ -9,7 +9,7 @@ See the project page at <http://ioos.github.io/i52n-sos> for user documentation.
 
 ## Docker
 
-These examples require Docker 1.9.0. Older versions will work with adjustments
+These examples require Docker 1.9.0 or higher. Older versions will work with adjustments
 left to the user (don't use named volume).
 
 Please review the [Docker documentation](https://docs.docker.com/engine/reference/run/)
