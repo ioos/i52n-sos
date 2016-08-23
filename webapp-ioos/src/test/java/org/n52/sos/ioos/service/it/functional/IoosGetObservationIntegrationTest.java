@@ -135,7 +135,7 @@ public class IoosGetObservationIntegrationTest extends AbstractIoosComplianceSui
 
     @Test
     public void testGetObservationNormalEncoding() throws OwsExceptionReport, XmlException {
-        XmlObject getObsResponse = sendGetObservation1RequestViaPox(NETWORK_OFFERING, OmConstants.CONTENT_TYPE_OM.toString(), null,
+        XmlObject getObsResponse = sendGetObservation1RequestViaPox(NETWORK_OFFERING, OmConstants.CONTENT_TYPE_OM.toString(),
                 ImmutableList.of(STATION_ASSET.getAssetId()), ImmutableList.of(OBS_PROP),null).asXmlObject();
         assertNotNull(getObsResponse);
         assertThat(getObsResponse, is(instanceOf(ObservationCollectionDocument.class)));
@@ -155,7 +155,7 @@ public class IoosGetObservationIntegrationTest extends AbstractIoosComplianceSui
     @Test
     public void testGetObservationIoosSweEncoding() throws OwsExceptionReport, XmlException {
         XmlObject getObsResponse = sendGetObservation1RequestViaPox(NETWORK_OFFERING, IoosSosConstants.OM_PROFILE_M10,
-                null, ImmutableList.of(STATION_ASSET.getAssetId()), ImmutableList.of(OBS_PROP),null).asXmlObject();
+                ImmutableList.of(STATION_ASSET.getAssetId()), ImmutableList.of(OBS_PROP),null).asXmlObject();
         assertNotNull(getObsResponse);
         assertThat(getObsResponse, is(instanceOf(ObservationCollectionDocument.class)));
         ObservationCollectionDocument obsCollectionDoc = (ObservationCollectionDocument) getObsResponse;
@@ -203,7 +203,7 @@ public class IoosGetObservationIntegrationTest extends AbstractIoosComplianceSui
     @Test
     public void testGetObservationIoosNetCDFEncoding() throws OwsExceptionReport, XmlException, IOException {
         InputStream getObsResponse = sendGetObservation1RequestViaPox(NETWORK_OFFERING, IoosNetcdfEncoder.CONTENT_TYPE_NETCDF.toString(),
-                null, ImmutableList.of(STATION_ASSET.getAssetId()), ImmutableList.of(OBS_PROP),null).asInputStream();
+                ImmutableList.of(STATION_ASSET.getAssetId()), ImmutableList.of(OBS_PROP),null).asInputStream();
         File tempNetcdfFile = File.createTempFile("i52n-sos-netcdf-test", ".nc");
         FileOutputStream fileOutputStream = new FileOutputStream(tempNetcdfFile);
         IOUtils.copy(getObsResponse, fileOutputStream);
@@ -219,7 +219,7 @@ public class IoosGetObservationIntegrationTest extends AbstractIoosComplianceSui
     //TODO only works in SOS 2.0 (URL format), add mime types to WMLEncoders for SOS 1.0? (WaterMLConstants.WML_CONTENT_TYPE)
     public void testGetObservationWaterMLEncoding() throws OwsExceptionReport, XmlException, IOException {
         XmlObject getObsResponse = sendGetObservation2RequestViaPox(NETWORK_OFFERING, WaterMLConstants.NS_WML_20,
-                null, ImmutableList.of(STATION_ASSET.getAssetId()), ImmutableList.of(OBS_PROP),null).asXmlObject();
+                ImmutableList.of(STATION_ASSET.getAssetId()), ImmutableList.of(OBS_PROP),null).asXmlObject();
         assertThat(getObsResponse, notNullValue());
         assertThat(getObsResponse, is(not(instanceOf(ExceptionReportDocument.class))));
         //TODO check this?
@@ -228,7 +228,7 @@ public class IoosGetObservationIntegrationTest extends AbstractIoosComplianceSui
     @Test
     //TODO only works in SOS 2.0 (URL format), add mime types to WMLEncoders for SOS 1.0? (WaterMLConstants.WML_DR_CONTENT_TYPE)
     public void testGetObservationWaterMLDomainRangeEncoding() throws OwsExceptionReport, XmlException, IOException {
-        XmlObject getObsResponse = sendGetObservation2RequestViaPox(NETWORK_OFFERING, WaterMLConstants.NS_WML_20_DR, null,
+        XmlObject getObsResponse = sendGetObservation2RequestViaPox(NETWORK_OFFERING, WaterMLConstants.NS_WML_20_DR,
                 ImmutableList.of(STATION_ASSET.getAssetId()), ImmutableList.of(OBS_PROP),null).asXmlObject();
         assertThat(getObsResponse, notNullValue());
         assertThat(getObsResponse, is(not(instanceOf(ExceptionReportDocument.class))));
@@ -236,11 +236,9 @@ public class IoosGetObservationIntegrationTest extends AbstractIoosComplianceSui
     }
 
     @Test
-    @Ignore
-    //TODO json only works if the Accept header is set to application/json
+    //TODO only works in SOS 2.0, add for SOS 1.0? (AbstractSosResponseEncoder)
     public void testGetObservationGeoJSONEncoding() throws OwsExceptionReport, XmlException, IOException {
-        InputStream getObsResponse = sendGetObservation1RequestViaPox(NETWORK_OFFERING,
-                MediaTypes.APPLICATION_JSON.toString(), MediaTypes.APPLICATION_JSON.toString(), 
+        InputStream getObsResponse = sendGetObservation2RequestViaPox(NETWORK_OFFERING, MediaTypes.APPLICATION_JSON.toString(),
                 ImmutableList.of(STATION_ASSET.getAssetId()), ImmutableList.of(OBS_PROP),null).asInputStream();
         assertThat(getObsResponse, notNullValue());
         Map jsonMap = new ObjectMapper().readValue(getObsResponse, Map.class);

@@ -216,8 +216,8 @@ public abstract class AbstractIoosComplianceSuiteTest extends AbstractCompliance
         return document;
     }
 
-    protected Response sendGetObservation1RequestViaPox(String offering, String responseFormat, String acceptType,
-            Collection<String> procedures, Collection<String> observedProperties, TimePeriod timePeriod) throws OwsExceptionReport {
+    protected Response sendGetObservation1RequestViaPox(String offering, String responseFormat, Collection<String> procedures,
+            Collection<String> observedProperties, TimePeriod timePeriod) throws OwsExceptionReport {
         GetObservationDocument document = GetObservationDocument.Factory.newInstance();
         GetObservation getObservationRequest = document.addNewGetObservation();
         getObservationRequest.setService(SosConstants.SOS);
@@ -248,14 +248,11 @@ public abstract class AbstractIoosComplianceSuiteTest extends AbstractCompliance
         }
 
         Client client = pox().entity(document.xmlText(XML_OPTIONS));
-        if (acceptType != null) {
-            client.accept(acceptType);
-        }
         return client.response();
     }
 
-    protected Response sendGetObservation2RequestViaPox(String offering, String responseFormat, String acceptType,
-            Collection<String> procedures, Collection<String> observedProperties, TimePeriod timePeriod) throws OwsExceptionReport {
+    protected Response sendGetObservation2RequestViaPox(String offering, String responseFormat, Collection<String> procedures,
+            Collection<String> observedProperties, TimePeriod timePeriod) throws OwsExceptionReport {
         net.opengis.sos.x20.GetObservationDocument document = net.opengis.sos.x20.GetObservationDocument.Factory.newInstance();
         GetObservationType getObservationRequest = document.addNewGetObservation();
         getObservationRequest.setService(SosConstants.SOS);
@@ -286,9 +283,6 @@ public abstract class AbstractIoosComplianceSuiteTest extends AbstractCompliance
         }
 
         Client client = pox().entity(document.xmlText(XML_OPTIONS));
-        if (acceptType != null) {
-            client.accept(acceptType);
-        }
         return client.response();
     }
 
