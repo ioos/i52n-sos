@@ -12,14 +12,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.joda.time.DateTime;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -45,6 +43,7 @@ import org.n52.sos.util.http.MediaTypes;
 import com.axiomalaska.ioos.sos.IoosSosConstants;
 import com.axiomalaska.ioos.sos.IoosSweConstants;
 import com.beust.jcommander.internal.Lists;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 
@@ -210,40 +209,41 @@ public class IoosGetObservationIntegrationTest extends AbstractIoosComplianceSui
         getObsResponse.close();
         fileOutputStream.close();
 
-        //TODO FIX THIS "Error getting sensor description for urn:ioos:station:unknown:fake1"
         NetcdfDataset netcdfDataset = NetcdfDataset.openDataset(tempNetcdfFile.getAbsolutePath());
         assertThat(netcdfDataset, notNullValue());
+        //TODO validate
     }
 
     @Test
-    //TODO only works in SOS 2.0 (URL format), add mime types to WMLEncoders for SOS 1.0? (WaterMLConstants.WML_CONTENT_TYPE)
+    // only works with SOS 2.0
     public void testGetObservationWaterMLEncoding() throws OwsExceptionReport, XmlException, IOException {
         XmlObject getObsResponse = sendGetObservation2RequestViaPox(NETWORK_OFFERING, WaterMLConstants.NS_WML_20,
                 ImmutableList.of(STATION_ASSET.getAssetId()), ImmutableList.of(OBS_PROP),null).asXmlObject();
         assertThat(getObsResponse, notNullValue());
         assertThat(getObsResponse, is(not(instanceOf(ExceptionReportDocument.class))));
-        //TODO check this?
+        //TODO validate
     }
 
     @Test
-    //TODO only works in SOS 2.0 (URL format), add mime types to WMLEncoders for SOS 1.0? (WaterMLConstants.WML_DR_CONTENT_TYPE)
+    // only works with SOS 2.0
     public void testGetObservationWaterMLDomainRangeEncoding() throws OwsExceptionReport, XmlException, IOException {
         XmlObject getObsResponse = sendGetObservation2RequestViaPox(NETWORK_OFFERING, WaterMLConstants.NS_WML_20_DR,
                 ImmutableList.of(STATION_ASSET.getAssetId()), ImmutableList.of(OBS_PROP),null).asXmlObject();
         assertThat(getObsResponse, notNullValue());
         assertThat(getObsResponse, is(not(instanceOf(ExceptionReportDocument.class))));
-        //TODO check this?
+        //TODO validate
     }
 
     @Test
-    //TODO only works in SOS 2.0, add for SOS 1.0? (AbstractSosResponseEncoder)
+    // TODO only works in SOS 2.0, add for SOS 1.0
+    // https://github.com/52North/SOS/pull/462
     public void testGetObservationGeoJSONEncoding() throws OwsExceptionReport, XmlException, IOException {
         InputStream getObsResponse = sendGetObservation2RequestViaPox(NETWORK_OFFERING, MediaTypes.APPLICATION_JSON.toString(),
                 ImmutableList.of(STATION_ASSET.getAssetId()), ImmutableList.of(OBS_PROP),null).asInputStream();
         assertThat(getObsResponse, notNullValue());
-        Map jsonMap = new ObjectMapper().readValue(getObsResponse, Map.class);
+        JsonNode jsonNode = new ObjectMapper().readTree(getObsResponse);
         getObsResponse.close();
-        assertThat(jsonMap, notNullValue());
-        //TODO check this?
+        assertThat(jsonNode, notNullValue());
+        //TODO validate
     }
 }
