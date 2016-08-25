@@ -62,7 +62,8 @@ public class IOOSSOSComplianceTestSuite
 
     @AfterClass
     public static void cleanup() {
-        SettingsManager.getInstance().cleanup();
+//        https://github.com/52North/SOS/issues/461
+//        SettingsManager.getInstance().cleanup();
     }
 
 }
