@@ -48,9 +48,9 @@
                 <exclude>WEB-INF/views/admin/index.jsp</exclude>
                 <exclude>static/conf/client-config.json</exclude>
                 <exclude>static/examples/**</exclude>
-                <exclude>sql/insert_test_data.sql</exclude>
-                <exclude>sql/remove_test_data.sql</exclude>
                 <exclude>WEB-INF/classes/logback.xml</exclude>
+                <!-- exclude dependencies (get from declared webapp pom dependency below -->
+                <exclude>WEB-INF/lib/*.jar</exclude>
               </excludes>
             </overlay>
           </overlays>
@@ -94,6 +94,30 @@
       <artifactId>webapp</artifactId>
       <version>${n52.sos.version}</version>
       <type>pom</type>
+      <exclusions>
+        <!-- exclude netcdf dependencies from upstream for now -->
+        <!-- also exclude above in maven-war-plugin overlay -->
+        <exclusion>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>api-netcdf</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>coding-netcdf</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>coding-oceansites</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>netcdf</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>edu.ucar</groupId>
+          <artifactId>netcdf</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- upstream profile dependencies -->
