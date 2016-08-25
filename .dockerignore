@@ -1,3 +1,11 @@
 Dockerfile
+.dockerignore
+docker-compose.yml
 target
 */target
+.project
+.settings
+.classpath
+*.swp
+.gitignore
+.travis.yml

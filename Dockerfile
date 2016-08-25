@@ -36,26 +36,32 @@ ADD . /usr/local/src/i52n-sos
 
 #Build the project
 RUN mvn clean package \
-    && mkdir -p /srv/apps \
-    && mv webapp-ioos/target/i52n-sos /srv/apps/ \
+    && mv webapp-ioos/target/i52n-sos/ /srv/i52n-sos/ \
     && rm -rf /usr/local/src/i52n-sos
+
+WORKDIR /srv/i52n-sos
 
 #Remove maven
 RUN rm /usr/bin/mvn && rm -rf /usr/share/maven
 
 #Send logging to console for Docker
-ADD docker/logback.xml /srv/apps/i52n-sos/WEB-INF/classes/logback.xml
+ADD docker/logback.xml /srv/i52n-sos/WEB-INF/classes/logback.xml
 
-#change webapps dir to /srv/apps
-RUN sed -i -e 's/appBase="webapps"/appBase="\/srv\/apps"/' $CATALINA_HOME/conf/server.xml
+#remove default tomcat apps
+RUN rm -rf /usr/local/tomcat/webapps/*
+
+#add tomcat context.xml file for i52n-sos
+RUN mkdir -p /usr/local/tomcat/conf/Catalina/localhost \
+      && echo '<?xml version="1.0" encoding="UTF-8"?>\n<Context docBase="/srv/i52n-sos" path="/" />' \
+         > /usr/local/tomcat/conf/Catalina/localhost/ROOT.xml
 
 #Add sensor user
-RUN useradd --system --home-dir=/srv/apps/i52n-sos sensor \
-      && chown -R sensor:sensor /srv/apps/i52n-sos \
+RUN useradd --system --home-dir=/srv/i52n-sos sensor \
+      && chown -R sensor:sensor /srv/i52n-sos \
       && chown -R sensor:sensor $CATALINA_HOME
 
 #Run as sensor user
 USER sensor
 
-#Create volume for data persistence
-VOLUME /srv/apps/i52n-sos
+#Create volume for i52n-sos install/configuration
+VOLUME /srv/i52n-sos
