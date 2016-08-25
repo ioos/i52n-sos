@@ -17,6 +17,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.joda.time.DateTime;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -46,6 +47,7 @@ import com.beust.jcommander.internal.Lists;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
+import com.sun.jna.Native;
 
 import net.opengis.gml.AbstractFeatureType;
 import net.opengis.gml.BoundingShapeType;
@@ -66,6 +68,7 @@ import net.opengis.swe.x20.DataRecordType.Field;
 import net.opengis.swes.x20.InsertSensorDocument;
 import net.opengis.swes.x20.InsertSensorResponseDocument;
 import ucar.nc2.dataset.NetcdfDataset;
+import ucar.nc2.jni.netcdf.Nc4prototypes;
 
 /**
  * @author Shane St Clair <shane@axiomdatascience.com>
@@ -201,6 +204,14 @@ public class IoosGetObservationIntegrationTest extends AbstractIoosComplianceSui
 
     @Test
     public void testGetObservationIoosNetCDFEncoding() throws OwsExceptionReport, XmlException, IOException {
+        // check for netcdf lib before test is run. on debian/ubuntu the package is libnetcdf-dev
+        // TODO shouldn't netcdf3 response formats work without this library?
+        try {
+            Native.loadLibrary("netcdf", Nc4prototypes.class);
+        } catch (UnsatisfiedLinkError e) {
+            Assume.assumeNoException("netcdf library not detected, skipping test", e);
+        }
+
         InputStream getObsResponse = sendGetObservation1RequestViaPox(NETWORK_OFFERING, IoosNetcdfEncoder.CONTENT_TYPE_NETCDF.toString(),
                 ImmutableList.of(STATION_ASSET.getAssetId()), ImmutableList.of(OBS_PROP),null).asInputStream();
         File tempNetcdfFile = File.createTempFile("i52n-sos-netcdf-test", ".nc");
