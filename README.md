@@ -19,7 +19,7 @@ if you aren't familiar with Docker.
 
 ```shell
 docker run -d -p 8083:8080 -v i52n-sos:/srv/apps/i52n-sos \
-  --name i52n-sos --restart=always i52n-sos:1.0.1
+  --name i52n-sos --restart=always i52n-sos:1.1
 ```
 
 This will store configuration data in the `i52n-sos` named volume which
@@ -69,7 +69,7 @@ docker run -d --restart=always --net i52n-sos -e POSTGRES_PASSWORD=SOME_PASSWORD
   --name i52n-sos-db mdillon/postgis:9.5
 
 docker run -d --restart=always --net i52n-sos -p 8083:8080 -v i52n-sos:/srv/apps/i52n-sos \
-  --name i52n-sos --restart=always i52n-sos:1.0.1
+  --name i52n-sos --restart=always i52n-sos:1.1
 ```
 
 `i52n-sos-db`'s database will be exposed on the host on port `5435`, but it is available
