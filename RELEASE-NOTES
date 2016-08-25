@@ -1,5 +1,24 @@
 RELEASE NOTES
 
+RELEASE 1.1
+==================================
+
+ --- New features ---
+
+    * Added SOS 2.0 WaterML encoders (https://github.com/ioos/i52n-sos/issues/31)
+    * Better support for JSON encoding (https://github.com/ioos/i52n-sos/issues/29)
+    * Docker support (https://github.com/ioos/i52n-sos/issues/26)
+
+ --- Changes ---
+
+    * Update to upstream 52North SOS 4.4.x line
+    * Better integration testing for easier upstream updates
+
+ --- Fixed bugs --- 
+
+    * Fixed bug in timeSeries/timeSeriesProfile SWE encoding (https://github.com/ioos/i52n-sos/issues/24)
+    * Support IOOS WSDD KVP BBOX (https://github.com/ioos/i52n-sos/issues/25)
+
 RELEASE 1.0.0
 ==================================
  
