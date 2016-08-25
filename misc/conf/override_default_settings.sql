@@ -1,7 +1,5 @@
 -- To build configuration.db: 
--- rm misc/conf/configuration.db
--- sqlite3 misc/conf/configuration.db < ../52n-sos/misc/db/default_settings.sql
--- sqlite3 misc/conf/configuration.db < misc/db/override_default_settings.sql
+-- ./misc/conf/build_conf_db.sh
 
 UPDATE "integer_settings"
 SET value = 8
@@ -36,7 +34,7 @@ SET value = 'http://www.opengis.net/def/crs/EPSG/0/'
 WHERE identifier = 'misc.srsNamePrefixSosV1';
 
 UPDATE "string_settings"
-SET value = '1-301-427-2420'
+SET value = '1-240-533-9444'
 WHERE identifier = 'serviceProvider.phone';
 
 UPDATE "string_settings"
@@ -44,7 +42,7 @@ SET value = 'noaa.ioos.webmaster@noaa.gov'
 WHERE identifier = 'serviceProvider.email';
 
 UPDATE "string_settings"
-SET value = '1100 Wayne Ave., Suite 1225'
+SET value = '1315 East-West Highway'
 WHERE identifier = 'serviceProvider.address';
 
 UPDATE "string_settings"
@@ -52,7 +50,7 @@ SET value = 'Silver Spring'
 WHERE identifier = 'serviceProvider.city';
 
 UPDATE "string_settings"
-SET value = 'MA'
+SET value = 'MD'
 WHERE identifier = 'serviceProvider.state';
 
 UPDATE "string_settings"
@@ -78,11 +76,11 @@ SET value = 'http://opengeospatial.net'
 WHERE identifier = 'serviceIdentification.serviceTypeCodeSpace';
 
 UPDATE "string_settings"
-SET value = 'IOOS'
+SET value = 'U.S. Integrated Ocean Observing System Program (IOOS)'
 WHERE identifier = 'serviceProvider.name';
 
 UPDATE "uri_settings"
-SET value = 'http://www.ioos.noaa.gov/'
+SET value = 'https://ioos.noaa.gov/'
 WHERE identifier = 'serviceProvider.site';
 
 UPDATE "uri_settings"
