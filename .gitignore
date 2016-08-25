@@ -7,3 +7,4 @@ docker/init-db.sh
 *.swp
 docker-compose.yml
 docker/docker-compose.yml
+config.logger.fileappender.filepath_IS_UNDEFINED
