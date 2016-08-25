@@ -1,13 +1,13 @@
-# this doesn't work yet because v1.0.1 hasn't been released
+# this doesn't work yet because v1.1 hasn't been released
 version: '2'
 
 services:
   app:
-    image: ioos/i52n-sos:1.0.1
+    image: ioos/i52n-sos:1.1
     ports:
       - "8083:8080"
     volumes:
-      - config:/srv/apps/i52n-sos
+      - config:/srv/i52n-sos
     restart: unless-stopped
     networks:
       - i52n-sos
