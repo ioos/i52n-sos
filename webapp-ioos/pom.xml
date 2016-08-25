@@ -58,6 +58,9 @@
             <resource>
               <directory>src/main/webapp</directory>
               <filtering>true</filtering>
+              <excludes>
+                <exclude>configuration.db</exclude>
+              </excludes>
             </resource>
             <resource>
               <directory>../misc/conf</directory>
@@ -178,31 +181,6 @@
 
   <profiles>
     <profile>
-      <id>configure-datasource</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>configure-datasource</id>
-                <phase>process-resources</phase>
-                <goals>
-                  <goal>run</goal>
-                </goals>
-                <configuration>
-                  <tasks>
-                    <copy file="${databaseConfigurationFile}" tofile="${project.build.directory}/${project.build.finalName}/WEB-INF/datasource.properties" />
-                  </tasks>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
       <id>configure-datasource-testdata</id>
       <activation>
         <property>
@@ -244,7 +222,7 @@
       </activation>      
       <properties>
         <jetty.port>9090</jetty.port>
-        <jetty.version>9.1.4.v20140401</jetty.version>
+        <jetty.version>9.3.11.v20160721</jetty.version>
       </properties>
 
       <dependencies>
@@ -306,13 +284,19 @@
               <httpConnector>
                 <port>9090</port>
               </httpConnector>
+              <webApp>
+                <resourceBases>
+                  <resoureBase>${project.build.directory}/i52n-sos</resoureBase>
+                </resourceBases>
+                <allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
+              </webApp>
             </configuration>
             <executions>
               <execution>
                 <id>start-jetty</id>
                 <phase>pre-integration-test</phase>
                 <goals>
-                  <goal>run-exploded</goal>
+                  <goal>start</goal>
                 </goals>
                 <configuration>
                   <scanIntervalSeconds>0</scanIntervalSeconds>
