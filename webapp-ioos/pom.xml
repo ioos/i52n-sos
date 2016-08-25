@@ -222,7 +222,7 @@
       </activation>      
       <properties>
         <jetty.port>9090</jetty.port>
-        <jetty.version>9.3.11.v20160721</jetty.version>
+        <jetty.version>9.2.18.v20160721</jetty.version>
       </properties>
 
       <dependencies>
