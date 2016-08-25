@@ -1,7 +1,8 @@
 FROM tomcat:8.0
 MAINTAINER Shane St Clair<shane@axds.co>
 
-RUN apt-get update && apt-get install -y --no-install-recommends openjdk-7-jdk && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends openjdk-7-jdk libnetcdf-dev \
+      && rm -rf /var/lib/apt/lists/*
 
 #Borrowed from maven:3 Dockerfile
 ENV MAVEN_VERSION 3.3.9
