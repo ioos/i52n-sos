@@ -31,8 +31,6 @@ package org.n52.sos.ioos.service.it;
 import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
-
-import org.n52.sos.config.SettingsManager;
 import org.n52.sos.service.SosService;
 import org.n52.sos.service.it.Client;
 import org.n52.sos.service.it.ComplianceSuite;
