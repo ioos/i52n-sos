@@ -611,9 +611,9 @@
   </repositories>
 
   <scm>
-    <connection>scm:git:https://github.com/ioos/i52n-sos.git</connection>
-    <url>scm:git:https://github.com/ioos/i52n-sos.git</url>
-    <developerConnection>scm:git:https://github.com/ioos/i52n-sos.git</developerConnection>
+    <connection>scm:git:git@github.com:ioos/i52n-sos.git</connection>
+    <url>scm:git:git@github.com:ioos/i52n-sos.git</url>
+    <developerConnection>scm:git:git@github.com:ioos/i52n-sos.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
 
