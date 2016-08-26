@@ -518,8 +518,10 @@
         </plugin>
         <plugin>
           <artifactId>maven-release-plugin</artifactId>
+          <version>2.5.3</version>
           <configuration>
             <connectionUrl>${project.scm.url}</connectionUrl>
+            <tagNameFormat>@{project.version}</tagNameFormat>
           </configuration>
         </plugin>
         <plugin>
