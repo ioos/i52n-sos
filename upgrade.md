@@ -13,7 +13,11 @@ title: Upgrade Instructions
 
 # Notes on Specific Version Upgrades
 
-## Pre-1.0.0 to 1.0.0 <a name="1.0.0"></a>
+## 1.0.0 to <a name="1.1">1.1</a>
+
+Coming soon.
+
+## Pre-1.0.0 to <a name="1.0.0">1.0.0</a>
 
 __NOTE:__ Be sure to disable any sensor harvesting and external access while installing the SOS, as SOS requests to the server before it is initialized will cause a crash due to [this bug](https://github.com/ioos/i52n-sos/issues/22). Will resolve in future releases.
 

@@ -30,11 +30,11 @@ The IOOS test data:
 * Includes test client example requests matching test data values
  
 The project currently aims to conform to the
-[IOOS SOS Milestone 1 Standard](https://code.google.com/p/ioostech/source/browse/#svn%2Ftrunk%2Ftemplates%2FMilestone1.0).
+[IOOS SOS Milestone 1 Standard](http://ioos.github.io/sos-guidelines/).
 
 ## Release Notes
 
-See [Release notes document](https://github.com/ioos/i52n-sos/blob/master/RELEASE-NOTES.txt).
+See [Release notes document](https://github.com/ioos/i52n-sos/blob/master/RELEASE-NOTES).
 
 ## Mailing List
 
@@ -92,7 +92,8 @@ Report issues on the [GitHub issue tracker](https://github.com/ioos/i52n-sos/iss
 
 ### IOOS SOS resources:
 
-* [ioostech Google Code page](http://code.google.com/p/ioostech/)
+* [IOOS SOS Guidelines](http://ioos.github.io/sos-guidelines/)
+* [IOOS General SOS Issues](https://github.com/ioos/ioos-sos-issues-generic/issues)
 * [ioostech_dev Google Group](https://groups.google.com/forum/?#!forum/ioostech_dev)
   
 Information on OGC SOS standards can be found [here](http://www.opengeospatial.org/standards/sos).
