@@ -179,12 +179,12 @@ public class IoosTestDataSmlGenerator {
         ContactList.Member xbPublisher = xbContactList.addNewMember();
         xbPublisher.setRole(IoosDefConstants.PUBLISHER_DEF);
         ResponsibleParty xbPublisherRp = xbPublisher.addNewResponsibleParty();
-        xbPublisherRp.setOrganizationName("Some Publisher");
+        xbPublisherRp.setOrganizationName("IOOS");
         ContactInfo xbPublisherCi = xbPublisherRp.addNewContactInfo();
         Address xbPublisherAddress = xbPublisherCi.addNewAddress();
         xbPublisherAddress.setCountry("USA");
-        xbPublisherAddress.setElectronicMailAddress("info@somepublisher.org");
-        xbPublisherCi.addNewOnlineResource().setHref("http://somepublisher.org");        
+        xbPublisherAddress.setElectronicMailAddress("noaa.ioos.webmaster@noaa.gov0");
+        xbPublisherCi.addNewOnlineResource().setHref("http://www.ioos.noaa.gov");
     }
     
     private static void addQualityControlDocument(SystemType xbSystem, String description, String onlineResource) {
