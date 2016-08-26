@@ -5,5 +5,5 @@
     xsi:schemaLocation="http://www.opengis.net/sos/2.0 http://schemas.opengis.net/sos/2.0/sos.xsd">
     <sos:procedure>urn:ioos:station:test:1</sos:procedure>
     <sos:observedProperty>http://mmisw.org/ont/cf/parameter/air_temperature</sos:observedProperty>
-    <sos:responseFormat>application/json</sos:responseFormat>
+    <sos:responseFormat>http://www.opengis.net/waterml/2.0</sos:responseFormat>
 </sos:GetObservation>

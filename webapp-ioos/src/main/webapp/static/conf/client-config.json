@@ -128,9 +128,38 @@
           "binding": "/kvp",
           "operation": "GetObservation",
           "title": "TimeSeries - Json",
-          "headers":{
-            "Accept":"application/json"
-          },          
+          "method": "GET"
+        },
+        {
+          "param": {
+            "service": "SOS",
+            "version": "2.0.0",
+            "request": "GetObservation",
+            "procedure": "urn:ioos:station:test:1",
+            "observedProperty": "http://mmisw.org/ont/cf/parameter/air_temperature",
+            "responseFormat": "http://www.opengis.net/waterml/2.0"
+          },
+          "service": "SOS",
+          "version": "2.0.0",
+          "binding": "/kvp",
+          "operation": "GetObservation",
+          "title": "TimeSeries - WaterML 2.0 Time Value Pair",
+          "method": "GET"
+        },
+        {
+          "param": {
+            "service": "SOS",
+            "version": "2.0.0",
+            "request": "GetObservation",
+            "procedure": "urn:ioos:station:test:1",
+            "observedProperty": "http://mmisw.org/ont/cf/parameter/air_temperature",
+            "responseFormat": "http://www.opengis.net/waterml-dr/2.0"
+          },
+          "service": "SOS",
+          "version": "2.0.0",
+          "binding": "/kvp",
+          "operation": "GetObservation",
+          "title": "TimeSeries - WaterML 2.0 Domain Range",
           "method": "GET"
         },
         {
@@ -336,6 +365,30 @@
             "binding": "/pox",
             "operation": "GetObservation",
             "title": "Single Station - TimeSeries - JSON",
+            "headers": {
+                "Content-Type": "text/xml"
+            },
+            "method": "POST"
+        },
+        {
+            "request": "static/examples/sos_v20/requests_xml/GetObservation/GetObservation-SingleStation-TimeSeries-WaterML2TVP.xml",
+            "service": "SOS",
+            "version": "2.0.0",
+            "binding": "/pox",
+            "operation": "GetObservation",
+            "title": "Single Station - TimeSeries - WaterML 2.0 Time Value Pair",
+            "headers": {
+                "Content-Type": "text/xml"
+            },
+            "method": "POST"
+        },
+        {
+            "request": "static/examples/sos_v20/requests_xml/GetObservation/GetObservation-SingleStation-TimeSeries-WaterML2TDR.xml",
+            "service": "SOS",
+            "version": "2.0.0",
+            "binding": "/pox",
+            "operation": "GetObservation",
+            "title": "Single Station - TimeSeries - WaterML 2.0 Domain Range",
             "headers": {
                 "Content-Type": "text/xml"
             },
