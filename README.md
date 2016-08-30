@@ -25,9 +25,9 @@ docker run -d -p 8083:8080 -v i52n-sos:/srv/i52n-sos \
 This will store configuration data in the `i52n-sos` named volume which
 will survive removal of and recreation of the `i52n-sos` container.
 
-The i52n-sos main page will be available at http://localhost:8083
+The i52n-sos main page will be available at <http://localhost:8083>
 
-The i52n-sos service endpoint will be available at http://localhost:8083/service
+The i52n-sos service endpoint will be available at <http://localhost:8083/service>
 
 ### View logs
 
