@@ -40,7 +40,12 @@ See [Release notes document](https://github.com/ioos/i52n-sos/blob/master/RELEAS
 
 <i52n-sos@googlegroups.com> ([Sign-up and archive](https://groups.google.com/forum/#!forum/i52n-sos))
 
-## Installation
+## Docker
+
+i52n-sos can be run in Docker using prebuilt images available on the IOOS Docker Hub.
+See the [i52n-sos Docker Hub page for more details](https://hub.docker.com/r/ioos/i52n-sos/).
+
+## Installation (non-Docker)
 
 See [installation instructions](./install.html).
 
@@ -54,11 +59,11 @@ To experiment with test data in your SOS, see [test data instructions](./testdat
 
 ## Populating
 
-For tools to populate your SOS, see [populating instructions](/populating.html).
+For tools to populate your SOS, see [populating instructions](./populating.html).
 
 ## Concepts
 
-For an overview of SOS concepts, see [concepts](/concepts.html).
+For an overview of SOS concepts, see [concepts](./concepts.html).
 
 ## Test instances
 
@@ -69,6 +74,11 @@ A test instance of the latest release of i52n-SOS is available:
 A test instance of the current development version (bleeding edge/not yet released) of i52n-SOS is also available:
 
 <http://dev.demo.i52nsos.axiomdatascience.com>
+
+## Testing the i52n-sos implementation
+
+The i52n-sos implementation of the IOOS SOS specification can be tested using an (incomplete) collection
+of CTL tests. See the [ioos-sos-compliance-tests](https://github.com/ioos/ioos-sos-compliance-tests) project.
 
 ## Issue Tracker
 
