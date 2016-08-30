@@ -64,11 +64,11 @@ For an overview of SOS concepts, see [concepts](/concepts.html).
 
 A test instance of the latest release of i52n-SOS is available:
    
-<http://ioossos.axiomalaska.com/52n-sos-ioos-stable>
+<http://demo.i52nsos.axiomdatascience.com>
 
 A test instance of the current development version (bleeding edge/not yet released) of i52n-SOS is also available:
 
-<http://ioossos.axiomalaska.com/52n-sos-ioos-dev>
+<http://dev.demo.i52nsos.axiomdatascience.com>
 
 ## Issue Tracker
 
