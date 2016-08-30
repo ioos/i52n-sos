@@ -18,8 +18,8 @@ if you aren't familiar with Docker.
 ### Run i52n-sos on port 8083 using a pre-built image on the IOOS Docker Hub repository
 
 ```shell
-docker run -d -p 8083:8080 -v i52n-sos:/srv/apps/i52n-sos \
-  --name i52n-sos --restart=always i52n-sos:1.1
+docker run -d -p 8083:8080 -v i52n-sos:/srv/i52n-sos \
+  --name i52n-sos --restart=unless-stopped ioos/i52n-sos:1.1
 ```
 
 This will store configuration data in the `i52n-sos` named volume which
@@ -59,6 +59,22 @@ docker start i52n-sos
 docker volume rm i52n-sos
 ```
 
+### Increase Tomcat memory
+
+First, create a `setenv.sh` file to set the `JAVA_OPTS` used by Tomcat. Example:
+
+```
+JAVA_OPTS="-Djava.awt.headless=true -Xmx4G -XX:+UseConcMarkSweepGC"
+```
+
+Then, provide this file to Tomcat inside the `i52n-sos` container when running in Docker. Example:
+
+```
+docker run -d -p 8083:8080 -v i52n-sos:/srv/i52n-sos \
+  -v $(pwd)/setenv.sh:/usr/local/tomcat/bin/setenv.sh
+  --name i52n-sos --restart=unless-stopped ioos/i52n-sos:1.1
+```
+
 ### Run a PostgreSQL/PostGIS server and i52n-sos together in Docker
 
 Copy the [example database init script](docker/init-db.sh.example) to your server,
@@ -73,7 +89,7 @@ docker run -d --restart=always --net i52n-sos -e POSTGRES_PASSWORD=SOME_PASSWORD
   --name i52n-sos-db mdillon/postgis:9.5
 
 docker run -d --restart=always --net i52n-sos -p 8083:8080 -v i52n-sos:/srv/apps/i52n-sos \
-  --name i52n-sos --restart=always i52n-sos:1.1
+  --name i52n-sos --restart=always ioos/i52n-sos:1.1
 ```
 
 `i52n-sos-db`'s database will be exposed on the host on port `5435`, but it is available
@@ -87,6 +103,26 @@ To see logs for the PostgreSQL/PostGIS server:
 ```shell
 docker logs i52n-sos-db
 ```
+
+Note that this will run PostgreSQL with the default configuration. You will likely
+need to adjust memory settings by issuing `ALTER SYSTEM` commands, e.g.
+
+```
+ALTER SYSTEM SET shared_buffers = '4096MB';
+ALTER SYSTEM SET max_connections = 200;
+ALTER SYSTEM SET work_mem = '160MB';
+ALTER SYSTEM SET effective_cache_size = '11GB';
+ALTER SYSTEM SET maintenance_work_mem = '960MB';
+```
+
+And then restarting the container:
+
+```
+docker restart i52n-sos-db
+```
+
+Alternatively you can customize a `postgres.conf` file and pass it to the container using a volume
+at `/var/lib/postgresql/data/postgres.conf`.
 
 ### Backup i52n configuration
 
