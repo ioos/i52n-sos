@@ -52,7 +52,7 @@ RUN rm -rf /usr/local/tomcat/webapps/*
 
 #add tomcat context.xml file for i52n-sos
 RUN mkdir -p /usr/local/tomcat/conf/Catalina/localhost \
-      && echo '<?xml version="1.0" encoding="UTF-8"?>\n<Context docBase="/srv/i52n-sos" path="/" />' \
+      && echo '<?xml version="1.0" encoding="UTF-8"?>\n<Context docBase="/srv/i52n-sos" path="" />' \
          > /usr/local/tomcat/conf/Catalina/localhost/ROOT.xml
 
 #Add sensor user
