@@ -43,10 +43,10 @@ import org.n52.sos.util.http.MediaTypes;
 
 import com.axiomalaska.ioos.sos.IoosSosConstants;
 import com.axiomalaska.ioos.sos.IoosSweConstants;
-import com.beust.jcommander.internal.Lists;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.sun.jna.Native;
 
 import net.opengis.gml.AbstractFeatureType;

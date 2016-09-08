@@ -19,6 +19,10 @@
       <artifactId>coding-sensorML-v101</artifactId>
     </dependency>
     <dependency>
+      <groupId>edu.ucar</groupId>
+      <artifactId>netcdf</artifactId>
+    </dependency>
+    <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>hibernate-h2</artifactId>
       <scope>test</scope>

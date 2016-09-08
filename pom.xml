@@ -58,6 +58,7 @@
         <artifactId>commons-lang3</artifactId>
         <version>3.4</version>
       </dependency>
+      <!-- netcdf is renamed to cdm in higher versions -->
       <dependency>
         <groupId>edu.ucar</groupId>
         <artifactId>netcdf</artifactId>

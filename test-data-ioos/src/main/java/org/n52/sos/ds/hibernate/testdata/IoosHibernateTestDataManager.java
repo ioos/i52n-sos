@@ -25,7 +25,6 @@ package org.n52.sos.ds.hibernate.testdata;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -80,8 +79,6 @@ import org.n52.sos.service.Configurator;
 import org.n52.sos.util.CodingHelper;
 import org.n52.sos.util.CollectionHelper;
 
-import ucar.nc2.constants.CF;
-
 import com.axiomalaska.ioos.sos.GeomHelper;
 import com.axiomalaska.ioos.sos.IoosSosConstants;
 import com.axiomalaska.ioos.sos.IoosSosUtil;
@@ -92,6 +89,8 @@ import com.axiomalaska.phenomena.UnitCreationException;
 import com.google.common.collect.Maps;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
+
+import ucar.nc2.constants.CF;
 
 public class IoosHibernateTestDataManager{
     public static final String TEST = "test";
