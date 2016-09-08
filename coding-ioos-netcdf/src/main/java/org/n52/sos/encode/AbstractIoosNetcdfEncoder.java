@@ -2,6 +2,7 @@ package org.n52.sos.encode;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.LinkedHashSet;
@@ -222,11 +223,15 @@ public abstract class AbstractIoosNetcdfEncoder implements ObservationEncoder<Bi
 
         NetcdfFileWriter writer = null;
         try {
+            for (Method method : NetcdfFileWriter.class.getMethods()) {
+                LOGGER.info(method.toString());
+            }
             writer = NetcdfFileWriter.createNew(Version.netcdf4, netcdfFile.getAbsolutePath(),
                     new IoosNc4ChunkingStrategy());
-        } catch (IOException e) {
+        } catch (Exception | Error e) {
             throw new NoApplicableCodeException().causedBy(e)
-                .withMessage("Error creating netCDF temp file.");
+                .withMessage("Error creating netCDF temp file " + netcdfFile.getAbsolutePath() + ": "
+                        + e.getClass().getName() + ": " + e.getMessage());
         }
         //set fill on, doesn't seem to have any effect though
         writer.setFill(true);
