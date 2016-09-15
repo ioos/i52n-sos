@@ -15,7 +15,26 @@ title: Upgrade Instructions
 
 ## 1.0.0 to <a name="1.1">1.1</a>
 
-Coming soon.
+In most cases you should not have to run any manual database queries to upgrade your database
+from i52n-sos 1.0.0 to 1.1 format. Follow the General Upgrade Procedure above and
+choose to upgrade your database tables. Note that this process can take a long time
+if your database is large.
+
+You may not be able to insert test data after upgrading your database. If you encounter
+an error trying to insert test data, run the following queries and try again:
+
+```sql
+ALTER TABLE featureofinterest DROP COLUMN hibernatediscriminator;
+ALTER TABLE observableproperty DROP COLUMN hibernatediscriminator;
+```
+
+If you encounter an error that your database user can't access the `spatial_ref_sys` table,
+run the following queries:
+
+```sql
+ALTER TABLE spatial_ref_sys OWNER TO sos;
+ALTER VIEW geometry_columns OWNER TO sos;
+```
 
 ## Pre-1.0.0 to <a name="1.0.0">1.0.0</a>
 
