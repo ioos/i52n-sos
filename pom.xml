@@ -8,7 +8,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>i52n-sos</artifactId>
-  <version>1.1</version>
+  <version>1.2-SNAPSHOT</version>
   <name>IOOS 52North Sensor Observation Service</name>
   <description>52North Sensor Observation Service for IOOS</description>
   <packaging>pom</packaging>
@@ -621,7 +621,7 @@
     <connection>scm:git:git@github.com:ioos/i52n-sos.git</connection>
     <url>scm:git:git@github.com:ioos/i52n-sos.git</url>
     <developerConnection>scm:git:git@github.com:ioos/i52n-sos.git</developerConnection>
-    <tag>1.1</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <distributionManagement>
